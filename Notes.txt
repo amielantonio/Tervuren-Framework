@@ -1,0 +1,19 @@
+Form Manager
+
+assets
+    css
+    js
+
+database
+    schema
+    seeds
+
+
+lib
+    Config
+    Controller
+    Databsae
+    Model
+    Settings
+
+Templates
