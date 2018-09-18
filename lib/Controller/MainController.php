@@ -1,20 +1,16 @@
 <?php
-
-
+namespace App\Controller;
 
 class MainController{
 
+    /**
+     * @return mixed
+     * @throws \exception
+     */
+    public function index(){
 
-    public function __construct()
-    {
-
-    }
-
-    public function start()
-    {
-
+        return view( 'dashboard/dashboard' );
 
     }
-
 
 }

@@ -1,7 +1,7 @@
 {
   "name": "strataplan-form-manager",
   "version": "1.0.0",
-  "description": "",
+  "description": "Test project for building WordPress plugins using MVC Pattern, Webpack, and VueJS",
   "main": "strataplan-form-manager.php",
   "directories": {
     "lib": "lib"
