@@ -1,0 +1,37 @@
+{
+  "name": "strataplan-form-manager",
+  "version": "1.0.0",
+  "description": "",
+  "main": "strataplan-form-manager.php",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "webpack --config webpack.config.js",
+    "watch": "webpack --watch --config webpack.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amielantonio/Strata-Form-Manager.git"
+  },
+  "keywords": [
+    "Wordpress",
+    "Plugin"
+  ],
+  "author": "Amiel Antonio",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/amielantonio/Strata-Form-Manager/issues"
+  },
+  "homepage": "https://github.com/amielantonio/Strata-Form-Manager#readme",
+  "devDependencies": {
+    "css-loader": "^1.0.0",
+    "extract-text-webpack-plugin": "^4.0.0-beta.0",
+    "node-sass": "^4.9.3",
+    "sass-loader": "^7.1.0",
+    "style-loader": "^0.23.0",
+    "webpack": "^4.19.0",
+    "webpack-cli": "^3.1.0"
+  }
+}

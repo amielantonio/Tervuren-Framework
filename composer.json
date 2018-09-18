@@ -1,0 +1,17 @@
+{
+    "name": "shore360/strataplan-form-manager",
+    "type": "wordpress-plugin",
+    "license": "ISC",
+    "authors": [
+        {
+            "name": "Amiel Antonio",
+            "email": "amiel.cornerstone@gmail.com"
+        }
+    ],
+    "require": {},
+    "autoload":{
+        "psr-4":{
+          "App\\" : "lib/"
+        }
+    }
+}

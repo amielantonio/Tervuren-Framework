@@ -22,7 +22,7 @@ define( 's_db_path', dirname( __FILE__)."/database" );
 
 
 
-
+register_activation_hook( __FILE__, 'strata_activation');
 function strata_activation(){
 
     $schema = require "lib/Database/Schema.php";
@@ -34,11 +34,16 @@ function strata_activation(){
 
 }
 
-
+add_action( 'init', 'strata_init' );
 function strata_init(){
 
+        do_action( 'strata_init' );
 
+        require_once 'lib/Controller/MainController.php';
 
+        $app = new MainController();
+
+        $app->start();
 }
 
 
