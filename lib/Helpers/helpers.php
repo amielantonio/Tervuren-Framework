@@ -1,6 +1,4 @@
 <?php
-
-
 if( ! function_exists( 'view' )){
 
     /**
@@ -20,6 +18,17 @@ if( ! function_exists( 'view' )){
         extract( $data );
 
         return require s_temp_path."/{$view}.view.php";
+
+    }
+
+}
+
+
+if( ! function_exists( 'route' ) ){
+
+    function route(){
+
+
 
     }
 
