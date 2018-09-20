@@ -6,7 +6,7 @@ class Seeds{
 
 
 
-    public function install(){
+    public function migrate(){
 
 
 

@@ -1,6 +1,8 @@
 <?php
 namespace App\Controller;
 
+use App\Database\Database;
+
 class MainController{
 
     /**
@@ -12,7 +14,7 @@ class MainController{
     public function index(){
 
 
-        $testdata = "This is a test";
+        $testdata = (new Database)->install();
 
         return view( 'dashboard/dashboard', compact( 'testdata' ) );
 

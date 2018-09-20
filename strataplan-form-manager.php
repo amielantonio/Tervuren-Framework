@@ -31,20 +31,26 @@ define( 's_db_path', dirname( __FILE__)."/database" );
 require_once 'vendor/autoload.php';
 
 use App\Main\Main;
-use App\Database\Schema;
+use App\Database\Database;
 use App\Database\Seeds;
 
 require "lib/Helpers/helpers.php";
 
+function strata_activation() {
+
+    (new Database)->install();
+//    (new Seeds)->migrate();
 
 
-
-function strata_activation(){
 
 
 }
 
-function strata_deactivation(){
+function strata_deactivation() {
+
+//    $settings = false;
+//
+//    (new Database)->uninstall( $settings );
 
 }
 
@@ -52,7 +58,7 @@ register_activation_hook( __FILE__, 'strata_activation');
 register_deactivation_hook( __FILE__, 'strata_deactivation');
 
 add_action( 'init', 'strata_init' );
-function strata_init(){
+function strata_init() {
 
     do_action( 'strata_init' );
 
