@@ -7,7 +7,12 @@ use App\Database\Grammar\Blueprint;
 class Schema {
 
 
+    /**
+     * install all database migration instances
+     */
     public function install(){
+
+
 
     }
 
@@ -18,11 +23,13 @@ class Schema {
         //Format SQL
         //Run SQL
 
-        $table = new Blueprint($table);
+        echo "this should be the first";
+        $callback( $table );
 
-        $test = $callback($table);
+    }
 
-        echo $test->integer( 'test' );
+
+    public static function drop( $table ){
 
     }
 
