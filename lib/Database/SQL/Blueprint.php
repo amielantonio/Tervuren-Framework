@@ -62,124 +62,317 @@ class Blueprint
     /**
      * Execute the blueprint for the database
      */
-    public function build()
+    public function create()
     {
-        return new SQLize( $this->table, $this->commands, $this->columns );
+        return ( new SQLize( [] ) )->toSQL();
     }
 
+    /**
+     * Defines the incremental columns in the blueprint
+     *
+     * @param $column
+     * @return string
+     */
     public function increments( $column )
     {
-
+        return $this->unsignedInteger( $column , true );
     }
 
-    public function unique( $column)
+    /**
+     * Defines the unique columns on the blueprint
+     *
+     * @param $columns
+     * @param null $name
+     * @param null $algorithm
+     * @return string
+     */
+    public function unique( $columns, $name = null, $algorithm = null )
     {
-
+        return $this->indexCommand( 'unique', $columns, $name, $algorithm );
     }
 
-    public function primary( $column )
+    /**
+     * Creates a primary key for a column on the blueprint
+     *
+     * @param string|array $columns
+     * @param null $name
+     * @param null $algorithm
+     * @return string
+     */
+    public function primary( $columns, $name = null, $algorithm = null )
     {
-
+        return $this->indexCommand( 'primary', $columns, $name, $algorithm );
     }
 
-
+    /**
+     * Defines a Char column on the blueprint
+     *
+     * @param $column
+     * @param null $length
+     * @return string
+     */
     public function char( $column, $length = null )
     {
+        $length = $length ?: $this->defaultStringLength;
 
+        return $this->addColumn( "char", $column, compact( 'length' ) );
     }
 
+    /**
+     * Defines a string column on the blueprint
+     *
+     * @param $column
+     * @param null $length
+     * @return string
+     */
     public function string( $column, $length = null )
     {
+        $length = $length ?: $this->defaultStringLength;
 
+        return $this->addColumn( "string", $column, compact( 'length' ) );
     }
 
-    public function text( $column ){
-
-    }
-
-    public function integer( $column, $autoIncrements = false, $unsigned = false )
+    /**
+     * Defines a text column on the blueprint
+     *
+     * @param string $column
+     * @return string
+     */
+    public function text( $column )
     {
-
+        return $this->addColumn( 'text', $column );
     }
 
-    public function unsignedInteger( $column, $autoIncrements = false, $unsigned = false )
+    /**
+     * Defines an integer column on the blueprint
+     *
+     * @param string $column
+     * @param bool $autoIncrement
+     * @param bool $unsigned
+     * @return string
+     */
+    public function integer( $column, $autoIncrement = false, $unsigned = false )
     {
-
+        return $this->addColumn( 'integer', $column, compact( 'autoIncrement', 'unsigned' ) );
     }
 
+    /**
+     * Defines an unsigned integer on the blueprint
+     *
+     * @param string $column
+     * @param bool $autoIncrement
+     * @param bool $unsigned
+     * @return string
+     */
+    public function unsignedInteger($column, $autoIncrement = false)
+    {
+        return $this->integer($column, $autoIncrement, true);
+    }
+
+    /**
+     * Defines a float column on the blueprint
+     *
+     * @param string $column
+     * @param int $total
+     * @param int $places
+     * @return string
+     */
     public function float( $column, $total = 8, $places = 2 )
     {
-
+        return $this->addColumn( 'float', $column, compact( 'total', 'places' ));
     }
 
+    /**
+     * Defines a double column on the blueprint
+     *
+     * @param $column
+     * @param null $total
+     * @param null $places
+     * @return string
+     */
     public function double( $column, $total = null, $places = null  )
     {
-
+        return $this->addColumn( 'double', $column, compact( 'total', 'places' ) );
     }
 
+    /**
+     * Defines a decimal column on the blueprint
+     *
+     * @param $column
+     * @param int $total
+     * @param int $places
+     * @return string
+     */
     public function decimal( $column, $total = 8, $places = 2 )
     {
-
+        return $this->addColumn( 'decimal', $column, compact( 'total', 'places' ) );
     }
 
+    /**
+     * Defines a boolean column on the blueprint
+     *
+     * @param string $column
+     * @return string
+     */
     public function boolean( $column )
     {
-
+        return $this->addColumn( 'boolean', $column);
     }
 
-    public function enum( $column )
+
+    /**
+     * Defines an enum column on the blueprint
+     *
+     * @param string $column
+     * @param array $allowed
+     * @return string
+     */
+    public function enum( $column, array $allowed )
     {
-
+        return $this->addColumn( 'enum', $column, compact( 'allowed' ) );
     }
 
-    public function dateTime( $column )
-    {
-
-    }
-
-    public function time( $column )
-    {
-
-    }
-
-    public function timestamp( $column )
-    {
-
-    }
-
+    /**
+     * Defines a date column on the blueprint
+     *
+     * @param string $column
+     * @return string
+     */
     public function date( $column )
     {
-
+        return $this->addColumn( 'date', $column );
     }
 
-    public function nullable( $column ){
-
-    }
-
-    public function addColumn()
+    /**
+     * Defines a datetime column on the blueprint
+     *
+     * @param string $column
+     * @param int $precision
+     * @return string
+     */
+    public function dateTime( $column, $precision = 0 )
     {
+        return $this->addColumn( 'dateTime', $column, compact( 'precision' ) );
+    }
 
+    /**
+     * Defines a time column on the blueprint
+     *
+     * @param $column
+     * @param int $precision
+     * @return string
+     */
+    public function time( $column, $precision = 0 )
+    {
+        return $this->addColumn( 'time', $column, compact( 'precision' ) );
+    }
+
+    /**
+     * Defines a timestamp column on the blueprint
+     *
+     * @param $column
+     * @param int $precision
+     * @return string
+     */
+    public function timestamp( $column, $precision = 0 )
+    {
+        return $this->addColumn( 'timestamp', $column, compact( 'precision' ) );
+    }
+
+    /**
+     * Adds a nullable config for the table
+     *
+     * @param string $columnDefinition
+     * @return string
+     */
+    public function nullable( $columnDefinition )
+    {
+        return $columnDefinition;
+    }
+
+    /**
+     * Add a new column to the blueprint
+     *
+     * @param $type
+     * @param $name
+     * @param array $parameters
+     * @return string|array
+     */
+    public function addColumn( $type, $name, $parameters = [] )
+    {
+        $this->columns[] = $column = (new SQLize( array_merge( compact( 'type', 'name' ), $parameters) ))->format();
+
+        return $column;
     }
 
     publiC function removeColumn()
     {
+        //Todo: hmm not sure how this one goes.
+    }
+
+    /**
+     * Add a new command to the Blueprint
+     *
+     * @param string $name
+     * @param array $parameters
+     * @return string
+     */
+    public function addCommand( $name, array $parameters = [] )
+    {
+        $this->commands[] = $command = $this->createCommand( $name, $parameters );
+
+        return $command;
+    }
+
+    /**
+     * Add a new index to the Blueprint
+     *
+     * @param string $type
+     * @param string|array $columns
+     * @param string $index
+     * @param string|null $algorithm
+     * @return string
+     */
+    public function indexCommand( $type, $columns, $index, $algorithm = null )
+    {
+
+        $columns = (array) $columns;
+
+        $index = $index ?: $this->createIndexName( $type, $columns );
+
+        return $this->addCommand(
+            $type, compact( 'index', 'columns', 'algorithm' )
+        );
 
     }
 
-    public function addCommand()
+    /**
+     * Create a unique index name
+     *
+     * @param $type
+     * @param $columns
+     * @return mixed
+     */
+    protected function createIndexName( $type, $columns )
     {
-        $this->commands = $commands = $this->createCommand();
+        $index = strtolower($this->table.'_'.implode('_', $columns).'_'.$type);
+
+        return str_replace(['-', '.'], '_', $index);
     }
 
     public function removeCommand()
     {
-
+        //Todo: same as with the other remove command
     }
 
-
-    public function createCommand()
+    /**
+     * @param $name
+     * @param array $parameters
+     * @return string
+     */
+    public function createCommand( $name, array $parameters = [] )
     {
-        return new SQLize();
+        return (new SQLize( array_merge( compact( 'name' ), $parameters ) ))->toSQL();
     }
 
     /**

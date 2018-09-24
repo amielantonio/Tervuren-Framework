@@ -3,10 +3,13 @@ namespace App\Controller;
 
 use App\Database\Database;
 
+//Testing main controller
+use App\Database\SQL\Blueprint;
+
 class MainController{
 
     /**
-     *
+     * Landing Page
      *
      * @return mixed
      * @throws \exception
@@ -14,7 +17,15 @@ class MainController{
     public function index(){
 
 
-        $testdata = (new Database)->install();
+        $testdata = (new Blueprint( 'demo', function( Blueprint $blueprint ){
+
+            $blueprint->integer( 'c_demo' );
+            $blueprint->string( 'c_string_demo', 10 );
+
+        }));
+
+        $testdata = $testdata->getColumns();
+
 
         return view( 'dashboard/dashboard', compact( 'testdata' ) );
 

@@ -2,34 +2,32 @@
 namespace App\Database;
 
 use Closure;
-use App\Database\Grammar\Blueprint;
+use App\Database\SQL\Blueprint;
 
 class Schema {
 
-
-    /**
-     * install all database migration instances
-     */
-    public function install(){
-
-
-
-    }
-
-
-    public static function create( $table, Closure $callback ){
+    public static function create( $table, Closure $callback )
+    {
 
         //Blueprint returns an SQL
         //Format SQL
         //Run SQL
 
-        echo "this should be the first";
-        $callback( $table );
+        $blueprint = new Blueprint( $table );
+
+//        $callback( $blueprint );
+
 
     }
 
 
-    public static function drop( $table ){
+    public static function drop( $table )
+    {
+
+    }
+
+    public function build()
+    {
 
     }
 
