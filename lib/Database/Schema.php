@@ -20,13 +20,17 @@ class Schema {
 
     }
 
-
     public static function drop( $table )
     {
 
     }
 
     public function build()
+    {
+
+    }
+
+    public function tap()
     {
 
     }

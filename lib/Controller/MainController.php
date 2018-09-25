@@ -19,12 +19,12 @@ class MainController{
 
         $testdata = (new Blueprint( 'demo', function( Blueprint $blueprint ){
 
-            $blueprint->integer( 'c_demo' );
+            $blueprint->integer( 'c_demo' )->unique();
             $blueprint->string( 'c_string_demo', 10 );
-
+            $blueprint->primary(['id', 'c_demo']);
         }));
 
-        $testdata = $testdata->getColumns();
+        $testdata = $testdata->getCommands();
 
 
         return view( 'dashboard/dashboard', compact( 'testdata' ) );

@@ -84,7 +84,7 @@ class Blueprint
      * @param $columns
      * @param null $name
      * @param null $algorithm
-     * @return string
+     * @return array
      */
     public function unique( $columns, $name = null, $algorithm = null )
     {
@@ -97,7 +97,7 @@ class Blueprint
      * @param string|array $columns
      * @param null $name
      * @param null $algorithm
-     * @return string
+     * @return array
      */
     public function primary( $columns, $name = null, $algorithm = null )
     {
@@ -161,7 +161,6 @@ class Blueprint
      *
      * @param string $column
      * @param bool $autoIncrement
-     * @param bool $unsigned
      * @return string
      */
     public function unsignedInteger($column, $autoIncrement = false)
@@ -315,7 +314,7 @@ class Blueprint
      *
      * @param string $name
      * @param array $parameters
-     * @return string
+     * @return array
      */
     public function addCommand( $name, array $parameters = [] )
     {
@@ -331,7 +330,7 @@ class Blueprint
      * @param string|array $columns
      * @param string $index
      * @param string|null $algorithm
-     * @return string
+     * @return array
      */
     public function indexCommand( $type, $columns, $index, $algorithm = null )
     {
@@ -368,11 +367,11 @@ class Blueprint
     /**
      * @param $name
      * @param array $parameters
-     * @return string
+     * @return array
      */
     public function createCommand( $name, array $parameters = [] )
     {
-        return (new SQLize( array_merge( compact( 'name' ), $parameters ) ))->toSQL();
+        return (new SQLize( array_merge( compact( 'name' ), $parameters) ))->format();
     }
 
     /**
