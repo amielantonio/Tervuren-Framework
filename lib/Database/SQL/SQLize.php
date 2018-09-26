@@ -26,11 +26,13 @@ class SQLize{
 
     }
 
-    public function format(){
+    public function format()
+    {
         return $this->attributes;
     }
 
-    public function createSQL(){
+    public function createSQL()
+    {
 
     }
 

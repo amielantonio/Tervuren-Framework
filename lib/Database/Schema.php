@@ -4,6 +4,12 @@ namespace App\Database;
 use Closure;
 use App\Database\SQL\Blueprint;
 
+/**
+ *
+ *
+ * Class Schema
+ * @package App\Database
+ */
 class Schema {
 
     public static function create( $table, Closure $callback )
@@ -20,7 +26,7 @@ class Schema {
 
     }
 
-    public static function drop( $table )
+    public static function droptable( $table )
     {
 
     }

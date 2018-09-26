@@ -60,6 +60,14 @@ class Blueprint
     }
 
     /**
+     *
+     */
+    public function creating()
+    {
+        //Todo: check if the table has a create command
+    }
+
+    /**
      * Execute the blueprint for the database
      */
     public function create()

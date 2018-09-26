@@ -11,7 +11,11 @@ namespace App\Database\Builder;
  */
 abstract class DataWrapper{
 
-
+    /**
+     * The table that is being specified
+     *
+     * @var
+     */
     protected $table;
 
     protected $primary_key;
@@ -20,40 +24,57 @@ abstract class DataWrapper{
 
     protected $where;
 
+    protected $connection;
 
-    public function get(){
-
-    }
-
-    public function select(){
+    public function __construct()
+    {
 
     }
 
-    public function getAll(){
+
+    public function get()
+    {
 
     }
 
-    public function first(){
+    public function select()
+    {
 
     }
 
-    public function last(){
+    public function getAll()
+    {
 
     }
 
-    public function save(){
+    public function first()
+    {
 
     }
 
-    public function insertOrReplace(){
+    public function last()
+    {
 
     }
 
-    public function delete(){
+    public function save()
+    {
 
     }
 
-    public function update(){
+    public function insertOrReplace()
+    {
+
+    }
+
+    public function delete(
+
+    ){
+
+    }
+
+    public function update()
+    {
 
     }
 

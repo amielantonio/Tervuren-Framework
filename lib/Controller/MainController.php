@@ -3,10 +3,7 @@ namespace App\Controller;
 
 use App\Database\Database;
 
-//Testing main controller
-use App\Database\SQL\Blueprint;
-
-class MainController{
+class MainController {
 
     /**
      * Landing Page
@@ -14,20 +11,10 @@ class MainController{
      * @return mixed
      * @throws \exception
      */
-    public function index(){
+    public function index()
+    {
 
-
-        $testdata = (new Blueprint( 'demo', function( Blueprint $blueprint ){
-
-            $blueprint->integer( 'c_demo' )->unique();
-            $blueprint->string( 'c_string_demo', 10 );
-            $blueprint->primary(['id', 'c_demo']);
-        }));
-
-        $testdata = $testdata->getCommands();
-
-
-        return view( 'dashboard/dashboard', compact( 'testdata' ) );
+        return view( 'dashboard/dashboard', compact( '' ) );
 
     }
 
@@ -37,7 +24,8 @@ class MainController{
      * @return mixed
      * @throws \exception
      */
-    public function access_form(){
+    public function access_form()
+    {
 
         return view( 'access_device_form/access_device' );
 
@@ -49,7 +37,8 @@ class MainController{
      * @return mixed
      * @throws \exception
      */
-    public function move_form(){
+    public function move_form()
+    {
 
         return view( 'move_in_out_form/move_form' );
 
