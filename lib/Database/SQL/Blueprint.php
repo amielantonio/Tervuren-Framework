@@ -43,7 +43,6 @@ class Blueprint
      */
     protected $defaultStringLength = 255;
 
-
     /**
      * Blueprint constructor.
      * @param $table
@@ -56,13 +55,12 @@ class Blueprint
         if (! is_null($callback)) {
             $callback($this);
         }
-
     }
 
     /**
      *
      */
-    public function creating()
+    public function hasCreate()
     {
         //Todo: check if the table has a create command
     }
@@ -72,7 +70,17 @@ class Blueprint
      */
     public function create()
     {
-        return ( new SQLize( [] ) )->toSQL();
+        return $this->addCommand( 'create' );
+    }
+
+    /**
+     * Returns the SQL format of the blueprint
+     *
+     * @return string
+     */
+    public function build()
+    {
+        return (new SQLize( [] ))->toSQL();
     }
 
     /**

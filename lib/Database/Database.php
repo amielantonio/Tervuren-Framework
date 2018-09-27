@@ -16,9 +16,9 @@ class Database extends DataWrapper {
     /**
      * List of all tables
      *
-     * @var string
+     * @var array
      */
-    public $tables;
+    public $tables = [];
 
     /**
      * The database Folder
@@ -28,21 +28,51 @@ class Database extends DataWrapper {
     protected $database_folder;
 
 
+    /**
+     * Creating a wpdb instance;
+     *
+     * @var \wpdb
+     */
+    protected $query;
+
+
+    /**
+     * Database constructor.
+     */
     public function __construct()
     {
+        global $wpdb;
+
+        $this->query = $wpdb;
+
         $this->database_folder = s_db_path."/tables";
+
     }
 
+    /**
+     * Run Database installation
+     */
     public function install()
     {
-
+        $this->iterator( 'up' );
     }
 
-    public function uninstall()
+    /**
+     * Responsible for running the sql
+     *
+     * @param string;
+     * @return string | boolean;
+     */
+    public function run( $sql )
     {
-
+        return $this->query->query( $sql );
     }
 
+    /**
+     * Call all the tables classes to start installing the database
+     *
+     * @param $method
+     */
     protected function iterator( $method )
     {
         foreach( glob( $this->database_folder."/*.php") as $file ){
@@ -51,7 +81,7 @@ class Database extends DataWrapper {
 
             $class = basename( $file, '.php' );
 
-            if( class_exists( $class))
+            if( class_exists( $class) )
             {
                 $obj = new $class;
 
@@ -63,15 +93,24 @@ class Database extends DataWrapper {
         }
     }
 
-    protected function saveMigrations( $table, $method )
-    {
 
+    /**
+     * @param string|array $tables
+     * @param $method
+     *
+     * @return string|array
+     */
+    protected function saveMigrations( $tables, $method )
+    {
+        $this->tables[] = $table = $tables;
+
+        return $table;
     }
 
     /**
      * Get the tables of the current migration
      *
-     * @return string
+     * @return array
      */
     public function getTables()
     {

@@ -9,7 +9,8 @@ if( ! function_exists( 'view' )){
      * @return mixed
      * @throws exception
      */
-    function view( $view, $data = [] ){
+    function view( $view, $data = [] )
+    {
 
         if( !file_exists( s_temp_path."/{$view}.view.php" )){
             throw new exception( 'No View' );
@@ -23,13 +24,30 @@ if( ! function_exists( 'view' )){
 
 }
 
-
 if( ! function_exists( 'route' ) ){
 
-    function route(){
+    function route()
+    {
 
 
+    }
 
+}
+
+if( ! function_exists( 'call' )){
+
+    /**
+     * Call the given closure with the given value, then return the value
+     *
+     * @param $value
+     * @param $callback
+     * @return mixed
+     */
+    function call( $value, $callback )
+    {
+        $callback( $value );
+
+        return $value;
     }
 
 }

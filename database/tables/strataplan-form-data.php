@@ -11,7 +11,6 @@ class StrataplanFormData
      */
     public function up()
     {
-
         Schema::create( 'strataplan-form-data', function( Blueprint $table ){
 
             $table->increments( 'id' );
@@ -20,7 +19,6 @@ class StrataplanFormData
             $table->primary('id');
 
         });
-
     }
 
     /**

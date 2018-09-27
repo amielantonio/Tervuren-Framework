@@ -13,8 +13,9 @@
 
 if( ! defined( 'WPINC' ) ) die;
 
-/**
- * Constants
+/***********************************
+ * Constants                       *
+ ***********************************
  */
 define( 's_base_path', dirname( __FILE__ ) );
 define( 's_assets_path', dirname(__FILE__) . "/assets" );
@@ -22,9 +23,9 @@ define( 's_lib_path', dirname( __FILE__)."/lib" );
 define( 's_temp_path', dirname( __FILE__)."/templates" );
 define( 's_db_path', dirname( __FILE__)."/database" );
 
-/*******************
- * Vendor Autoload *
- *******************
+/***********************************
+ * Vendor Autoload                 *
+ ***********************************
  *
  * Require Composer autoload file.
  */
@@ -39,10 +40,6 @@ require "lib/Helpers/helpers.php";
 function strata_activation() {
 
     (new Database)->install();
-//    (new Seeds)->migrate();
-
-
-
 
 }
 

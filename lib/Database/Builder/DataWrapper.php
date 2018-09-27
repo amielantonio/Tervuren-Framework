@@ -31,7 +31,6 @@ abstract class DataWrapper{
 
     }
 
-
     public function get()
     {
 
@@ -67,9 +66,8 @@ abstract class DataWrapper{
 
     }
 
-    public function delete(
-
-    ){
+    public function delete()
+    {
 
     }
 
@@ -77,12 +75,4 @@ abstract class DataWrapper{
     {
 
     }
-
-
-
-
-
-
-
-
 }

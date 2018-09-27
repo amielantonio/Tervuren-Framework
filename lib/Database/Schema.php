@@ -2,6 +2,7 @@
 namespace App\Database;
 
 use Closure;
+use App\Database\Database;
 use App\Database\SQL\Blueprint;
 
 /**
@@ -12,33 +13,55 @@ use App\Database\SQL\Blueprint;
  */
 class Schema {
 
+    protected $database;
+
+    public function __construct()
+    {
+        $this->database = new Database();
+    }
+
     public static function create( $table, Closure $callback )
     {
+        $self = new Schema();
 
-        //Blueprint returns an SQL
-        //Format SQL
-        //Run SQL
+        $self->build( call( $self->createBlueprint( $table ), function( $blueprint ) use( $callback ){
+            $blueprint->create();
 
-        $blueprint = new Blueprint( $table );
-
-//        $callback( $blueprint );
-
-
+            $callback($blueprint);
+        }));
     }
 
-    public static function droptable( $table )
+    /**
+     * Runs the building process against the SQL database
+     *
+     * @param Blueprint $blueprint
+     */
+    protected function build( Blueprint $blueprint )
+    {
+        $this->database->run( $blueprint->build() );
+    }
+
+    public function dropTable()
     {
 
     }
 
-    public function build()
+    public function dropIfExists()
     {
 
     }
 
-    public function tap()
+    /**
+     * Create a new Blueprint
+     *
+     * @param $table
+     * @param Closure|null $callback
+     * @return Blueprint
+     */
+    protected function createBlueprint( $table, Closure $callback = null )
     {
-
+        return new Blueprint( $table, $callback );
     }
+
 
 }

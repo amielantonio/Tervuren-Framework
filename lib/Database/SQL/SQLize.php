@@ -10,9 +10,18 @@ namespace App\Database\SQL;
  */
 class SQLize{
 
-
+    /**
+     * Defines the current SQL
+     *
+     * @var string
+     */
     protected $sql = "";
 
+    /**
+     * Defines the current attributes to be formatted
+     *
+     * @var array
+     */
     protected $attributes = [];
 
 
@@ -34,6 +43,11 @@ class SQLize{
     public function createSQL()
     {
 
+    }
+
+    public function toSQL()
+    {
+        return $this->sql;
     }
 
 
