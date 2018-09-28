@@ -17,12 +17,28 @@ class PostType
 
     protected $labels;
 
-    public function __construct()
+    public function __construct( $name, array $args, array $labels)
+    {
+        $this->name = $name;
+        $this->args = $args;
+        $this->labels = $labels;
+    }
+
+    public function register()
+    {
+
+    }
+
+    public function addTaxonomy(){
+
+    }
+
+    public function save()
     {
 
     }
 
 
-    
+
 
 }

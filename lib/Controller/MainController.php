@@ -15,15 +15,38 @@ class MainController {
      */
     public function index()
     {
-//        $testdata = (new Blueprint( 'demo', function( Blueprint $blueprint ){
-//            $blueprint->integer( 'c_demo' );
-//            $blueprint->string( 'c_string_demo', 10 );
-//            $blueprint->primary(['id', 'c_demo']);
-//        }));
-//
-//        $testdata = $testdata->getCommands();
+        $testdata = (new Blueprint( 'demo', function( Blueprint $blueprint ){
+            $blueprint->create();
 
-        return view( 'dashboard/dashboard' );
+            $blueprint->integer( 'c_demo' );
+            $blueprint->string( 'c_string_demo', 10 );
+            $blueprint->primary(['id', 'c_demo']);
+        }));
+
+//
+//        foreach( $testdata->getColumns() as $key => $value ){
+//            foreach($value as $db_key => $db_value){
+//
+//                echo 'key: '.$db_key. '| value:' . '\''.$db_value.'\'' .  '<br />';
+//
+//            }
+//        }
+//
+//        foreach( $testdata->getColumns() as $key => $value ){
+//            echo implode(", ",$value);
+//        }
+
+
+
+
+//        $testdata = array_merge( $testdata->getColumns() );
+
+
+
+//        print_r( array_shift($testdata) );
+
+
+        return view( 'dashboard/dashboard', compact( 'testdata' ) );
     }
 
     /**

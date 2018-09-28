@@ -3,6 +3,7 @@ namespace  App\Database\SQL;
 
 use Closure;
 use App\Database\SQL\SQLize;
+use App\Database\SQL\Fluent;
 
 class Blueprint
 {
@@ -50,7 +51,10 @@ class Blueprint
      */
     public function __construct( $table, Closure $callback = null )
     {
-        $this->table = $table;
+        global $wpdb;
+        $this->table = $wpdb->prefix . $table;
+
+        $this->collation = $wpdb->get_charset_collate();
 
         if (! is_null($callback)) {
             $callback($this);
@@ -58,12 +62,20 @@ class Blueprint
     }
 
     /**
+     * Check if the commands has a create command
      *
+     * @return bool
      */
     public function hasCreate()
     {
-        //Todo: check if the table has a create command
+        return $this->commands[0]['name'] == 'create';
     }
+
+    public function hasDrop()
+    {
+        return $this->commands[0]['name'] == 'drop';
+    }
+
 
     /**
      * Execute the blueprint for the database
@@ -80,7 +92,7 @@ class Blueprint
      */
     public function build()
     {
-        return (new SQLize( [] ))->toSQL();
+
     }
 
     /**
@@ -315,7 +327,9 @@ class Blueprint
      */
     public function addColumn( $type, $name, $parameters = [] )
     {
-        $this->columns[] = $column = (new SQLize( array_merge( compact( 'type', 'name' ), $parameters) ))->format();
+        $this->columns[] = $column = new Fluent(
+            array_merge(compact('type', 'name'), $parameters)
+        );
 
         return $column;
     }
@@ -381,13 +395,15 @@ class Blueprint
     }
 
     /**
+     * create a new Fluent Command.
+     *
      * @param $name
      * @param array $parameters
-     * @return array
+     * @return \App\Database\SQL\Fluent
      */
     public function createCommand( $name, array $parameters = [] )
     {
-        return (new SQLize( array_merge( compact( 'name' ), $parameters) ))->format();
+        return new Fluent(array_merge(compact('name'), $parameters));
     }
 
     /**

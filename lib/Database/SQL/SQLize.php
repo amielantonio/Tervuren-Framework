@@ -2,6 +2,9 @@
 
 namespace App\Database\SQL;
 
+use App\Database\SQL\Blueprint;
+
+
 /**
  * Used to format the blueprints sql
  *
@@ -24,14 +27,49 @@ class SQLize{
      */
     protected $attributes = [];
 
+    /**
+     * Blueprint::class instance
+     *
+     * @var \App\Database\SQL\Blueprint;
+     */
+    protected $blueprint;
 
-    public function __construct( $attributes = [] )
+
+    /**
+     * $WPDB instance
+     *
+     * @var \wpdb
+     */
+    protected $wpdb;
+
+    /**
+     * Database Collation
+     *
+     * @var string;
+     */
+    protected $collation;
+
+
+    /**
+     * SQLized columns
+     *
+     * @var array
+     */
+    protected $columns = [];
+
+    /**
+     * SQLize constructor.
+     * @param \App\Database\SQL\Blueprint $blueprint
+     * @param $collation
+     */
+    public function __construct( Blueprint $blueprint, $collation )
     {
 
-        //Build SQL here
-        //$this->sql = $this->buildSQL( $attributes );
+        global $wpdb;
 
-        $this->attributes = $attributes;
+        $this->wpdb = $wpdb;
+        $this->blueprint = $blueprint;
+        $this->collation = $collation;
 
     }
 
@@ -40,16 +78,40 @@ class SQLize{
         return $this->attributes;
     }
 
-    public function createSQL()
+    public function sqlPrefix()
     {
+        $starter = strtoupper( $this->extractMainCommand()['name'] );
 
+        $this->attributes[] = $starter. " TABLE IF NOT EXISTS" . $this->blueprint->getTable();
     }
 
+    /**
+     * Formats the given array into an SQL
+     *
+     * @return string
+     */
     public function toSQL()
     {
         return $this->sql;
     }
 
+    public function extractCommand( $name )
+    {
 
+    }
+
+    public function extractColumns()
+    {
+        foreach( $this->blueprint->getColumns() as $key => $fields ){
+            $this->columns[] = $fields[ 'name' ] . $fields[ '' ] . "";
+        }
+    }
+
+
+
+    public function extractMainCommand()
+    {
+        return array_shift( $this->blueprint->getCommands() );
+    }
 
 }
