@@ -92,7 +92,7 @@ class Blueprint
      */
     public function build()
     {
-
+        return ( new SQLize( $this ) )->toSQL();
     }
 
     /**

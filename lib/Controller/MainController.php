@@ -4,6 +4,8 @@ namespace App\Controller;
 use App\Database\Database;
 use App\Database\Schema;
 use App\Database\SQL\Blueprint;
+use App\Database\SQL\SQLize;
+use App\Database\SQL\Helpers\Column;
 
 class MainController {
 
@@ -23,28 +25,9 @@ class MainController {
             $blueprint->primary(['id', 'c_demo']);
         }));
 
-//
-//        foreach( $testdata->getColumns() as $key => $value ){
-//            foreach($value as $db_key => $db_value){
-//
-//                echo 'key: '.$db_key. '| value:' . '\''.$db_value.'\'' .  '<br />';
-//
-//            }
-//        }
-//
-//        foreach( $testdata->getColumns() as $key => $value ){
-//            echo implode(", ",$value);
-//        }
+        $sql = new SQLize( $testdata );
 
-
-
-
-//        $testdata = array_merge( $testdata->getColumns() );
-
-
-
-//        print_r( array_shift($testdata) );
-
+        $testdata = $sql->toSQL();
 
         return view( 'dashboard/dashboard', compact( 'testdata' ) );
     }
