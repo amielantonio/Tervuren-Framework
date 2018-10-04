@@ -132,6 +132,11 @@ class Blueprint
         return $this->indexCommand( 'primary', $columns, $name, $algorithm );
     }
 
+    public function nullable( $columns, $name = null, $algorithm = null )
+    {
+        return $this->indexCommand( 'nullable', $columns, $name, $algorithm );
+    }
+
     /**
      * Defines a Char column on the blueprint
      *
@@ -304,17 +309,6 @@ class Blueprint
     public function timestamp( $column, $precision = 0 )
     {
         return $this->addColumn( 'timestamp', $column, compact( 'precision' ) );
-    }
-
-    /**
-     * Adds a nullable config for the table
-     *
-     * @param string $columnDefinition
-     * @return string
-     */
-    public function nullable( $columnDefinition )
-    {
-        return $columnDefinition;
     }
 
     /**

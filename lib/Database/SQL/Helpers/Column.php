@@ -4,80 +4,48 @@ namespace App\Database\SQL\Helpers;
 class Column
 {
     /**
-     * Name of the Column
-     *
-     * @var string
-     */
-    protected $name;
-
-    /**
-     * type of the Column
-     *
-     * @var string
-     */
-    protected $type;
-
-    /**
-     * Length of the specified type
-     *
-     * @var string
-     */
-    protected $length;
-
-    /**
-     * Define column as unsigned
-     *
-     * @var string
-     */
-    protected $unsigned;
-
-    /**
-     * Define column as nullable
-     *
-     * @var string
-     */
-    protected $nullable;
-
-    /**
-     * Define column as auto increment
-     *
-     * @var string
-     */
-    protected $autoIncrement;
-
-    /**
-     * Define column constraints
-     *
-     * @var string
-     */
-    protected $constraints;
-
-
-    /**
      * Defines the current SQL for the column
      *
      * @var string
      */
     protected $sql;
 
-
     /**
-     * Store attributes
+     * base column definition
      *
      * @var array
      */
-    protected $attributes = [];
+    protected $column = [];
 
+
+    /**
+     * Column Name
+     *
+     * @var string
+     */
+    protected $name;
+
+
+    /**
+     * Column Type
+     *
+     * @var string
+     */
+    protected $type;
+
+    /**
+     * Column Length
+     *
+     * @var
+     */
+    protected $length;
 
 
     public function __construct( $column )
     {
-        $this->attributes[ 'name' ] = $this->name = $this->extract( $column['name'] );
-        $this->attributes[ 'type' ] = $this->type = $this->extract( $column['type'] );
-        $this->attributes[ 'length' ] = $this->length = $this->extract( $column['length'] );
-        $this->attributes[ 'unsigned' ] = $this->unsigned = $this->extract( $column['unsigned'] );
-        $this->attributes[ 'autoIncrement' ] = $this->autoIncrement = $this->extract( $column[ 'autoIncrement' ] );
+        $this->column = $column;
 
+        //Build the SQL on instantiation
         $this->build();
     }
 
@@ -89,64 +57,57 @@ class Column
      */
     public function extract( $column_name )
     {
-        return isset($column_name) ? $column_name : "" ;
+        if( isset( $this->column[ $column_name ] ) ){
+
+            $method = 'get' . ucfirst( $column_name );
+
+            return $this->$method();
+
+        }
+
+        return "";
+
     }
 
 
     public function getName()
     {
-        return $this->name;
+
+        return $this->name = $this->column['name'];
+
     }
 
-    /**
-     * @return mixed
-     */
     public function getType()
     {
-        return $this->type;
+        return $this->type = $this->column[ 'type'  ];
     }
 
-    /**
-     * @return mixed
-     */
     public function getLength()
     {
-        return $this->length;
+        return $this->length = $this->column[ 'length' ];
     }
 
-    /**
-     * @return mixed
-     */
-    public function getUnsigned()
+
+    protected function compiledType()
     {
-        return ($this->unsigned) ? "UNSIGNED" : "";
-    }
+        if( $this->length <> "" ){
 
-    public function getNullable()
-    {
-        return ($this->nullable) ? "NOT NULL" : "NULL";
-    }
+            return "{$this->type}({$this->length})";
 
-    public function getAutoIncrement()
-    {
-        return ($this->autoIncrement) ? "AUTO_INCREMENT" : "";
-    }
+        }
 
+        return $this->type;
+
+    }
 
 
     protected function build()
     {
-        $length = ( $this->length <> "" ) ? "({$this->length})" : "";
 
-        $this->sql = "{$this->name} {$this->type}{$length} {$this->nullable} {$this->autoIncrement} {$this->unsigned}";
 
     }
 
 
-    protected function modify( $column, $modifier )
-    {
-
-    }
 
     /**
      * Return sql
