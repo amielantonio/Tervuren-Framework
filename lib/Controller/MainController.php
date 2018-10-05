@@ -17,17 +17,10 @@ class MainController {
      */
     public function index()
     {
-        $testdata = (new Blueprint( 'demo', function( Blueprint $blueprint ){
-            $blueprint->create();
 
-            $blueprint->integer( 'c_demo' )->nullable();
-            $blueprint->string( 'c_string_demo', 10 );
-            $blueprint->primary(['id', 'c_demo']);
-        }));
+        (new Database)->install();
 
-        $sql = (new SQLize( $testdata ))->toSQL();
-
-        return view( 'dashboard/dashboard', compact( 'testdata', 'sql' ) );
+        return view( 'dashboard/dashboard' );
     }
 
     /**

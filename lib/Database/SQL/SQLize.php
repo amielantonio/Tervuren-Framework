@@ -59,6 +59,15 @@ class SQLize{
      */
     protected $columns = [];
 
+
+    /**
+     * SQLized Commands
+     *
+     * @var array
+     */
+    protected $commands = [];
+
+
     /**
      * SQLize constructor.
      *
@@ -78,6 +87,11 @@ class SQLize{
     public function getColumns()
     {
         return $this->columns;
+    }
+
+    public function getCommands()
+    {
+        return $this->commands;
     }
 
     public function format()
@@ -129,6 +143,15 @@ class SQLize{
 
     }
 
+    protected function createCommands()
+    {
+        foreach( $this->blueprint->getCommands() as $key => $fields ){
+            $this->columns[]  =  ( new Column( $fields ) )->toSQL();
+        }
+
+        $this->addAttribute( 'tables', $this->columns );
+    }
+
     /**
      * Add the suffix in the attributes
      */
@@ -155,6 +178,7 @@ class SQLize{
     {
         $this->createSQLPrefix();
         $this->createColumns();
+//        $this->createCommands();
         $this->createSQLSuffix();
 
         return $this->sql = $this->attributes['prefix'] . " ( " . implode( ", ", $this->attributes[ 'tables' ] ) . " ) " . $this->attributes[ 'suffix' ];
