@@ -17,9 +17,6 @@ class MainController {
      */
     public function index()
     {
-
-        (new Database)->install();
-
         return view( 'dashboard/dashboard' );
     }
 

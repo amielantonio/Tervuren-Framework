@@ -13,63 +13,145 @@
 
 if( ! defined( 'WPINC' ) ) die;
 
-/***********************************
- * Constants                       *
- ***********************************
+
+final class StrataplanFormManager {
+
+    /**
+     * Current's Plugin Version
+     *
+     * @var string
+     */
+    protected $version = "1.0.0";
+
+    /**
+     * Minimum required PHP version
+     *
+     * @var string
+     */
+    protected $php_version = '5.6';
+
+
+    /**
+     * Contains various class dependencies
+     *
+     * @var array
+     */
+    protected $container = [];
+
+    /**
+     * Singleton instance for the plugin
+     *
+     * @var StrataplanFormManager
+     */
+    private static $instance;
+
+    /**
+     * Creates a single instance of the plugin
+     *
+     * @since 1.0.0
+     * @return StrataplanFormManager
+     */
+    public static function init()
+    {
+        if( ! isset( self::$instance ) && !( self::$instance instanceof StrataplanFormManager) ){
+            self::$instance = new StrataplanFormManager();
+            self::$instance->start();
+        }
+
+        return self::$instance;
+    }
+
+
+    /**
+     * Run Plugin Setup
+     */
+    private function start()
+    {
+
+        //Check if the current PHP version
+        register_activation_hook( __FILE__, array( $this, 'auto_deactivate') );
+
+        $this->define_constants();
+
+        $this->load_helpers();
+
+        $this->load_dependencies();
+
+        // Once all dependencies and services has been loaded, install database
+        // and boot up the entire plugin
+
+        register_activation_hook( __FILE__, array( $this, 'activate') );
+        register_deactivation_hook( __FILE__, array( $this, 'deactivate' ) );
+
+        $this->boot();
+
+    }
+
+    /**
+     * Define Class constants
+     */
+    private function define_constants()
+    {
+        //Libraries
+        define( 'S_BASEPATH'    , dirname( __FILE__ ) );
+        define( 'S_LIBPATH'     , dirname( __FILE__) . "/lib" );
+        define( 'S_ASSETSPATH'  , dirname(__FILE__ ) . "/assets" );
+        define( 'S_DBPATH'      , dirname( __FILE__) . "/database" );
+        define( 'S_INCPATH'     , dirname( __FILE__) . "/includes" );
+        define( 'S_VIEWPATH'    , dirname( __FILE__) . "/templates" );
+
+
+        //Misc
+        define( 'S_VERSION', $this->version );
+        define( 'S_PHP_VERSION', $this->php_version );
+    }
+
+    /**
+     * Auto Deactivates the plugin when the PHP Version is lower than required
+     */
+    private function auto_deactivate()
+    {
+        if( version_compare( PHP_VERSION, $this->php_version, '<=') ) {
+            return;
+        }
+
+        deactivate_plugins( basename(__FILE__) );
+
+        $error = "<h1>Plugin Activation Error</h1>";
+        $error .= "<p>Required PHP Version: {$this->version}</p>";
+
+        wp_die( $error, "Plugin Activation Error", array( 'response' => 200, 'back_link' => true ));
+    }
+
+
+    /**
+     * Load all helper functions
+     */
+    private function load_helpers()
+    {
+        //Require Vendor Autoload
+        require_once 'vendor/autoload.php';
+
+        require_once S_INCPATH . '/helpers.php';
+        require_once S_INCPATH . '/functions.php';
+    }
+
+    /**
+     * Loads all dependencies
+     */
+    private function load_dependencies()
+    {
+
+    }
+
+    private function boot()
+    {
+
+    }
+
+}
+
+/**
+ * Start the App
  */
-define( 's_base_path', dirname( __FILE__ ) );
-define( 's_assets_path', dirname(__FILE__) . "/assets" );
-define( 's_lib_path', dirname( __FILE__)."/lib" );
-define( 's_temp_path', dirname( __FILE__)."/templates" );
-define( 's_db_path', dirname( __FILE__)."/database" );
-
-/***********************************
- * Vendor Autoload                 *
- ***********************************
- *
- * Require Composer autoload file.
- */
-require_once 'vendor/autoload.php';
-
-use App\Main\Main;
-use App\Database\Database;
-use App\Database\Seeds;
-
-require "lib/Helpers/helpers.php";
-
-function strata_activation() {
-
-    (new Database)->install();
-
-}
-
-function strata_deactivation() {
-
-//    $settings = false;
-//
-//    (new Database)->uninstall( $settings );
-
-}
-
-register_activation_hook( __FILE__, 'strata_activation');
-register_deactivation_hook( __FILE__, 'strata_deactivation');
-
-add_action( 'init', 'strata_init' );
-function strata_init() {
-
-    do_action( 'strata_init' );
-
-    $app = Main::getInstance();
-
-    //Start the Plugin
-    $app->start();
-}
-
-
-function strata_role(){
-
-}
-
-function strata_capability(){
-
-}
+StrataplanFormManager::init();

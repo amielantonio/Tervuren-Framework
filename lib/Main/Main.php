@@ -4,26 +4,12 @@ namespace App\Main;
 use App\Controller\MainController;
 class Main{
 
-    private static $instance;
-
     public function __construct(){
 
         add_action( 'admin_menu', array($this, 'create_pages') );
 
     }
 
-    /**
-     *
-     *
-     * @return Main
-     */
-    public static function getInstance(){
-        if ( ! isset( self::$instance ) ) {
-            self::$instance = new self;
-        }
-
-        return self::$instance;
-    }
 
     /**
      * Create pages that are under the admin sidebar
@@ -94,7 +80,5 @@ class Main{
         }
     }
 
-    public function start(){
 
-    }
 }

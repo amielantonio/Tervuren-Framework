@@ -18,7 +18,7 @@ if( ! function_exists( 'view' )){
 
         extract( $data );
 
-        return require s_temp_path."/{$view}.view.php";
+        return require s_temp_path . "/helpers.php";
 
     }
 
