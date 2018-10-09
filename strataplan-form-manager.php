@@ -132,8 +132,8 @@ final class StrataplanFormManager {
         //Require Vendor Autoload
         require_once 'vendor/autoload.php';
 
-        require_once S_INCPATH . '/helpers.php';
-        require_once S_INCPATH . '/functions.php';
+        require_once S_INCPATH . '/functions/helpers.php';
+        require_once S_INCPATH . '/functions/functions.php';
     }
 
     /**
@@ -141,7 +141,13 @@ final class StrataplanFormManager {
      */
     private function load_dependencies()
     {
+        $dependencies = require_once S_INCPATH . "/dependency.php";
 
+        foreach( $dependencies[ 'dependency' ] as $dependency){
+
+            tick( $dependency );
+
+        }
     }
 
     private function boot()
