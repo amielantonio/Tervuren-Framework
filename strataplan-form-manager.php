@@ -30,14 +30,6 @@ final class StrataplanFormManager {
      */
     protected $php_version = '5.6';
 
-
-    /**
-     * Contains various class dependencies
-     *
-     * @var array
-     */
-    protected $container = [];
-
     /**
      * Singleton instance for the plugin
      *
@@ -72,16 +64,13 @@ final class StrataplanFormManager {
         register_activation_hook( __FILE__, array( $this, 'auto_deactivate') );
 
         $this->define_constants();
-
-        $this->load_helpers();
-
+        $this->registerAutoload();
         $this->load_dependencies();
-
         // Once all dependencies and services has been loaded, install database
         // and boot up the entire plugin
-
-        register_activation_hook( __FILE__, array( $this, 'activate') );
-        register_deactivation_hook( __FILE__, array( $this, 'deactivate' ) );
+//
+//        register_activation_hook( __FILE__, array( $this, 'activate') );
+//        register_deactivation_hook( __FILE__, array( $this, 'deactivate' ) );
 
         $this->boot();
 
@@ -96,6 +85,7 @@ final class StrataplanFormManager {
         define( 'S_BASEPATH'    , dirname( __FILE__ ) );
         define( 'S_LIBPATH'     , dirname( __FILE__) . "/lib" );
         define( 'S_ASSETSPATH'  , dirname(__FILE__ ) . "/assets" );
+        define( 'S_CONFIGPATH'  , dirname(__FILE__ ) . "/config" );
         define( 'S_DBPATH'      , dirname( __FILE__) . "/database" );
         define( 'S_INCPATH'     , dirname( __FILE__) . "/includes" );
         define( 'S_VIEWPATH'    , dirname( __FILE__) . "/templates" );
@@ -107,7 +97,8 @@ final class StrataplanFormManager {
     }
 
     /**
-     * Auto Deactivates the plugin when the PHP Version is lower than required
+     * Auto Deactivates the plugin when the PHP Version is lower than required,
+     * Then show the error on the front end
      */
     private function auto_deactivate()
     {
@@ -127,13 +118,10 @@ final class StrataplanFormManager {
     /**
      * Load all helper functions
      */
-    private function load_helpers()
+    private function registerAutoload()
     {
         //Require Vendor Autoload
         require_once 'vendor/autoload.php';
-
-        require_once S_INCPATH . '/functions/helpers.php';
-        require_once S_INCPATH . '/functions/functions.php';
     }
 
     /**
@@ -141,13 +129,14 @@ final class StrataplanFormManager {
      */
     private function load_dependencies()
     {
-        $dependencies = require_once S_INCPATH . "/dependency.php";
+        //Load dependency classes such as custom post types,
+        //roles, databases and other wordpress instantiation before adding
+        //it to any navigation.
 
-        foreach( $dependencies[ 'dependency' ] as $dependency){
 
-            tick( $dependency );
+        ( new \App\Helpers\Installer )->install();
+        ( new Database )->install();
 
-        }
     }
 
     private function boot()
@@ -161,3 +150,5 @@ final class StrataplanFormManager {
  * Start the App
  */
 StrataplanFormManager::init();
+( new \App\Helpers\Menu );
+( new \App\Helpers\Roles );

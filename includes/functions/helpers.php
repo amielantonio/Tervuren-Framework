@@ -18,7 +18,7 @@ if( ! function_exists( 'view' )){
 
         extract( $data );
 
-        return require s_temp_path . "/helpers.php";
+        return require s_temp_path."/{$view}.view.php";
 
     }
 
@@ -63,5 +63,27 @@ if (! function_exists('value')) {
     function value($value)
     {
         return $value instanceof Closure ? $value() : $value;
+    }
+}
+
+if (! function_exists('config')) {
+    /**
+     * Return the default value of the given value.
+     *
+     * @param string $key
+     * @param $default
+     * @return mixed
+     */
+    function config( $key, $default = "" )
+    {
+        $config = require_once S_CONFIGPATH . "/config.php";
+
+        $arrays = explode( '.', $key );
+
+        if( count($arrays) == 0 ){
+            return $config[ $key ];
+        }
+
+        return $config[ $key ][ $arrays[1] ];
     }
 }
