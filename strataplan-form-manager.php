@@ -134,14 +134,15 @@ final class StrataplanFormManager {
         //it to any navigation.
 
 
-        ( new \App\Helpers\Installer )->install();
-        ( new Database )->install();
+//        ( new \App\Database\Database )->install();
 
     }
 
     private function boot()
     {
+        require_once "includes/Kernel.php";
 
+        (new Kernel)->run();
     }
 
 }
@@ -150,5 +151,3 @@ final class StrataplanFormManager {
  * Start the App
  */
 StrataplanFormManager::init();
-( new \App\Helpers\Menu );
-( new \App\Helpers\Roles );

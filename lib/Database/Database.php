@@ -45,7 +45,7 @@ class Database extends DataWrapper {
 
         $this->query = $wpdb;
 
-        $this->database_folder = s_db_path."/tables";
+        $this->database_folder = S_DBPATH."/tables";
 
     }
 
@@ -89,10 +89,7 @@ class Database extends DataWrapper {
                     $obj->$method();
                 }
             }
-
         }
-
-
     }
 
 

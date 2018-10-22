@@ -1,11 +1,8 @@
 <?php
 namespace App\Controller;
 
-use App\Database\Database;
-use App\Database\Schema;
-use App\Database\SQL\Blueprint;
-use App\Database\SQL\SQLize;
-use App\Database\SQL\Helpers\Column;
+use App\Helpers\Func;
+use App\Helpers\View;
 
 class MainController {
 
@@ -17,7 +14,7 @@ class MainController {
      */
     public function index()
     {
-        return view( 'dashboard/dashboard' );
+        return (new View)->render( 'dashboard/dashboard' );
     }
 
     /**
@@ -28,7 +25,7 @@ class MainController {
      */
     public function access_form()
     {
-        return view( 'access_device_form/access_device' );
+        return (new View)->render( 'access_device_form/access_device' );
     }
 
     /**
@@ -39,7 +36,7 @@ class MainController {
      */
     public function move_form()
     {
-        return view( 'move_in_out_form/move_form' );
+        return (new View)->render( 'move_in_out_form/move_form' );
 
     }
 

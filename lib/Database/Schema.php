@@ -2,6 +2,7 @@
 namespace App\Database;
 
 use Closure;
+use App\Helpers\Func;
 use App\Database\Database;
 use App\Database\SQL\Blueprint;
 
@@ -24,7 +25,7 @@ class Schema {
     {
         $self = new Schema();
 
-        $self->build( call( $self->createBlueprint( $table ), function( $blueprint ) use( $callback ){
+        $self->build( (new Func)->call( $self->createBlueprint( $table ), function( $blueprint ) use( $callback ){
             $blueprint->create();
 
             $callback($blueprint);
