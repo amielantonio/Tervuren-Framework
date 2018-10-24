@@ -11,12 +11,12 @@ class Kernel {
 
     public function run()
     {
-        wp_enqueue_script( 'msq-bulma', 'https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.css');
-
-        wp_enqueue_style( 'msq-datatables', '//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css' );
-        wp_enqueue_script( 'msq-datatables', '//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js' );
-
-        wp_enqueue_script( 'msq-chart', 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js' );
+//        wp_enqueue_script( 'msq-bulma', 'https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.css');
+//
+//        wp_enqueue_style( 'msq-datatables', '//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css' );
+//        wp_enqueue_script( 'msq-datatables', '//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js' );
+//
+//        wp_enqueue_script( 'msq-chart', 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js' );
 
     }
 

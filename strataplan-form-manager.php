@@ -10,9 +10,7 @@
  * @package Strataplan_Form_Manager
  */
 
-
 if( ! defined( 'WPINC' ) ) die;
-
 
 final class StrataplanFormManager {
 
@@ -144,7 +142,6 @@ final class StrataplanFormManager {
 
         (new Kernel)->run();
     }
-
 }
 
 /**

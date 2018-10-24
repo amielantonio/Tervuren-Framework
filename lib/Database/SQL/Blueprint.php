@@ -87,12 +87,14 @@ class Blueprint
 
     /**
      * Returns the SQL format of the blueprint
-     *
-     * @return string
      */
     public function build()
     {
-        return ( new SQLize( $this ) )->toSQL();
+        global $wpdb;
+
+        $sql = ( new SQLize( $this ) )->toSQL();
+
+        $wpdb->query( $sql );
     }
 
     /**

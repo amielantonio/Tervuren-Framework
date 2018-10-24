@@ -3,7 +3,6 @@ namespace App\Database;
 
 use Closure;
 use App\Helpers\Func;
-use App\Database\Database;
 use App\Database\SQL\Blueprint;
 
 /**
