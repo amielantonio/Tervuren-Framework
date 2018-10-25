@@ -6,8 +6,6 @@ use App\Helpers\Func;
 use App\Database\SQL\Blueprint;
 
 /**
- *
- *
  * Class Schema
  * @package App\Database
  */

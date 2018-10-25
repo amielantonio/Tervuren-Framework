@@ -90,11 +90,7 @@ class Blueprint
      */
     public function build()
     {
-        global $wpdb;
-
-        $sql = ( new SQLize( $this ) )->toSQL();
-
-        $wpdb->query( $sql );
+        return ( new SQLize( $this ) )->toSQL();
     }
 
     /**
@@ -311,6 +307,19 @@ class Blueprint
     public function timestamp( $column, $precision = 0 )
     {
         return $this->addColumn( 'timestamp', $column, compact( 'precision' ) );
+    }
+
+    /**
+     * Add nullable creation and update timestamps to the table.
+     *
+     * @param  int  $precision
+     * @return void
+     */
+    public function timestamps($precision = 0)
+    {
+        $this->timestamp('created_at', $precision)->nullable();
+
+        $this->timestamp('updated_at', $precision)->nullable();
     }
 
     /**

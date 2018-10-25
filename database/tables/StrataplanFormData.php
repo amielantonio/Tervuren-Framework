@@ -16,6 +16,8 @@ class StrataplanFormData
             $table->increments( 'id' );
             $table->string( 'name', 128 );
             $table->string( 'email', 128 );
+            $table->string( 'form_name', 128 );
+            $table->string( 'date_filled', 128 );
             $table->primary('id');
 
         });

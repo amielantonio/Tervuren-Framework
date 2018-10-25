@@ -3,8 +3,15 @@ namespace App\Controller;
 
 use App\Helpers\Func;
 use App\Helpers\View;
+use App\Core\CoreController;
 
-class MainController {
+class MainController extends CoreController{
+
+
+    public function __construct()
+    {
+        parent::__construct();
+    }
 
     /**
      * Landing Page
@@ -39,5 +46,11 @@ class MainController {
         return (new View)->render( 'move_in_out_form/move_form' );
 
     }
+
+    public function test()
+    {
+        echo "Did i reached this part?";
+    }
+
 
 }

@@ -1,26 +1,36 @@
 <?php
 
+use App\Core\Router;
 use App\Controller\MainController;
 
 class Kernel {
 
+    /**
+     * Kernel constructor.
+     */
     public function __construct()
     {
         add_action( 'admin_menu', array( $this, 'create_pages' ) );
+
+        ( new Router( 'stm-route' ) )->receiver();
     }
 
+    /**
+     * Run the kernel class
+     */
     public function run()
     {
-//        wp_enqueue_script( 'msq-bulma', 'https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.css');
-//
-//        wp_enqueue_style( 'msq-datatables', '//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css' );
-//        wp_enqueue_script( 'msq-datatables', '//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js' );
-//
-//        wp_enqueue_script( 'msq-chart', 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js' );
+        wp_enqueue_script( 'stm-bulma', 'https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.css');
 
+        wp_enqueue_style( 'stm-datatables', '//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css' );
+        wp_enqueue_script( 'stm-datatables', '//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js' );
+
+        wp_enqueue_script( 'stm-chart', 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js' );
     }
 
-
+    /**
+     * Create the starting pages
+     */
     public function create_pages()
     {
 

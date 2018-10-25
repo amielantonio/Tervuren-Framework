@@ -59,16 +59,14 @@ final class StrataplanFormManager {
     {
 
         //Check if the current PHP version
-        register_activation_hook( __FILE__, array( $this, 'auto_deactivate') );
+        //register_activation_hook( __FILE__, array( $this, 'auto_deactivate') );
 
         $this->define_constants();
         $this->registerAutoload();
         $this->load_dependencies();
+
         // Once all dependencies and services has been loaded, install database
         // and boot up the entire plugin
-//
-//        register_activation_hook( __FILE__, array( $this, 'activate') );
-//        register_deactivation_hook( __FILE__, array( $this, 'deactivate' ) );
 
         $this->boot();
 
@@ -131,8 +129,7 @@ final class StrataplanFormManager {
         //roles, databases and other wordpress instantiation before adding
         //it to any navigation.
 
-
-//        ( new \App\Database\Database )->install();
+        ( new \App\Helpers\Installer )->install();
 
     }
 
@@ -140,7 +137,7 @@ final class StrataplanFormManager {
     {
         require_once "includes/Kernel.php";
 
-        (new Kernel)->run();
+        ( new Kernel )->run();
     }
 }
 
