@@ -4,54 +4,84 @@ namespace App\Core;
 class Router {
 
     /**
-     * Store the given routing to the router
+     * Store the channel to the router
      *
      * @var string
      */
-    protected $route;
+    protected $channel;
+
+    protected $controller;
 
     /**
      * Router constructor.
      *
      * use the given variable as the main router variable
      */
-    public function __construct( $variable )
+    public function __construct()
     {
-        if( isset( $_GET[ $variable ] )){
-            $this->route = urldecode( $_GET[ $variable ] );
-        }
+
     }
 
     /**
      * Listens to the router instance and the send it to the controller
      *
-     * @return bool
+     * @param $channel
+     * @return $this|bool
      */
-    public function receiver()
+    public function channel( $channel = "" )
     {
-        if( $this->route == "" || $this->route == null ){
-            return true;
+        if( isset( $_GET[ $channel ] ) && $channel <> "" ){
+            $this->channel = urldecode( $_GET[ $channel ] );
         }
 
-        $route = explode( '-', $this->route );
-
-        $this->to( $route[0], $route[1] );
-
+        return $this;
     }
+
+    /**
+     * Set the controller of the router
+     *
+     * @param $controller
+     */
+    public function setController( $controller )
+    {
+        $this->controller = $controller;
+    }
+
 
     /**
      * Sends the received routing to the controller
      *
      * @param $controller
      * @param $method
-     * @return bool
      */
-    protected function to( $controller, $method )
+    public function to( $controller, $method )
+    {
+        if( $this->channel == "" ){
+            (new $controller)->$method();
+
+        }else{
+
+            $controller = $this->invoke();
+
+        }
+    }
+
+
+    protected function invoke()
     {
         $app = "\App\\Controller\\";
-        $dir = str_replace( '/', '\\', $controller);
-        $app = $app . $dir;
+        $dir = str_replace( '/', '\\', $this->controller);
+        return $app . $dir;
+    }
 
-        ( new $app )->$method;
+    /**
+     * Magic method for calling controller methods
+     *
+     * @param $name
+     * @param $arguments
+     */
+    public function __call( $name, $arguments )
+    {
+        $this->to( $this->controller, $name );
     }
 }

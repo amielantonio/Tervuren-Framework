@@ -5,6 +5,8 @@ use App\Controller\MainController;
 
 class Kernel {
 
+    protected static $router;
+
     /**
      * Kernel constructor.
      */
@@ -12,7 +14,10 @@ class Kernel {
     {
         add_action( 'admin_menu', array( $this, 'create_pages' ) );
 
-        ( new Router( 'stm-route' ) )->receiver();
+        $this::$router = new Router;
+
+        $this::$router->channel( 'stm-route' );
+
     }
 
     /**
@@ -36,6 +41,8 @@ class Kernel {
 
         $mainController = new MainController;
 
+        $this::$router->setController( $mainController );
+
         if( !current_user_can( 'manage_strata_forms' ) ){
 
             add_menu_page(
@@ -43,7 +50,7 @@ class Kernel {
                 __( "Strataplan Form Manager", "textdomain" ),
                 "manage_options",
                 "strataplan-form-manager",
-                array( $mainController, "index" ),
+                array( $this::$router, 'index' ),
                 "dashicons-image-filter",
                 "2"
             );
