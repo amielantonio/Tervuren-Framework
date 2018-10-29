@@ -13,16 +13,6 @@ class Router {
     protected $controller;
 
     /**
-     * Router constructor.
-     *
-     * use the given variable as the main router variable
-     */
-    public function __construct()
-    {
-
-    }
-
-    /**
      * Listens to the router instance and the send it to the controller
      *
      * @param $channel
@@ -49,29 +39,31 @@ class Router {
 
 
     /**
-     * Sends the received routing to the controller
+     * Sends the received routing to the appropriate controller
      *
      * @param $controller
      * @param $method
      */
     public function to( $controller, $method )
     {
+        //Check first whether there is a channel that's being listened,
+        // if there is none, continue calling the method of the controller
         if( $this->channel == "" ){
-            (new $controller)->$method();
 
-        }else{
+            ( new $controller )->$method();
 
-            $controller = $this->invoke();
+        } else {
+
+            $routes = explode( '-', $this->channel );
+
+            $controller = str_replace( '/', '\\', $routes[0]);
+            $method = $routes[1];
+
+            $controller = "\App\\Controller\\{$controller}";
+
+            ( new $controller )->$method();
 
         }
-    }
-
-
-    protected function invoke()
-    {
-        $app = "\App\\Controller\\";
-        $dir = str_replace( '/', '\\', $this->controller);
-        return $app . $dir;
     }
 
     /**
@@ -82,6 +74,8 @@ class Router {
      */
     public function __call( $name, $arguments )
     {
-        $this->to( $this->controller, $name );
+        if( ! method_exists( $this, $name) ){
+            $this->to( $this->controller, $name );
+        }
     }
 }
