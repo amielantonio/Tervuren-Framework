@@ -38,7 +38,6 @@ class Kernel {
      */
     public function create_pages()
     {
-
         $mainController = new MainController;
 
         $this::$router->setController( $mainController );
@@ -62,7 +61,7 @@ class Kernel {
                 __( "Access Device Form", "textdomain" ),
                 "manage_options",
                 "access-device-form",
-                array( $mainController, "access_form" )
+                array( $this::$router, "access_form" )
             );
 
             add_submenu_page(
@@ -71,7 +70,7 @@ class Kernel {
                 __( "Move In/Out Form", "textdomain" ),
                 "manage_options",
                 "move-in-out-form1",
-                array( $mainController, "move_form" )
+                array( $this::$router, "move_form" )
             );
 
             add_submenu_page(
@@ -80,7 +79,7 @@ class Kernel {
                 __( "Acquisition", "textdomain" ),
                 "manage_options",
                 "move-in-out-form2",
-                array( $mainController, "move_form" )
+                array( $this::$router, "move_form" )
             );
 
             add_submenu_page(
@@ -89,7 +88,7 @@ class Kernel {
                 __( "Customers", "textdomain" ),
                 "manage_options",
                 "move-in-out-form3",
-                array( $mainController, "move_form" )
+                array( $this::$router, "move_form" )
             );
 
             add_submenu_page(
@@ -98,7 +97,7 @@ class Kernel {
                 __( "Settings", "textdomain" ),
                 "manage_options",
                 "move-in-out-form4",
-                array( $mainController, "move_form" )
+                array( $this::$router, "move_form" )
             );
 
         }

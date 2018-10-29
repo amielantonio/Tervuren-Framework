@@ -74,6 +74,7 @@ class Router {
      */
     public function __call( $name, $arguments )
     {
+        //Only send the command when the method doesn't exists on the class
         if( ! method_exists( $this, $name) ){
             $this->to( $this->controller, $name );
         }

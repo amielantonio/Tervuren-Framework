@@ -3,14 +3,14 @@
 use App\Database\Schema;
 use App\Database\SQL\Blueprint;
 
-class AccessDeviceForm {
+class StrataplanFormOptions {
 
     /**
      * Run the Migration
      */
     public function up()
     {
-        Schema::create( '', function( Blueprint $table){
+        Schema::create( 'strataplan_form_options', function( Blueprint $table){
 
             $table->increments( 'id' );
             $table->string( 'ps_no', 128 );
