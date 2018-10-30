@@ -4,6 +4,7 @@ namespace App\Controller;
 use App\Helpers\Func;
 use App\Helpers\View;
 use App\Core\CoreController;
+use App\Model\AccessDevice;
 
 class MainController extends CoreController{
 
@@ -21,6 +22,9 @@ class MainController extends CoreController{
      */
     public function index()
     {
+
+
+
         return (new View)->render( 'dashboard/dashboard' );
     }
 
