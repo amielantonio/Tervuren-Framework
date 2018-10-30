@@ -1,1 +1,24 @@
-console.log( 'This is a test' );
+/**
+ *
+ */
+
+require( './components/access-device' );
+
+
+/**
+ *
+ */
+
+
+( function ($){
+
+  $(function() {
+
+    console.log( 'App Initialized' );
+
+  });
+
+
+})(jQuery);
+
+

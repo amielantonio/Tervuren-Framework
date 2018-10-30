@@ -91,9 +91,20 @@
   !*** ./src/js/app.js ***!
   \***********************/
 /*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("/**\r\n *\r\n */\r\n\r\n__webpack_require__( /*! ./components/access-device */ \"./src/js/components/access-device.js\" );\r\n\r\n\r\n/**\r\n *\r\n */\r\n\r\n\r\n( function ($){\r\n\r\n  $(function() {\r\n\r\n    console.log( 'App Initialized' );\r\n\r\n  });\r\n\r\n\r\n})(jQuery);\r\n\r\n\r\n\n\n//# sourceURL=webpack:///./src/js/app.js?");
+
+/***/ }),
+
+/***/ "./src/js/components/access-device.js":
+/*!********************************************!*\
+  !*** ./src/js/components/access-device.js ***!
+  \********************************************/
+/*! no static exports found */
 /***/ (function(module, exports) {
 
-eval("console.log( 'This is a test' );\r\n\n\n//# sourceURL=webpack:///./src/js/app.js?");
+eval("( function ($){\r\n\r\n\r\n  $( function(){\r\n\r\n    $( '#access-device-buildings' ).DataTable();\r\n\r\n  });\r\n\r\n\r\n  function ajax(){\r\n\r\n  }\r\n\r\n\r\n\r\n\r\n\r\n})(jQuery);\r\n\n\n//# sourceURL=webpack:///./src/js/components/access-device.js?");
 
 /***/ }),
 

@@ -31,9 +31,12 @@ class Kernel {
         wp_enqueue_script( 'stm-datatables', '//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js' );
 
         wp_enqueue_script( 'stm-chart', 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js' );
+
+        wp_enqueue_script( 'stm-app',  '/wp-content/plugins/strataplan-form-manager/assets/js/app.js');
+        wp_enqueue_style( 'stm-app', '/wp-content/plugins/strataplan-form-manager/assets/css/app.css');
     }
 
-    /**
+    /**s
      * Create the starting pages
      */
     public function create_pages()
@@ -99,8 +102,24 @@ class Kernel {
                 "move-in-out-form4",
                 array( $this::$router, "move_form" )
             );
-
         }
+
+
+//        if( ! current_user_can( 'strataplan_developer' )){
+//
+//            add_menu_page(
+//                __( "Strataplan Developer Options", "textdomain" ),
+//                __( "Strataplan Form Manager", "textdomain" ),
+//                "manage_options",
+//                "strataplan-developer-options",
+//                array( $this::$router, 'index' ),
+//                "dashicons-shield",
+//                "2"
+//            );
+//
+//        }
+
+
     }
 
 }

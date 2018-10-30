@@ -87,6 +87,10 @@ final class StrataplanFormManager {
         define( 'S_VIEWPATH'    , dirname( __FILE__) . "/templates" );
 
 
+        //Plugin
+        define( 'S_BASE_DIR', plugin_dir_path( __DIR__ ));
+
+
         //Misc
         define( 'S_VERSION', $this->version );
         define( 'S_PHP_VERSION', $this->php_version );
