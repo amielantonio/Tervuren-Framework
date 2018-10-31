@@ -17,6 +17,7 @@ class StrataplanFormOptions {
             $table->text( 'address' );
             $table->string( 'options', 128 );
             $table->timestamps();
+            $table->primary('id');
         });
     }
 

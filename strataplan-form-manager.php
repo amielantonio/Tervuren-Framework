@@ -133,7 +133,9 @@ final class StrataplanFormManager {
         //roles, databases and other wordpress instantiation before adding
         //it to any navigation.
 
-        ( new \App\Helpers\Installer )->install();
+        $installer = new \App\Helpers\Installer;
+
+        $installer->install();
 
     }
 

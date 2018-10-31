@@ -13,7 +13,7 @@ class Installer{
      */
     public function install()
     {
-        register_activation_hook( __FILE__, array( $this, 'boot') );
+        register_activation_hook( S_BASEPATH.'/strataplan-form-manager.php', array( $this, 'boot') );
     }
 
     /**
@@ -29,8 +29,9 @@ class Installer{
      */
     public function boot()
     {
+
         //Install all things that are needed to be installed first.
-        ( new Database )->install();
+        ( new Database() )->install();
 
         //Run the Queue pipe!
         $this->install_pipe();
