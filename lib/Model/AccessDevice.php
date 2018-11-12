@@ -1,11 +1,11 @@
 <?php
 namespace App\Model;
 
-use App\Core\CoreModal;
+use App\Core\CoreModel;
 
-class AccessDevice extends CoreModal {
+class AccessDevice extends CoreModel {
 
-    protected $table = "";
+    protected $table = "sss";
 
     protected $primary_key = "";
 

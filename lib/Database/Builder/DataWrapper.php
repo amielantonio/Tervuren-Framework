@@ -28,7 +28,7 @@ abstract class DataWrapper{
 
     public function __construct()
     {
-
+        echo $this->table;
     }
 
     public function get()
@@ -75,4 +75,10 @@ abstract class DataWrapper{
     {
 
     }
+
+    protected function _statement()
+    {
+
+    }
+
 }

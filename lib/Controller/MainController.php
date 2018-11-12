@@ -5,6 +5,7 @@ use App\Helpers\Func;
 use App\Helpers\View;
 use App\Core\CoreController;
 use App\Model\AccessDevice;
+use GuzzleHttp\Client;
 
 class MainController extends CoreController{
 
@@ -22,10 +23,14 @@ class MainController extends CoreController{
      */
     public function index()
     {
+        $device = new AccessDevice;
+
+        $device->test = "Yes";
+
+        echo $device->test;
 
 
-
-        return (new View)->render( 'dashboard/dashboard' );
+        return (new View)->render( 'dashboard/dashboard', compact( 'device' ) );
     }
 
     /**

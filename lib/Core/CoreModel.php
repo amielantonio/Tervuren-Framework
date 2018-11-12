@@ -5,6 +5,10 @@ use App\Database\Builder\DataWrapper;
 
 abstract class CoreModel extends DataWrapper{
 
+
+    protected  $fields = [];
+
+
     public function __construct()
     {
 
@@ -13,12 +17,12 @@ abstract class CoreModel extends DataWrapper{
 
     public function __get($name)
     {
-        // TODO: Implement __get() method.
+        return $this->fields[ $name ];
     }
 
     public function __set($name, $value)
     {
-        // TODO: Implement __set() method.
+        $this->fields[ $name ] = $value;
     }
 
 }
