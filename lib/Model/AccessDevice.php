@@ -7,6 +7,6 @@ class AccessDevice extends CoreModel {
 
     protected $table = "sss";
 
-    protected $primary_key = "";
+    protected $primary_key = "Tet";
 
 }

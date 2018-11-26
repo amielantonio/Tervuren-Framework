@@ -27,10 +27,10 @@ class MainController extends CoreController{
 
         $device->test = "Yes";
 
-        echo $device->test;
+        var_dump( $device );
 
 
-        return (new View)->render( 'dashboard/dashboard', compact( 'device' ) );
+        return (new View('dashboard/dashboard', compact( 'device' )))->render();
     }
 
     /**

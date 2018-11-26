@@ -13,6 +13,7 @@ class StrataplanFormOptions {
         Schema::create( 'strataplan_form_options', function( Blueprint $table){
 
             $table->increments( 'id' );
+            $table->integer( 'form_id' );
             $table->string( 'ps_no', 128 );
             $table->text( 'address' );
             $table->string( 'options', 128 );
