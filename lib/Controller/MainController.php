@@ -25,9 +25,7 @@ class MainController extends CoreController{
     {
         $device = new AccessDevice;
 
-        $device->test = "Yes";
-
-        var_dump( $device );
+        $device->select( '*' )->get();
 
 
         return (new View('dashboard/dashboard', compact( 'device' )))->render();

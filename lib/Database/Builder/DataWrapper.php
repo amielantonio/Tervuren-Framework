@@ -2,6 +2,8 @@
 
 namespace App\Database\Builder;
 
+use App\Database\Sql\Helpers\Query;
+
 /**
  * Class DataWrapper
  *
@@ -27,50 +29,57 @@ abstract class DataWrapper{
 
 
     /**
-     * Select Query
-     *
-     * @var string
-     */
-    protected $_select;
-
-    /**
-     * Where Query
-     *
-     * @var string
-     */
-    protected $_where;
-
-
-    /**
-     * Order Query
-     *
-     * @var string
-     */
-    protected $_order;
-
-    /**
      * Fields for the database
      *
      * @var array
      */
     protected  $fields = [];
 
+
+    /**
+     * Resulting Data
+     *
+     * @var array|object|string
+     */
+    protected $result;
+
+
+    private $wpdb;
+
     /**
      * DataWrapper constructor.
      */
     public function __construct()
     {
+        global $wpdb;
 
+        $this->wpdb = $wpdb;
+
+        $this->table = $wpdb->prefix . $this->table;
     }
 
     public function get()
     {
-
+        return $this->result;
     }
 
-    public function select()
+    /**
+     * Create a select query;
+     *
+     * @param mixed ...$fields
+     * @return $this
+     */
+    public function select( ...$fields )
     {
+        $query = ( new Query )
+            ->select( $fields )
+            ->distinct()
+            ->from( $this->table )
+            ->where( [['console','=','1'],['console','<>','1']] )->execute();
 
+        var_dump($query);
+
+        return $this;
     }
 
     public function getAll()
@@ -112,10 +121,8 @@ abstract class DataWrapper{
 
     }
 
-    protected function _statement()
-    {
 
-    }
+
 
     /**
      * Dynamically gets an attribute to the field
