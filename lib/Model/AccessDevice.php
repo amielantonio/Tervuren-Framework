@@ -9,4 +9,10 @@ class AccessDevice extends CoreModel {
 
     protected $primary_key = "Tet";
 
+    public function __construct()
+    {
+        parent::__construct();
+
+    }
+
 }

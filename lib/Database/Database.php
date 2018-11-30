@@ -3,7 +3,6 @@ namespace App\Database;
 
 use DirectoryIterator;
 use App\Settings\Settings;
-use App\Database\Builder\DataWrapper;
 
 /**
  * Responsible for installing database tables to the network
@@ -11,7 +10,7 @@ use App\Database\Builder\DataWrapper;
  * Class Database
  * @package App\Database
  */
-class Database extends DataWrapper {
+class Database  {
 
     /**
      * List of all tables

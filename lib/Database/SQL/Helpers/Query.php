@@ -13,11 +13,11 @@ class Query {
     protected $statement;
 
     /**
-     * Query Schema
+     * Command to be used for the query
      *
-     * @var array
+     * @var string
      */
-    protected $schema = [];
+    protected $command;
 
     /**
      * Table name of the query
@@ -26,19 +26,37 @@ class Query {
      */
     protected $table;
 
+    protected $where = [];
 
+    protected $distinct = false;
+
+    protected $columns = [];
+
+    protected $values = [];
+
+
+    /**
+     * Create a select statement
+     *
+     * @param $fields
+     * @return $this
+     */
     public function select( $fields )
     {
-
-        $this->addSchema( 'command', 'select' );
-        $this->addSchema( 'fields', $fields );
+        $this->columns = ( is_array($fields) ) ? $fields : func_get_args();
+        $this->command = 'select';
 
         return $this;
     }
 
+    /**
+     * Create Distinct
+     *
+     * @return $this
+     */
     public function distinct()
     {
-        $this->addSchema( 'distinct', true );
+        $this->distinct = true;
 
         return $this;
     }
@@ -51,43 +69,58 @@ class Query {
      */
     public function from( $table )
     {
-        $this->addSchema( 'table', $table );
+        $this->table = $table;
 
         return $this;
     }
 
     /**
-     * Execute the
+     * Create an insert statement
      *
-     * @return array
+     * @param array $values
+     * @param string $table
+     * @return $this
      */
-    public function execute()
+    public function insert( array $values, $table )
     {
-        $this->statement = $statement = $this->buildStatement();
+        $this->command = 'insert';
 
-//        return $statement;
-        return $this->schema;
-    }
+        foreach ($values as $key => $value) {
+            ksort($value);
 
+            $this->values[$key] = $value;
+        }
 
-    public function insert()
-    {
-        $this->addSchema( 'command' , 'insert' );
+        $this->table = $table;
+
 
         return $this;
     }
 
-    public function update()
+    /**
+     * @param array $values
+     * @param $table
+     * @return $this
+     */
+    public function update( array $values, $table )
     {
-        $this->addSchema( 'command', 'update' );
+        $this->command = 'update';
+
+        foreach ($values as $key => $value) {
+            ksort($value);
+
+            $this->values[$key] = $value;
+        }
+
+        $this->table = $table;
+
         return $this;
     }
 
 
     public function delete()
     {
-        $this->addSchema( 'command', 'delete' );
-        return $this;
+
     }
 
     /**
@@ -98,35 +131,62 @@ class Query {
      */
     public function where( $where )
     {
-        $sentence = "";
+        $sentence[] = $this->solveWhere( $where );
 
-        if( is_array( $where ) ){
-            $x = 1;
-            foreach( $where as $item ){
-                if( is_array( $item ) ){
-                    $sentence .= implode( '', $item );
-                    if($x < count($where )){
-                        $sentence .= " AND ";
-                    }
-
-                } else {
-                    $sentence .= implode( '', $where );
-                    break;
-                }
-                $x++;
-            }
-        } else {
-            $sentence .= $where;
-        }
-
-        $this->addSchema( 'WHERE', $sentence );
+        $this->addSchema( 'where', $sentence );
 
         return $this;
     }
 
     public function orWhere( $where )
     {
+        $sentence[] = $this->solveWhere( $where );
 
+        $this->addSchema( 'orWhere', $sentence );
+
+        return $this;
+    }
+
+    public function like( $key, $value )
+    {
+        $sentence = "{$key} LIKE {$value}";
+
+        $this->addSchema( 'like', $sentence);
+
+        return $this;
+    }
+
+    public function in( array $values )
+    {
+        $this->addSchema( 'in', $values );
+
+        return $this;
+    }
+
+    public function between( $firstValue, $secondValue )
+    {
+        $this->addSchema( 'between', [$firstValue, $secondValue ] );
+
+        return $this;
+    }
+
+    public function having( $condition )
+    {
+        $this->addSchema( 'having', $condition );
+
+        return $this;
+    }
+
+    public function groupBy( $column )
+    {
+        $this->addSchema( 'groupBy', $column );
+
+        return $this;
+    }
+
+    public function orderBy( $column, $option )
+    {
+        $this->addSchema( 'orderBy', ['column'=>$column, 'option'=>$option] );
     }
 
     /**
@@ -172,7 +232,30 @@ class Query {
 
     protected function solveWhere( $where )
     {
+        $sentence = "(";
 
+        if( is_array( $where ) ){
+            $x = 1;
+            foreach( $where as $item ){
+                if( is_array( $item ) ){
+                    $sentence .= implode( '', $item );
+                    if($x < count($where )){
+                        $sentence .= " AND ";
+                    }
+
+                } else {
+                    $sentence .= implode( '', $where );
+                    break;
+                }
+                $x++;
+            }
+        } else {
+            $sentence .= $where;
+        }
+
+        $sentence .= ")";
+
+        return $sentence;
     }
 
     /**
@@ -182,9 +265,47 @@ class Query {
      */
     protected function buildStatement()
     {
-        $statement = '';
+        $statement = "";
+
+        switch ($this->schema['command']){
+            case 'select':
+                $statement = $this->createSelect();
+                break;
+            case 'insert':
+                $statement = $this->createInsert();
+                break;
+            case 'update':
+                $statement = "";
+                break;
+            case 'delete':
+                $statement = "";
+                break;
+            default:
+
+        }
 
         return $statement;
+    }
+
+
+    protected function createSelect()
+    {
+
+    }
+
+    protected function createInsert()
+    {
+
+    }
+
+    protected function createUpdate()
+    {
+
+    }
+
+    protected function createDelete()
+    {
+
     }
 
     /**
