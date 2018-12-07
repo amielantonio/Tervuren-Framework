@@ -4,11 +4,25 @@ namespace App\Helpers;
 
 class View {
 
-
+    /**
+     * View name
+     *
+     * @var $view
+     */
     protected $view;
 
+    /**
+     *
+     *
+     * @var string
+     */
     protected $path;
 
+    /**
+     * Data attributed with the view
+     *
+     * @var array
+     */
     protected $data;
 
     public function __construct( $view, $data = [] )
@@ -24,7 +38,6 @@ class View {
      */
     public function render()
     {
-
         if( ! $this->exists() ){
             return "";
         }
@@ -58,37 +71,6 @@ class View {
         // version
         // media
 
-        $enqueue = [];
-
-        foreach( $styles as $style ){
-
-            if( ! isset( $style['handle'] ) ){
-                $enqueue[] = $styles['handle'];
-            }else{
-                throw new \exception( 'No Handle Given' );
-            }
-            if( ! isset( $style['src'] ) ){
-                $enqueue[] = $styles['src'];
-            }else{
-                throw new \exception( 'No URL Given' );
-            }
-
-            if( ! isset( $style['deps'] ) ){
-                $enqueue[] = $styles['deps'];
-            }
-            if( ! isset( $style['version'] ) ){
-                $enqueue[] = $styles['version'];
-            }
-            if( ! isset( $style['handle'] ) ){
-                $enqueue[] = $styles['media'];
-            }
-
-            $enqueue = implode( ', ', $enqueue );
-
-            wp_enqueue_style( $enqueue );
-
-        }
-
     }
 
     public function exists()
@@ -101,6 +83,12 @@ class View {
 
     }
 
+    /**
+     * Include data on form
+     *
+     * @param mixed ...$data
+     * @return $this
+     */
     public function with( ...$data ){
         $this->data = $data;
 
