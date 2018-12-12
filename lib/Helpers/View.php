@@ -78,11 +78,6 @@ class View {
         return ( file_exists( $this->path ) );
     }
 
-    public function getContents()
-    {
-
-    }
-
     /**
      * Include data on form
      *

@@ -2,6 +2,7 @@
 
 namespace App\Database\SQL\Helpers;
 
+use App\Database\SQL\Helpers\Grammar;
 
 class Query {
 
@@ -33,6 +34,18 @@ class Query {
     protected $columns = [];
 
     protected $values = [];
+
+    /**
+     * @var \App\Database\SQL\Helpers\Grammar
+     */
+    protected $grammar;
+
+
+    public function __construct()
+    {
+        $this->grammar = new Grammar;
+
+    }
 
 
     /**
@@ -209,27 +222,6 @@ class Query {
         $this->statement = $statement;
     }
 
-    /**
-     * Get the schema array
-     *
-     * @return array
-     */
-    public function getSchema()
-    {
-        return $this->schema;
-    }
-
-    /**
-     * Add attributes to the schema
-     *
-     * @param $key
-     * @param $value
-     */
-    protected function addSchema( $key, $value )
-    {
-        $this->schema[$key] = $value;
-    }
-
     protected function solveWhere( $where )
     {
         $sentence = "(";
@@ -267,45 +259,24 @@ class Query {
     {
         $statement = "";
 
-        switch ($this->schema['command']){
+        switch ($this->command){
             case 'select':
-                $statement = $this->createSelect();
+                $statement = $this->grammar->createSelect();
                 break;
             case 'insert':
-                $statement = $this->createInsert();
+                $statement = $this->grammar->createInsert();
                 break;
             case 'update':
-                $statement = "";
+                $statement = $this->grammar->createUpdate();
                 break;
             case 'delete':
-                $statement = "";
+                $statement = $this->grammar->createDelete();
                 break;
             default:
 
         }
 
         return $statement;
-    }
-
-
-    protected function createSelect()
-    {
-
-    }
-
-    protected function createInsert()
-    {
-
-    }
-
-    protected function createUpdate()
-    {
-
-    }
-
-    protected function createDelete()
-    {
-
     }
 
     /**
