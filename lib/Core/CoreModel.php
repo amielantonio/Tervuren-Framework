@@ -71,6 +71,8 @@ abstract class CoreModel {
             ->where( [['console','=','1'],['console','<>','1']] )
             ->orWhere([ 'or','==','1' ]);
 
+        $this->result = $query;
+
         return $this;
     }
 

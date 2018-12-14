@@ -2,28 +2,34 @@
 
 namespace App\Database\SQL\Helpers;
 
+use App\Database\SQL\Helpers\Query;
 
 class Grammar {
 
 
-    public function createSelect()
+    public function compileSelect( Query $query )
     {
+        var_dump($query);
 
+        return "";
     }
 
-    public function createInsert()
+    public function compileInsert( Query $query )
     {
 
+        return "";
     }
 
-    public function createDelete()
+    public function compileDelete( Query $query )
     {
 
+        return "";
     }
 
-    public function createUpdate()
+    public function compileUpdate( Query $query )
     {
 
+        return "";
     }
 
 }

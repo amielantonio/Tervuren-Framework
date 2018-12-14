@@ -25,7 +25,7 @@ class MainController extends CoreController{
     {
         $device = new AccessDevice;
 
-        $device->select( '*' )->get();
+        echo $device->select( '*' )->get();
 
 
         return (new View('dashboard/dashboard', compact( 'device' )))->render();
@@ -39,7 +39,7 @@ class MainController extends CoreController{
      */
     public function access_form()
     {
-        return (new View)->render( 'access_device_form/access_device' );
+        return (new View( 'access_device_form/access_device' ))->render();
     }
 
     /**
@@ -50,7 +50,7 @@ class MainController extends CoreController{
      */
     public function move_form()
     {
-        return (new View)->render( 'move_in_out_form/move_form' );
+        return (new View('move_in_out_form/move_form'))->render();
 
     }
 

@@ -14,6 +14,11 @@ class Query {
     protected $statement;
 
     /**
+     * @var array
+     */
+    protected $columns = [];
+
+    /**
      * Command to be used for the query
      *
      * @var string
@@ -31,9 +36,9 @@ class Query {
 
     protected $distinct = false;
 
-    protected $columns = [];
-
     protected $values = [];
+
+    protected $aggregates = [];
 
     /**
      * @var \App\Database\SQL\Helpers\Grammar
@@ -51,7 +56,7 @@ class Query {
     /**
      * Create a select statement
      *
-     * @param $fields
+     * @param $fieldsu di j
      * @return $this
      */
     public function select( $fields )
@@ -131,7 +136,7 @@ class Query {
     }
 
 
-    public function delete()
+    public function delete( $id = null )
     {
 
     }
@@ -144,18 +149,16 @@ class Query {
      */
     public function where( $where )
     {
-        $sentence[] = $this->solveWhere( $where );
+        $this->where = $this->solveWhere( $where );
 
-        $this->addSchema( 'where', $sentence );
 
         return $this;
     }
 
     public function orWhere( $where )
     {
-        $sentence[] = $this->solveWhere( $where );
+        $this->where .= $this->solveWhere( $where );
 
-        $this->addSchema( 'orWhere', $sentence );
 
         return $this;
     }
@@ -164,42 +167,41 @@ class Query {
     {
         $sentence = "{$key} LIKE {$value}";
 
-        $this->addSchema( 'like', $sentence);
 
         return $this;
     }
 
     public function in( array $values )
     {
-        $this->addSchema( 'in', $values );
+        $this->aggregates = [
+            'key' => 'in',
+            'value' => $values
+        ];
 
         return $this;
     }
 
     public function between( $firstValue, $secondValue )
     {
-        $this->addSchema( 'between', [$firstValue, $secondValue ] );
 
         return $this;
     }
 
     public function having( $condition )
     {
-        $this->addSchema( 'having', $condition );
 
         return $this;
     }
 
     public function groupBy( $column )
     {
-        $this->addSchema( 'groupBy', $column );
 
         return $this;
     }
 
     public function orderBy( $column, $option )
     {
-        $this->addSchema( 'orderBy', ['column'=>$column, 'option'=>$option] );
+
     }
 
     /**
@@ -261,16 +263,16 @@ class Query {
 
         switch ($this->command){
             case 'select':
-                $statement = $this->grammar->createSelect();
+                $statement = $this->grammar->compileSelect( $this );
                 break;
             case 'insert':
-                $statement = $this->grammar->createInsert();
+                $statement = $this->grammar->compileInsert( $this );
                 break;
             case 'update':
-                $statement = $this->grammar->createUpdate();
+                $statement = $this->grammar->compileUpdate( $this );
                 break;
             case 'delete':
-                $statement = $this->grammar->createDelete();
+                $statement = $this->grammar->compileDelete( $this );
                 break;
             default:
 
