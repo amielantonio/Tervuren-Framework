@@ -32,12 +32,32 @@ class Query {
      */
     protected $table;
 
+    /**
+     * Where Clause of the query
+     *
+     * @var array
+     */
     protected $where = [];
 
+    /**
+     * Identifier for distinct
+     *
+     * @var bool
+     */
     protected $distinct = false;
 
+    /**
+     * Values inside the query
+     *
+     * @var array
+     */
     protected $values = [];
 
+    /**
+     * Conditional aggregates of the query
+     *
+     * @var array
+     */
     protected $aggregates = [];
 
     /**
@@ -56,7 +76,7 @@ class Query {
     /**
      * Create a select statement
      *
-     * @param $fieldsu di j
+     * @param $fields
      * @return $this
      */
     public function select( $fields )
@@ -120,7 +140,7 @@ class Query {
      * @param $table
      * @return $this
      */
-    public function update( array $values, $table )
+    public function update( $table, array $values )
     {
         $this->command = 'update';
 
@@ -136,9 +156,17 @@ class Query {
     }
 
 
-    public function delete( $id = null )
+    public function delete( $table, $id = null )
     {
+        $this->command = 'delete';
 
+        $this->table = $table;
+
+        if( !$id == null ){
+            $this->where = "";
+        }
+
+        return $this;
     }
 
     /**
@@ -165,43 +193,63 @@ class Query {
 
     public function like( $key, $value )
     {
-        $sentence = "{$key} LIKE {$value}";
-
+        $this->aggregates[] = "{$key} LIKE {$value}";
 
         return $this;
     }
 
     public function in( array $values )
     {
-        $this->aggregates = [
-            'key' => 'in',
-            'value' => $values
-        ];
+        $list = implode( ', ', $values );
+
+        $this->aggregates[] = "IN ($list)";
 
         return $this;
     }
 
     public function between( $firstValue, $secondValue )
     {
+        $this->aggregates[] = "BETWEEN {$firstValue} AND {$secondValue}";
 
         return $this;
     }
 
     public function having( $condition )
     {
+        $this->aggregates[] = "HAVING {$condition}";
 
         return $this;
     }
 
     public function groupBy( $column )
     {
+        $this->aggregates[] = "GROUP BY {$column}";
 
         return $this;
     }
 
-    public function orderBy( $column, $option )
+    public function orderBy( $column, $option = "ASC" )
     {
+        $defaults = ['ASC', 'DESC']; $columns = "";
 
+        //Check on the option that was passed by the user
+        if( ! in_array( $option, $defaults ) ){
+            $option = "ASC"; //Go back to default;
+        }
+
+        //Check if column is an array
+        if( is_array($column) ){
+            $columns = implode( ', ', $column );
+        }
+
+        //Check if column is a string
+        if( is_string($column)){
+            $columns = $column;
+        }
+
+        $this->aggregates[] = "ORDER BY {$columns} {$option}";
+
+        return $this;
     }
 
     /**

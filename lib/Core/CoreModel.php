@@ -66,10 +66,7 @@ abstract class CoreModel {
     {
         $query = ( new Query )
             ->select( $fields )
-            ->distinct()
-            ->from( $this->table )
-            ->where( [['console','=','1'],['console','<>','1']] )
-            ->orWhere([ 'or','==','1' ]);
+            ->distinct();
 
         $this->result = $query;
 

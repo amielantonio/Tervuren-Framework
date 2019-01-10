@@ -1,3 +1,4 @@
 <?php
 
-var_dump( $device );
+var_dump($device);
+echo $device;

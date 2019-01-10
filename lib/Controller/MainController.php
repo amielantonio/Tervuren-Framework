@@ -28,7 +28,7 @@ class MainController extends CoreController{
         echo $device->select( '*' )->get();
 
 
-        return (new View('dashboard/dashboard', compact( 'device' )))->render();
+        return (new View('dashboard/dashboard'))->render();
     }
 
     /**
