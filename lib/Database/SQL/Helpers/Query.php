@@ -16,49 +16,49 @@ class Query {
     /**
      * @var array
      */
-    protected $columns = [];
+    public $columns = [];
 
     /**
      * Command to be used for the query
      *
      * @var string
      */
-    protected $command;
+    public $command;
 
     /**
      * Table name of the query
      *
      * @var string
      */
-    protected $table;
+    public $table;
 
     /**
      * Where Clause of the query
      *
      * @var array
      */
-    protected $where = [];
+    public $where = [];
 
     /**
      * Identifier for distinct
      *
      * @var bool
      */
-    protected $distinct = false;
+    public $distinct = false;
 
     /**
      * Values inside the query
      *
      * @var array
      */
-    protected $values = [];
+    public $values = [];
 
     /**
      * Conditional aggregates of the query
      *
      * @var array
      */
-    protected $aggregates = [];
+    public $aggregates = [];
 
     /**
      * @var \App\Database\SQL\Helpers\Grammar
@@ -110,6 +110,11 @@ class Query {
         $this->table = $table;
 
         return $this;
+    }
+
+    public function table( $table )
+    {
+        $this->table = $table;
     }
 
     /**
@@ -191,12 +196,14 @@ class Query {
         return $this;
     }
 
+
     public function like( $key, $value )
     {
         $this->aggregates[] = "{$key} LIKE {$value}";
 
         return $this;
     }
+
 
     public function in( array $values )
     {
@@ -207,12 +214,14 @@ class Query {
         return $this;
     }
 
+
     public function between( $firstValue, $secondValue )
     {
         $this->aggregates[] = "BETWEEN {$firstValue} AND {$secondValue}";
 
         return $this;
     }
+
 
     public function having( $condition )
     {
@@ -298,6 +307,12 @@ class Query {
         $sentence .= ")";
 
         return $sentence;
+    }
+
+
+    public function getCommand()
+    {
+        return $this->command;
     }
 
     /**

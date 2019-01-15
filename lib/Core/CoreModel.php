@@ -60,13 +60,14 @@ abstract class CoreModel {
      * Create a select query;
      *
      * @param mixed ...$fields
+     * @param boolean $distinct
      * @return $this
      */
     public function select( ...$fields )
     {
         $query = ( new Query )
-            ->select( $fields )
-            ->distinct();
+            ->select( '*' )
+            ->from( $this->table );
 
         $this->result = $query;
 
