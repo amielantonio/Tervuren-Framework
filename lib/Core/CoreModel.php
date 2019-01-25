@@ -22,11 +22,11 @@ abstract class CoreModel {
 
 
     /**
-     * Fields for the database
+     * Column of the database
      *
      * @var array
      */
-    protected  $fields = [];
+    protected  $columns = [];
 
 
     /**
@@ -36,8 +36,20 @@ abstract class CoreModel {
      */
     protected $result;
 
-
+    /**
+     * @var \wpdb
+     */
     private $wpdb;
+
+    /**
+     * Query class
+     *
+     * @var Query
+     */
+    protected $query;
+
+    protected $statement;
+
 
     /**
      * DataWrapper constructor.
@@ -48,49 +60,62 @@ abstract class CoreModel {
 
         $this->wpdb = $wpdb;
 
+        $this->query = new Query();
+
         $this->table = $wpdb->prefix . $this->table;
     }
 
     public function get()
     {
-        return $this->result;
+//        $this->result = $this->wpdb->get_results( $this->statement );
+        $this->statement = $this->query->toString();
+
+//        var_dump( $this->statement );
+        return true;
     }
 
     /**
      * Create a select query;
      *
-     * @param mixed ...$fields
+     * @param mixed $columns
      * @param boolean $distinct
      * @return $this
      */
-    public function select( ...$fields )
+    public function select( $columns, $distinct = false )
     {
-        $query = ( new Query )
-            ->select( '*' )
-            ->from( $this->table );
+        $this->columns = $columns = ( is_array($columns) ) ? implode( ', ', $columns ) : $columns ;
 
-        $this->result = $query;
+        if( $distinct ) {
+            $this->query
+                ->select( $columns )
+                ->distinct()
+                ->from( $this->table );
+        }else{
+            $this->query
+                ->select( $columns )
+                ->from( $this->table );
+        }
 
         return $this;
     }
 
+    /**
+     * Get all resources from the database
+     *
+     * @return array|null|object
+     */
     public function getAll()
     {
+        $query  = $this->query->select( '*' )->from( $this->table );
 
+        return $this->wpdb->get_results( $query );
     }
 
-    public function first()
+    public function where( $where )
     {
+        $this->query->where( $where );
 
-    }
-
-    public function last()
-    {
-
-    }
-
-    public function where(){
-
+        return $this;
     }
 
     public function save()
@@ -121,7 +146,7 @@ abstract class CoreModel {
      */
     public function __get($name)
     {
-        return $this->fields[ $name ];
+        return $this->columns[ $name ];
     }
 
     /**
@@ -132,7 +157,12 @@ abstract class CoreModel {
      */
     public function __set($name, $value)
     {
-        $this->fields[ $name ] = $value;
+        $this->columns[ $name ] = $value;
+    }
+
+    private function compiler()
+    {
+
     }
 
 }

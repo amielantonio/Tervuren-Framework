@@ -6,7 +6,12 @@ use App\Database\SQL\Helpers\Query;
 
 class Grammar {
 
-
+    /**
+     * Compile Select Statement
+     *
+     * @param \App\Database\SQL\Helpers\Query $query
+     * @return string
+     */
     public function compileSelect( Query $query )
     {
         $command = strtoupper( $query->command );
@@ -15,10 +20,17 @@ class Grammar {
 
         $grammar = "{$command} {$distinct} {$this->compileColumns($query->columns)} FROM {$query->table}";
 
-        var_dump( $query );
+        //Check for where clause
+        $grammar .= (! empty( $query->where )) ? "where {$query->where}" : "";
+
+
         return $grammar;
     }
 
+    /**
+     * @param \App\Database\SQL\Helpers\Query $query
+     * @return string
+     */
     public function compileInsert( Query $query )
     {
         $grammar = "INSERT INTO {$query->table}";
@@ -26,6 +38,10 @@ class Grammar {
         return "";
     }
 
+    /**
+     * @param \App\Database\SQL\Helpers\Query $query
+     * @return string
+     */
     public function compileDelete( Query $query )
     {
 

@@ -25,7 +25,9 @@ class MainController extends CoreController{
     {
         $device = new AccessDevice;
 
-        echo $device->select( '*' )->get();
+        $devs = $device->select( ['1', '2'], true )->where( 'test langs'  )->get();
+
+
 
 
         return (new View('dashboard/dashboard'))->render();

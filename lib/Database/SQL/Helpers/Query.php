@@ -345,12 +345,24 @@ class Query {
     }
 
     /**
+     *
      * @return string
      */
-    public function __toString()
-    {
-        // TODO: Implement __toString() method.
+//    public function __toString()
+//    {
+//
+//        $this->statement = $statement = $this->buildStatement();
+//
+//        return $statement;
+//    }
 
+    /**
+     * Return a string representation of the query
+     *
+     * @return string
+     */
+    public function toString()
+    {
         $this->statement = $statement = $this->buildStatement();
 
         return $statement;
