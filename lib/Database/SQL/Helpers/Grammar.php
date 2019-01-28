@@ -21,7 +21,7 @@ class Grammar {
         $grammar = "{$command} {$distinct} {$this->compileColumns($query->columns)} FROM {$query->table}";
 
         //Check for where clause
-        $grammar .= (! empty( $query->where )) ? "where {$query->where}" : "";
+        $grammar .= (! empty( $query->where )) ? " where {$query->where}" : "";
 
 
         return $grammar;

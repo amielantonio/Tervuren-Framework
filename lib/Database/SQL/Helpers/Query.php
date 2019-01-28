@@ -3,6 +3,7 @@
 namespace App\Database\SQL\Helpers;
 
 use App\Database\SQL\Helpers\Grammar;
+use Closure;
 
 class Query {
 
@@ -61,9 +62,65 @@ class Query {
     public $aggregates = [];
 
     /**
+     * The groupings for the query.
+     *
+     * @var array
+     */
+    public $groups;
+
+    /**
+     * The having constraints for the query.
+     *
+     * @var array
+     */
+    public $havings;
+
+    /**
+     * The orderings for the query.
+     *
+     * @var array
+     */
+    public $orders;
+
+    /**
+     * The maximum number of records to return.
+     *
+     * @var int
+     */
+    public $limit;
+
+    /**
+     * The number of records to skip.
+     *
+     * @var int
+     */
+    public $offset;
+
+    /**
+     * The query union statements.
+     *
+     * @var array
+     */
+    public $unions;
+
+    /**
      * @var \App\Database\SQL\Helpers\Grammar
      */
     protected $grammar;
+
+    /**
+     * All of the available clause operators.
+     *
+     * @var array
+     */
+    public $operators = [
+        '=', '<', '>', '<=', '>=', '<>', '!=', '<=>',
+        'like', 'like binary', 'not like', 'ilike',
+        '&', '|', '^', '<<', '>>',
+        'rlike', 'regexp', 'not regexp',
+        '~', '~*', '!~', '!~*', 'similar to',
+        'not similar to', 'not ilike', '~~*', '!~~*',
+    ];
 
 
     public function __construct()
@@ -76,12 +133,12 @@ class Query {
     /**
      * Create a select statement
      *
-     * @param $fields
+     * @param $columns
      * @return $this
      */
-    public function select( $fields )
+    public function select( $columns )
     {
-        $this->columns = ( is_array($fields) ) ? $fields : func_get_args();
+        $this->columns = ( is_array($columns) ) ? $columns : func_get_args();
         $this->command = 'select';
 
         return $this;
@@ -175,27 +232,83 @@ class Query {
     }
 
     /**
-     * Create where clause
+     * Add a where clause to the statement
      *
-     * @param $where
+     * @param string|array  $column
+     * @param null $operator
+     * @param null $value
+     * @param string $link
      * @return $this
      */
-    public function where( $where )
+    public function where( $column, $operator = null, $value = null, $link = "and" )
     {
-        $this->where = $this->solveWhere( $where );
 
+        //Assuming the user has given an array of columns and operators,
+        //resolve the clause received then add it to the where clause
+        if( is_array( $column ) ){
+            return $this->resolveArrayOfWhere( $column, $link );
+        }
+
+        if( $column instanceof Closure){
+
+        }
+
+        if( is_string( $column ) && is_null($operator && is_null($value))){
+            echo $column;
+        }
+
+
+        var_dump($this->where[ "{$column} {$operator} {$value}" ]);
 
         return $this;
     }
 
-    public function orWhere( $where )
+    public function orWhere( $column, $operator = null, $value = null, $link = "or" )
     {
-        $this->where .= $this->solveWhere( $where );
+//        $this->where .= $this->solveWhere( $where );
 
+
+        var_dump($this->where);
 
         return $this;
     }
 
+    protected function resolveArrayOfWhere( $column, $link, $method = "where" )
+    {
+        return $this->nestedWhere( function( $query ) use ($column, $link, $method){
+            foreach( $column as $key => $value ){
+                 echo "query = {$query} | key: {$key} | value: {$value} <br />";
+
+//                $this->$method( $key, '=', $value );
+            }
+        }, $link );
+    }
+
+    protected function nestedWhere( Closure $callback, $link )
+    {
+        call_user_func( $callback, $query = "Query" );
+
+        return $this->compileWhere( $query, $link );
+
+    }
+
+    protected function compileWhere( $query, $link)
+    {
+        $this->where[] = $query;
+
+        return $this;
+    }
+
+    public function addBindings( Array $array, $value )
+    {
+        $this->$array = $value;
+    }
+
+
+    public function whereRaw( $string )
+    {
+
+    }
 
     public function like( $key, $value )
     {
@@ -285,6 +398,13 @@ class Query {
     {
         $sentence = "(";
 
+        if( is_array( $where )){
+            //Resolve the where clause when an array is being passed
+
+
+        }
+
+
         if( is_array( $where ) ){
             $x = 1;
             foreach( $where as $item ){
@@ -305,6 +425,7 @@ class Query {
         }
 
         $sentence .= ")";
+
 
         return $sentence;
     }

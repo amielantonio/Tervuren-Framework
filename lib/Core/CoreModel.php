@@ -118,6 +118,13 @@ abstract class CoreModel {
         return $this;
     }
 
+    public function orWhere( $where )
+    {
+        $this->query->orWhere( $where );
+
+        return $this;
+    }
+
     public function save()
     {
 

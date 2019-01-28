@@ -25,7 +25,7 @@ class MainController extends CoreController{
     {
         $device = new AccessDevice;
 
-        $devs = $device->select( ['1', '2'], true )->where( 'test langs'  )->get();
+        $devs = $device->select( ['1', '2'], true )->where( [ 'key','value' ]  )->get();
 
 
 
