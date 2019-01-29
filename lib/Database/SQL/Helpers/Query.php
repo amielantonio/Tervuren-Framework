@@ -122,11 +122,25 @@ class Query {
         'not similar to', 'not ilike', '~~*', '!~~*',
     ];
 
+    /**
+     * The current query value bindings.
+     *
+     * @var array
+     */
+    public $bindings = [
+        'select' => [],
+        'from'   => [],
+        'join'   => [],
+        'where'  => [],
+        'having' => [],
+        'order'  => [],
+        'union'  => [],
+    ];
+
 
     public function __construct()
     {
         $this->grammar = new Grammar;
-
     }
 
 
@@ -253,12 +267,12 @@ class Query {
 
         }
 
-        if( is_string( $column ) && is_null($operator && is_null($value))){
-            echo $column;
+        //if the operator is invalid,
+        if( $this->invalidOperator( $operator ) ){
+
         }
 
-
-        var_dump($this->where[ "{$column} {$operator} {$value}" ]);
+        $this->addBinding( );
 
         return $this;
     }
@@ -268,46 +282,66 @@ class Query {
 //        $this->where .= $this->solveWhere( $where );
 
 
-        var_dump($this->where);
+//        var_dump($this->where);
 
         return $this;
     }
 
-    protected function resolveArrayOfWhere( $column, $link, $method = "where" )
+    protected function resolveArrayOfWhere( $column, $link )
     {
-        return $this->nestedWhere( function( $query ) use ($column, $link, $method){
+        return $this->nestedWhere( function() use ( $column, $link ){
             foreach( $column as $key => $value ){
-                 echo "query = {$query} | key: {$key} | value: {$value} <br />";
-
-//                $this->$method( $key, '=', $value );
+                 if( is_numeric( $key ) ){
+                     $this->where(...array_values($value));
+                 }else {
+                     $this->where($key, '=', $value );
+                 }
             }
         }, $link );
     }
 
     protected function nestedWhere( Closure $callback, $link )
     {
-        call_user_func( $callback, $query = "Query" );
+        call_user_func( $callback );
 
-        return $this->compileWhere( $query, $link );
-
+        return $this->compileWhere( $link );
     }
 
-    protected function compileWhere( $query, $link)
+    public function compileWhere( $link )
     {
-        $this->where[] = $query;
+        if( count($this->where))
 
         return $this;
     }
 
-    public function addBindings( Array $array, $value )
+    public function resolveWhere( $where )
     {
-        $this->$array = $value;
+
+    }
+
+
+    public function addBinding( $key, $value )
+    {
+        if( ! array_key_exists($key, $this->bindings)){
+            throw new exception("No Bindings of this sort!");
+        }
     }
 
 
     public function whereRaw( $string )
     {
 
+    }
+
+    /**
+     * Determine if the operator is supported
+     *
+     * @param $operator
+     * @return bool
+     */
+    protected function invalidOperator( $operator )
+    {
+        return ! in_array(strtolower($operator), $this->operators, true );
     }
 
     public function like( $key, $value )
