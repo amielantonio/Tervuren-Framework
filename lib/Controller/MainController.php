@@ -25,10 +25,13 @@ class MainController extends CoreController{
     {
         $device = new AccessDevice;
 
-        $devs = $device->select( ['1', '2'], true )->where( [['status','<>','Pending'],['status','<>','Not Available']] )->get();
+        $devs = $device->select( ['1', '2'], true )
+            ->where( 'test','1' )
+            ->where( 'test2','2' )
+            ->get();
 
 
-
+//        var_dump( $devs);
 
         return (new View('dashboard/dashboard'))->render();
     }

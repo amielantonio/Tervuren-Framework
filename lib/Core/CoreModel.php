@@ -71,15 +71,16 @@ abstract class CoreModel {
         $this->statement = $this->query->toString();
 
 //        var_dump( $this->statement );
-        return true;
+//        return $this->statement;
     }
 
     /**
      * Create a select query;
      *
-     * @param mixed $columns
-     * @param boolean $distinct
+     * @param $columns
+     * @param bool $distinct
      * @return $this
+     * @throws \Exception
      */
     public function select( $columns, $distinct = false )
     {
@@ -103,6 +104,7 @@ abstract class CoreModel {
      * Get all resources from the database
      *
      * @return array|null|object
+     * @throws \Exception
      */
     public function getAll()
     {
@@ -111,16 +113,16 @@ abstract class CoreModel {
         return $this->wpdb->get_results( $query );
     }
 
-    public function where( $where )
+    public function where( $column, $operator = null, $value = null, $link = "and" )
     {
-        $this->query->where( $where );
+        $this->query->where( $column, $operator, $value, $link );
 
         return $this;
     }
 
-    public function orWhere( $where )
+    public function orWhere( $column, $operator = null, $value = null, $link = "and" )
     {
-        $this->query->orWhere( $where );
+        $this->query->orWhere( $column, $operator, $value, $link );
 
         return $this;
     }

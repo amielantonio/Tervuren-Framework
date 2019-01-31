@@ -20,6 +20,8 @@ class Grammar {
 
         $grammar = "{$command} {$distinct} {$this->compileColumns($query->columns)} FROM {$query->table}";
 
+
+//        var_dump( $query->bindings);
         //Check for where clause
         $grammar .= (! empty( $query->where )) ? " where {$query->where}" : "";
 
@@ -70,6 +72,12 @@ class Grammar {
 
         return $columns;
 
+    }
+
+
+    protected function compileWhere( $where )
+    {
+        var_dump( $where );
     }
 
 }

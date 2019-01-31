@@ -4,6 +4,7 @@ namespace App\Database\SQL\Helpers;
 
 use App\Database\SQL\Helpers\Grammar;
 use Closure;
+use Exception;
 
 class Query {
 
@@ -15,6 +16,8 @@ class Query {
     protected $statement;
 
     /**
+     * Columns to be accessed by the query
+     *
      * @var array
      */
     public $columns = [];
@@ -149,6 +152,7 @@ class Query {
      *
      * @param $columns
      * @return $this
+     * @throws exception
      */
     public function select( $columns )
     {
@@ -246,13 +250,14 @@ class Query {
     }
 
     /**
-     * Add a where clause to the statement
+     * Add a Where Clause to the query
      *
-     * @param string|array  $column
+     * @param $column
      * @param null $operator
      * @param null $value
      * @param string $link
-     * @return $this
+     * @return $this|Query
+     * @throws Exception
      */
     public function where( $column, $operator = null, $value = null, $link = "and" )
     {
@@ -263,16 +268,38 @@ class Query {
             return $this->resolveArrayOfWhere( $column, $link );
         }
 
-        if( $column instanceof Closure){
+        // Here we will make some assumptions about the operator. If only 2 values are
+        // passed to the method, we will assume that the operator is an equals sign
+        // and keep going. Otherwise, we'll require the operator to be passed in.
+        list($value, $operator) = $this->prepareValueAndOperator(
+            $value, $operator, func_num_args() === 2
+        );
 
+        // If the columns is actually a Closure instance, we will assume the developer
+        // wants to begin a nested where statement which is wrapped in parenthesis.
+        // We'll add that Closure to the query then return back out immediately.
+        if( $column instanceof Closure ){
+            return $this->nestedWhere($column, $link);
         }
 
-        //if the operator is invalid,
-        if( $this->invalidOperator( $operator ) ){
-
+        // If the given operator is not found in the list of valid operators we will
+        // assume that the developer is just short-cutting the '=' operators and
+        // we will set the operators to '=' and set the values appropriately.
+        if ($this->invalidOperator( $operator )) {
+            list($value, $operator) = [$operator, '='];
         }
 
-        $this->addBinding( );
+        // If the value is "null", we will just assume the developer wants to add a
+        // where null clause to the query. So, we will allow a short-cut here to
+        // that method for convenience so the developer doesn't have to check.
+        if (is_null($value)) {
+            return $this->whereNull($column, $link, $operator !== '=');
+        }
+
+        $this->where[] = compact( 'column', 'operator', 'value', 'link');
+
+
+        $this->addBinding($this->where);
 
         return $this;
     }
@@ -287,14 +314,19 @@ class Query {
         return $this;
     }
 
+    public function whereNull($column, $boolean = 'and', $not = false)
+    {
+        return $this;
+    }
+
     protected function resolveArrayOfWhere( $column, $link )
     {
         return $this->nestedWhere( function() use ( $column, $link ){
             foreach( $column as $key => $value ){
                  if( is_numeric( $key ) ){
-                     $this->where(...array_values($value));
+                     $this->addBinding('where', ...array_values($value));
                  }else {
-                     $this->where($key, '=', $value );
+                     $this->addBinding('where', "test");
                  }
             }
         }, $link );
@@ -309,9 +341,47 @@ class Query {
 
     public function compileWhere( $link )
     {
-        if( count($this->where))
+//        if( count($this->where) ){
+//            foreach( $this->bindings['where'] as $sentence ){
+//
+//            }
+//        }
+
+//        var_dump($this->bindings['where']);
 
         return $this;
+    }
+
+    protected function invalidOperatorAndValue($operator, $value)
+    {
+        return is_null($value) && in_array($operator, $this->operators) &&
+            ! in_array($operator, ['=', '<>', '!=']);
+    }
+
+    /**
+     * @param $value
+     * @param $operator
+     * @param bool $useDefault
+     * @return array
+     * @throws Exception
+     */
+    public function prepareValueAndOperator( $value, $operator, $useDefault = false )
+    {
+        if ($useDefault) {
+            return [$operator, '='];
+        } elseif ($this->invalidOperatorAndValue( $operator, $value )) {
+            throw new exception('Illegal operator and value combination.');
+        }
+
+        return [$value, $operator];
+    }
+
+    public function checkOperatorAndValue( $operator, $value )
+    {
+        // if the operator is null, assumes that the developer is sending only 2
+        if( ! is_null( $operator ) && is_null( $value )){
+
+        }
     }
 
     public function resolveWhere( $where )
@@ -319,12 +389,45 @@ class Query {
 
     }
 
-
-    public function addBinding( $key, $value )
+    /**
+     * Add binding to the query
+     *
+     * @param $value
+     * @param string $type
+     * @param string $link
+     * @return $this
+     * @throws Exception
+     */
+    public function addBinding( $value, $type = 'where', $link = 'and' )
     {
-        if( ! array_key_exists($key, $this->bindings)){
+        if( ! array_key_exists($type, $this->bindings)){
             throw new exception("No Bindings of this sort!");
         }
+
+//        if (is_array($value)) {
+//            $this->bindings[$type] = $value;
+//        } else {
+//            $this->bindings[$type][] = [
+//                "query" => $value,
+//                "link" => $link
+//            ];
+//        }
+
+
+        var_dump( $value ) ;
+
+        if (is_array($value)) {
+            $this->bindings[$type] = array_values(array_merge($this->bindings[$type], $value));
+        } else {
+            $this->bindings[$type][] = $value;
+        }
+
+        return $this;
+    }
+
+    public function getBindings()
+    {
+        return $this->bindings;
     }
 
 
