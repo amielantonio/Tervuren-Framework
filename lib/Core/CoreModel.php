@@ -70,8 +70,7 @@ abstract class CoreModel {
 //        $this->result = $this->wpdb->get_results( $this->statement );
         $this->statement = $this->query->toString();
 
-//        var_dump( $this->statement );
-//        return $this->statement;
+        return $this->statement;
     }
 
     /**

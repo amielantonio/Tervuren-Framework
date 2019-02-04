@@ -279,7 +279,7 @@ class Query {
         // wants to begin a nested where statement which is wrapped in parenthesis.
         // We'll add that Closure to the query then return back out immediately.
         if( $column instanceof Closure ){
-            return $this->nestedWhere($column, $link);
+            return $this->nestedWhere($column);
         }
 
         // If the given operator is not found in the list of valid operators we will
@@ -296,8 +296,7 @@ class Query {
             return $this->whereNull($column, $link, $operator !== '=');
         }
 
-        $this->where[] = compact( 'column', 'operator', 'value', 'link');
-
+        $this->where[] = compact( 'column', 'operator', 'value', 'link' );
 
         $this->addBinding($this->where);
 
@@ -319,37 +318,63 @@ class Query {
         return $this;
     }
 
-    protected function resolveArrayOfWhere( $column, $link )
+    /**
+     * @param $column
+     * @param $link
+     * @param string $method
+     * @return Query
+     * @throws Exception
+     */
+    protected function resolveArrayOfWhere( $column, $link, $method = "where" )
     {
-        return $this->nestedWhere( function() use ( $column, $link ){
+        return $this->nestedWhere( function() use ( $column, $link, $method ){
             foreach( $column as $key => $value ){
+//                var_dump($value);
                  if( is_numeric( $key ) ){
-                     $this->addBinding('where', ...array_values($value));
+                     foreach( $value as $valKey => $valValue){
+                         $this->$method($valKey, '=', $valValue, $link );
+                     }
+
                  }else {
-                     $this->addBinding('where', "test");
+
+                     $this->$method($key,'=',$value, $link);
                  }
             }
-        }, $link );
+        } );
     }
 
-    protected function nestedWhere( Closure $callback, $link )
+    /**
+     * @param Closure $callback
+     * @param $link
+     * @return Query
+     * @throws Exception
+     */
+    protected function nestedWhere( Closure $callback )
     {
         call_user_func( $callback );
 
-        return $this->compileWhere( $link );
+        return $this->compileWhere();
     }
 
-    public function compileWhere( $link )
+    /**
+     * @param $link
+     * @return $this
+     * @throws Exception
+     */
+    public function compileWhere()
     {
-//        if( count($this->where) ){
-//            foreach( $this->bindings['where'] as $sentence ){
-//
-//            }
-//        }
+       if (count($this->where)) {
 
-//        var_dump($this->bindings['where']);
+            $this->addBinding($this->getRawBindings()['where'], 'where');
+
+        }
 
         return $this;
+    }
+
+    public function getRawBindings()
+    {
+        return $this->bindings;
     }
 
     protected function invalidOperatorAndValue($operator, $value)
@@ -376,14 +401,6 @@ class Query {
         return [$value, $operator];
     }
 
-    public function checkOperatorAndValue( $operator, $value )
-    {
-        // if the operator is null, assumes that the developer is sending only 2
-        if( ! is_null( $operator ) && is_null( $value )){
-
-        }
-    }
-
     public function resolveWhere( $where )
     {
 
@@ -404,20 +421,8 @@ class Query {
             throw new exception("No Bindings of this sort!");
         }
 
-//        if (is_array($value)) {
-//            $this->bindings[$type] = $value;
-//        } else {
-//            $this->bindings[$type][] = [
-//                "query" => $value,
-//                "link" => $link
-//            ];
-//        }
-
-
-        var_dump( $value ) ;
-
         if (is_array($value)) {
-            $this->bindings[$type] = array_values(array_merge($this->bindings[$type], $value));
+            $this->bindings[$type] = $value;
         } else {
             $this->bindings[$type][] = $value;
         }
@@ -444,7 +449,8 @@ class Query {
      */
     protected function invalidOperator( $operator )
     {
-        return ! in_array(strtolower($operator), $this->operators, true );
+        return ! in_array(strtolower($operator), $this->operators, true) &&
+            ! in_array(strtolower($operator), $this->grammar->getOperators(), true);
     }
 
     public function like( $key, $value )

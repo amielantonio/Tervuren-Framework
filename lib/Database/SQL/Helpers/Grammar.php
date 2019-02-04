@@ -7,6 +7,13 @@ use App\Database\SQL\Helpers\Query;
 class Grammar {
 
     /**
+     * The grammar specific operators.
+     *
+     * @var array
+     */
+    protected $operators = [];
+
+    /**
      * Compile Select Statement
      *
      * @param \App\Database\SQL\Helpers\Query $query
@@ -78,6 +85,11 @@ class Grammar {
     protected function compileWhere( $where )
     {
         var_dump( $where );
+    }
+
+    public function getOperators()
+    {
+        return $this->operators;
     }
 
 }

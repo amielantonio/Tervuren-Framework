@@ -26,8 +26,10 @@ class MainController extends CoreController{
         $device = new AccessDevice;
 
         $devs = $device->select( ['1', '2'], true )
-            ->where( 'test','1' )
-            ->where( 'test2','2' )
+//            ->where( 'test','1' )
+//            ->where( [['test2' => 'yes'],['test3' => 'no']] )
+//            ->where( ['test4' => 'yesno'] )
+            ->where( 'test5','<','test5' )
             ->get();
 
 
