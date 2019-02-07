@@ -25,17 +25,17 @@ class MainController extends CoreController{
     {
         $device = new AccessDevice;
 
-        $devs = $device->select( ['1', '2'], true )
+        $devs = $device->select( ['1', '2'] )
 //            ->where( 'test','1' )
 //            ->where( [['test2' => 'yes'],['test3' => 'no']] )
 //            ->where( ['test4' => 'yesno'] )
-            ->where( 'test5','<','test5' )
+//            ->where( 'test5','<','test5' )
             ->get();
 
 
-//        var_dump( $devs);
+        var_dump( $devs);
 
-        return (new View('dashboard/dashboard'))->render();
+        return ( new View( 'dashboard/dashboard' ) )->render();
     }
 
     /**
@@ -46,7 +46,7 @@ class MainController extends CoreController{
      */
     public function access_form()
     {
-        return (new View( 'access_device_form/access_device' ))->render();
+        return ( new View( 'access_device_form/access_device' ) )->render();
     }
 
     /**
@@ -57,7 +57,7 @@ class MainController extends CoreController{
      */
     public function move_form()
     {
-        return (new View('move_in_out_form/move_form'))->render();
+        return ( new View( 'move_in_out_form/move_form' ) )->render();
 
     }
 

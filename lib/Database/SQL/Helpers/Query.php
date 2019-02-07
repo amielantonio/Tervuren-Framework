@@ -23,13 +23,6 @@ class Query {
     public $columns = [];
 
     /**
-     * Command to be used for the query
-     *
-     * @var string
-     */
-    public $command;
-
-    /**
      * Table name of the query
      *
      * @var string
@@ -157,7 +150,6 @@ class Query {
     public function select( $columns )
     {
         $this->columns = ( is_array($columns) ) ? $columns : func_get_args();
-        $this->command = 'select';
 
         return $this;
     }
@@ -182,7 +174,7 @@ class Query {
      */
     public function from( $table )
     {
-        $this->table = $table;
+        $this->table = $this->from = $table;
 
         return $this;
     }
@@ -201,7 +193,6 @@ class Query {
      */
     public function insert( array $values, $table )
     {
-        $this->command = 'insert';
 
         foreach ($values as $key => $value) {
             ksort($value);
@@ -220,25 +211,16 @@ class Query {
      * @param $table
      * @return $this
      */
-    public function update( $table, array $values )
+    public function update( array $values )
     {
-        $this->command = 'update';
+        $sql = $this->grammar->compileUpdate( $this, $values );
 
-        foreach ($values as $key => $value) {
-            ksort($value);
 
-            $this->values[$key] = $value;
-        }
-
-        $this->table = $table;
-
-        return $this;
     }
 
 
     public function delete( $table, $id = null )
     {
-        $this->command = 'delete';
 
         $this->table = $table;
 
@@ -537,97 +519,14 @@ class Query {
         $this->statement = $statement;
     }
 
-    protected function solveWhere( $where )
-    {
-        $sentence = "(";
-
-        if( is_array( $where )){
-            //Resolve the where clause when an array is being passed
-
-
-        }
-
-
-        if( is_array( $where ) ){
-            $x = 1;
-            foreach( $where as $item ){
-                if( is_array( $item ) ){
-                    $sentence .= implode( '', $item );
-                    if($x < count($where )){
-                        $sentence .= " AND ";
-                    }
-
-                } else {
-                    $sentence .= implode( '', $where );
-                    break;
-                }
-                $x++;
-            }
-        } else {
-            $sentence .= $where;
-        }
-
-        $sentence .= ")";
-
-
-        return $sentence;
-    }
-
-
-    public function getCommand()
-    {
-        return $this->command;
-    }
-
-    /**
-     * Build the SQL Statement
-     *
-     * @return string
-     */
-    protected function buildStatement()
-    {
-        $statement = "";
-
-        switch ($this->command){
-            case 'select':
-                $statement = $this->grammar->compileSelect( $this );
-                break;
-            case 'insert':
-                $statement = $this->grammar->compileInsert( $this );
-                break;
-            case 'update':
-                $statement = $this->grammar->compileUpdate( $this );
-                break;
-            case 'delete':
-                $statement = $this->grammar->compileDelete( $this );
-                break;
-            default:
-
-        }
-
-        return $statement;
-    }
-
-    /**
-     *
-     * @return string
-     */
-//    public function __toString()
-//    {
-//
-//        $this->statement = $statement = $this->buildStatement();
-//
-//        return $statement;
-//    }
-
     /**
      * Return a string representation of the query
      *
      * @return string
      */
-    public function toString()
+    public function toSQL()
     {
-        $this->statement = $statement = $this->buildStatement();
+        $this->statement = $statement = $this->grammar->compileSelect( $this );
 
         return $statement;
     }

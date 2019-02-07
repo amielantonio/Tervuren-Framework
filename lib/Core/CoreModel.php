@@ -68,7 +68,7 @@ abstract class CoreModel {
     public function get()
     {
 //        $this->result = $this->wpdb->get_results( $this->statement );
-        $this->statement = $this->query->toString();
+        $this->statement = $this->query->toSQL();
 
         return $this->statement;
     }
@@ -83,17 +83,12 @@ abstract class CoreModel {
      */
     public function select( $columns, $distinct = false )
     {
-        $this->columns = $columns = ( is_array($columns) ) ? implode( ', ', $columns ) : $columns ;
+//        $this->columns = $columns = ( is_array($columns) ) ? implode( ', ', $columns ) : $columns ;
 
-        if( $distinct ) {
-            $this->query
-                ->select( $columns )
-                ->distinct()
-                ->from( $this->table );
-        }else{
-            $this->query
-                ->select( $columns )
-                ->from( $this->table );
+        $this->query->select( $columns )->from( $this->table );
+
+        if( $distinct ){
+            $this->query->distinct();
         }
 
         return $this;
@@ -112,6 +107,14 @@ abstract class CoreModel {
         return $this->wpdb->get_results( $query );
     }
 
+    /**
+     * @param $column
+     * @param null $operator
+     * @param null $value
+     * @param string $link
+     * @return $this
+     * @throws \Exception
+     */
     public function where( $column, $operator = null, $value = null, $link = "and" )
     {
         $this->query->where( $column, $operator, $value, $link );
