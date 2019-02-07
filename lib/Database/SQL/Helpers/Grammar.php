@@ -100,7 +100,7 @@ class Grammar {
 
     protected function compileJoins( Query $query, $joins )
     {
-
+        return '';
     }
 
     protected function compileWhere( Query $query, $wheres )
@@ -141,37 +141,37 @@ class Grammar {
 
     protected function compileGroups( Query $query, $groups )
     {
-
+        return '';
     }
 
     protected function compileHavings( Query $query, $havings )
     {
-
+        return '';
     }
 
     protected function compileOrders( Query $query, $orders )
     {
-
+        return '';
     }
 
     protected function compileLimit( Query $query, $limit )
     {
-
+        return '';
     }
 
     protected function compileOffset( Query $query, $offset )
     {
-
+        return '';
     }
 
     protected function compileUnions( Query $query, $unions )
     {
-
+        return '';
     }
 
     protected function compileLock( Query $query, $lock )
     {
-
+        return '';
     }
 
 
