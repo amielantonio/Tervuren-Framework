@@ -181,6 +181,7 @@ abstract class CoreModel {
      * Add an where not null statement with an "or" link
      *
      * @param $column
+     * @return $this
      */
     public function orWhereNotNull( $column )
     {
@@ -209,6 +210,7 @@ abstract class CoreModel {
      *
      * @param $column
      * @param array $values
+     * @return $this
      * @throws \Exception
      */
     public function orWhereBetween( $column, array $values )

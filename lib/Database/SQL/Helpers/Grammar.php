@@ -156,7 +156,7 @@ class Grammar {
 
     protected function whereRaw( Query $query, $where )
     {
-
+        return $where['sql'];
     }
 
     /**
@@ -198,47 +198,7 @@ class Grammar {
 
     protected function whereBetween( Query $query, $where )
     {
-
-    }
-
-    protected function whereDate( Query $query, $where )
-    {
-
-    }
-
-    protected function whereTime( Query $query, $where )
-    {
-
-    }
-
-    protected function whereDay( Query $query, $where )
-    {
-
-    }
-
-    protected function whereMonth( Query $query, $where )
-    {
-
-    }
-
-    protected function whereYear( Query $query, $where )
-    {
-
-    }
-
-    protected function whereColumn( Query $query, $where )
-    {
-
-    }
-
-    protected function whereExists( Query $query, $where )
-    {
-
-    }
-
-    protected function whereNotExists( Query $query, $where )
-    {
-
+        return $where['column']." BETWEEN ".$where['values'][0]." AND ".$where['values'][1];
     }
 
     protected function compileGroups( Query $query, $groups )

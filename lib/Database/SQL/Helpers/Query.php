@@ -358,7 +358,7 @@ class Query {
      */
     public function whereBetween( $column, array $values, $link = 'and', $not = false )
     {
-        $type = 'between';
+        $type = 'Between';
 
         $this->where[] = compact('type', 'column', 'values', 'link', 'not');
 
@@ -418,7 +418,7 @@ class Query {
      */
     public function whereRaw($sql, $bindings = [], $link = 'and')
     {
-        $this->where[] = ['type' => 'raw', 'sql' => $sql, 'link' => $link];
+        $this->where[] = ['type' => 'Raw', 'sql' => $sql, 'link' => $link];
 
         $this->addBinding((array) $bindings, 'where');
 
@@ -433,9 +433,9 @@ class Query {
      * @return Query
      * @throws Exception
      */
-    public function orWhereRaw($sql, $bindings = [])
+    public function orWhereRaw( $sql, $bindings = [] )
     {
-        return $this->whereRaw($sql, $bindings, 'or');
+        return $this->whereRaw( $sql, $bindings, 'or' );
     }
 
     /**

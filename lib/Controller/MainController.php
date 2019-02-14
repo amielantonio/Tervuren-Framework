@@ -30,7 +30,7 @@ class MainController extends CoreController{
 //            ->where( [['test2' =>  'yes'],['test3' => 'no']] )
 //            ->where( ['test4' => 'yesno'] )
             ->whereIn( 'type', ['yow', 'yes'] )
-            ->orWhereIn( 'type', ['yow', 'yes'] )
+            ->whereBetween( 'type', ['yow', 'yes'] )
 //            ->where( 'test5','<','test5' )
             ->get();
 
