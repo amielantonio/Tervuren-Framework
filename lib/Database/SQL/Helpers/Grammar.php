@@ -45,6 +45,8 @@ class Grammar {
      */
     public function compileSelect( Query $query )
     {
+        var_dump($query->where);
+
         if( is_null( $query->columns ) ){
             $query->columns = ['*'];
         }
@@ -57,7 +59,7 @@ class Grammar {
     }
 
     /**
-     *
+     * compile components
      *
      * @param \App\Database\SQL\Helpers\Query $query
      * @return array
@@ -93,8 +95,6 @@ class Grammar {
 
     protected function compileFrom( Query $query, $table )
     {
-
-        echo "from";
         return "FROM {$table}";
     }
 
@@ -103,15 +103,20 @@ class Grammar {
         return '';
     }
 
+    /**
+     *
+     *
+     * @param \App\Database\SQL\Helpers\Query $query
+     * @param $wheres
+     * @return string
+     */
     protected function compileWhere( Query $query, $wheres )
     {
         if (is_null($wheres)){
             return '';
         }
 
-
         if( count($sql = $this->wheretoArray( $query ) ) > 0 ){
-//            var_dump($query->where);
             return $this->concatenateWhereClauses( $query, $sql );
         }
 
@@ -119,23 +124,120 @@ class Grammar {
     }
 
 
-    //final
+    /**
+     * @param $query
+     * @param $sql
+     * @return string
+     */
     protected function concatenateWhereClauses($query, $sql)
     {
         $conjunction =  'WHERE';
 
-        return $conjunction.' '.$this->removeLeadingBoolean(implode(' ', $sql));
+        return $conjunction.' '.$this->removeLeadingBoolean( implode( ' ', $sql ) );
     }
 
+    /**
+     * Parse Array and return statement
+     *
+     * @param $query
+     * @return array
+     */
     protected function wheretoArray( $query )
     {
         $wheres = [];
 
         foreach( $query->where as $key => $where ){
-            $wheres[] = "{$where['link']} {$where['column']} {$where['operator']} {$where['value']}";
+            $wheres[] = "{$where['link']} ". $this->{"where{$where['type']}"}($query, $where );
         }
 
         return $wheres;
+
+    }
+
+    protected function whereRaw( Query $query, $where )
+    {
+
+    }
+
+    /**
+     * Return a Basic where statement
+     *
+     * @param \App\Database\SQL\Helpers\Query $query
+     * @param $where
+     * @return string
+     */
+    protected function whereBasic( Query $query, $where )
+    {
+        return $where['column']." ".$where['operator']." ".$where['value'];
+    }
+
+    /**
+     * @param \App\Database\SQL\Helpers\Query $query
+     * @param $where
+     * @return string
+     */
+    protected function whereIn( Query $query, $where )
+    {
+        return $where['column']." IN (".implode( ', ', $where['values'] ).")";
+    }
+
+    protected function whereNotIn( Query $query, $where )
+    {
+
+    }
+
+    protected function whereNull( Query $query, $where )
+    {
+
+    }
+
+    protected function whereNotNull( Query $query, $where )
+    {
+
+    }
+
+    protected function whereBetween( Query $query, $where )
+    {
+
+    }
+
+    protected function whereDate( Query $query, $where )
+    {
+
+    }
+
+    protected function whereTime( Query $query, $where )
+    {
+
+    }
+
+    protected function whereDay( Query $query, $where )
+    {
+
+    }
+
+    protected function whereMonth( Query $query, $where )
+    {
+
+    }
+
+    protected function whereYear( Query $query, $where )
+    {
+
+    }
+
+    protected function whereColumn( Query $query, $where )
+    {
+
+    }
+
+    protected function whereExists( Query $query, $where )
+    {
+
+    }
+
+    protected function whereNotExists( Query $query, $where )
+    {
 
     }
 

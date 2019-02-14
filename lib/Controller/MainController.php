@@ -27,13 +27,15 @@ class MainController extends CoreController{
 
         $devs = $device->select( ['1', '2'] )
 //            ->where( 'test','1' )
-//            ->where( [['test2' => 'yes'],['test3' => 'no']] )
+//            ->where( [['test2' =>  'yes'],['test3' => 'no']] )
 //            ->where( ['test4' => 'yesno'] )
+            ->whereIn( 'type', ['yow', 'yes'] )
+            ->orWhereIn( 'type', ['yow', 'yes'] )
 //            ->where( 'test5','<','test5' )
             ->get();
 
 
-        var_dump( $devs);
+        var_dump( $devs );
 
         return ( new View( 'dashboard/dashboard' ) )->render();
     }

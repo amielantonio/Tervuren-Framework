@@ -70,6 +70,7 @@ abstract class CoreModel {
 //        $this->result = $this->wpdb->get_results( $this->statement );
         $this->statement = $this->query->toSQL();
 
+
         return $this->statement;
     }
 
@@ -108,6 +109,8 @@ abstract class CoreModel {
     }
 
     /**
+     * Create a simple Where Clause
+     *
      * @param $column
      * @param null $operator
      * @param null $value
@@ -122,9 +125,179 @@ abstract class CoreModel {
         return $this;
     }
 
-    public function orWhere( $column, $operator = null, $value = null, $link = "and" )
+    /**
+     * Add an "or WHERE" Closure to the query
+     *
+     * @param $column
+     * @param null $operator
+     * @param null $value
+     * @return $this
+     * @throws \Exception
+     */
+    public function orWhere( $column, $operator = null, $value = null)
     {
-        $this->query->orWhere( $column, $operator, $value, $link );
+        $this->query->orWhere( $column, $operator, $value );
+
+        return $this;
+    }
+
+    /**
+     * add a where null statement
+     *
+     * @param $column
+     * @return $this
+     */
+    public function whereNull( $column )
+    {
+        $this->query->whereNull( $column );
+
+        return $this;
+    }
+
+    /**
+     * add a where null statement
+     *
+     * @param $column
+     */
+    public function orWhereNull( $column )
+    {
+        $this->query->orWhereNull( $column );
+    }
+
+    /**
+     * Add a where not null statement
+     *
+     * @param $column
+     * @return $this
+     */
+    public function whereNotNull( $column )
+    {
+        $this->query->whereNotNull( $column );
+
+        return $this;
+    }
+
+    /**
+     * Add an where not null statement with an "or" link
+     *
+     * @param $column
+     */
+    public function orWhereNotNull( $column )
+    {
+        $this->query->orWhereNotNull( $column );
+
+        return $this;
+    }
+
+    /**
+     * Add a where between sql statement
+     *
+     * @param $column
+     * @param array $values
+     * @return $this
+     * @throws \Exception
+     */
+    public function whereBetween( $column, array $values )
+    {
+        $this->query->whereBetween( $column, $values );
+
+        return $this;
+    }
+
+    /**
+     * Add an or Where between statement with an "or" link
+     *
+     * @param $column
+     * @param array $values
+     * @throws \Exception
+     */
+    public function orWhereBetween( $column, array $values )
+    {
+        $this->query->orWhereBetween( $column, $values );
+
+        return $this;
+    }
+
+    /**
+     * Add a where not between statement
+     *
+     * @param $column
+     * @param array $values
+     * @return $this
+     * @throws \Exception
+     */
+    public function whereNotBetween( $column, array $values )
+    {
+        $this->query->whereNotBetween( $column, $values );
+
+        return $this;
+    }
+
+    /**
+     * Add where not between statement with an "or" link
+     *
+     * @param $column
+     * @param array $values
+     * @return $this
+     * @throws \Exception
+     */
+    public function orWhereNotBetween( $column, array $values )
+    {
+        $this->query->orWhereNotBetween( $column, $values );
+
+        return $this;
+    }
+
+    /**
+     * Add a raw Where statement
+     *
+     * @param $sql
+     * @return $this
+     * @throws \Exception
+     */
+    public function whereRaw( $sql )
+    {
+        $this->query->whereRaw( $sql );
+
+        return $this;
+    }
+
+    /**
+     * Add a raw Where statement with an "or" link
+     *
+     * @param $sql
+     * @return $this
+     * @throws \Exception
+     */
+    public function orWhereRaw( $sql )
+    {
+        $this->query->orWhereRaw( $sql );
+
+        return $this;
+    }
+
+    /**
+     * @param $column
+     * @param array $values
+     * @return $this
+     * @throws \Exception
+     */
+    public function whereIn( $column, array $values )
+    {
+        $this->query->whereIn( $column, $values );
+
+        return $this;
+    }
+
+    /**
+     * @param $column
+     * @param array $values
+     * @return $this
+     * @throws \Exception
+     */
+    public function orWhereIn( $column, array $values )
+    {
+        $this->query->orWhereIn( $column, $values );
 
         return $this;
     }

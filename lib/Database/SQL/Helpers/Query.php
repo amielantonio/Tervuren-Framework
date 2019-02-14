@@ -3,6 +3,7 @@
 namespace App\Database\SQL\Helpers;
 
 use App\Database\SQL\Helpers\Grammar;
+use App\Database\SQL\Helpers\Expression;
 use Closure;
 use Exception;
 
@@ -213,7 +214,7 @@ class Query {
      */
     public function update( array $values )
     {
-        $sql = $this->grammar->compileUpdate( $this, $values );
+//        $sql = $this->grammar->compileUpdate( $this, $values );
 
 
     }
@@ -278,26 +279,198 @@ class Query {
             return $this->whereNull($column, $link, $operator !== '=');
         }
 
-        $this->where[] = compact( 'column', 'operator', 'value', 'link' );
+        $type = "Basic";
+
+        $this->where[] = compact( 'type', 'column', 'operator', 'value', 'link' );
 
         $this->addBinding($this->where);
 
         return $this;
     }
 
-    public function orWhere( $column, $operator = null, $value = null, $link = "or" )
+    /**
+     *
+     * @param $column
+     * @param null $operator
+     * @param null $value
+     * @return Query
+     * @throws Exception
+     */
+    public function orWhere( $column, $operator = null, $value = null )
     {
-//        $this->where .= $this->solveWhere( $where );
+        list($value, $operator) = $this->prepareValueAndOperator(
+            $value, $operator, func_num_args() === 2
+        );
 
+        return $this->where($column, $operator, $value, 'or');
+    }
 
-//        var_dump($this->where);
+    /**
+     * @param $column
+     * @param string $link
+     * @param bool $not
+     * @return $this
+     */
+    public function whereNull($column, $link = 'and', $not = false)
+    {
+        $type = $not ? 'NotNull' : 'Null';
+
+        $this->where[] = compact( 'type', 'column', 'link' );
 
         return $this;
     }
 
-    public function whereNull($column, $boolean = 'and', $not = false)
+    public function orWhereNull( $column )
     {
+        return $this->whereNull( $column, 'or' );
+    }
+
+    /**
+     * Add a "where not null" clause to the query.
+     *
+     * @param $column
+     * @param string $link
+     * @return Query
+     */
+    public function whereNotNull( $column, $link = "and ")
+    {
+        return $this->whereNull( $column, $link, true );
+    }
+
+    /**
+     *  Add an "or where not null" clause to the query.
+     *
+     * @param $column
+     * @return Query
+     */
+    public function orWhereNotNull($column)
+    {
+        return $this->whereNotNull($column, 'or');
+    }
+
+    /**
+     * @param $column
+     * @param array $values
+     * @param string $link
+     * @param bool $not
+     * @return $this
+     * @throws Exception
+     */
+    public function whereBetween( $column, array $values, $link = 'and', $not = false )
+    {
+        $type = 'between';
+
+        $this->where[] = compact('type', 'column', 'values', 'link', 'not');
+
+        $this->addBinding($this->cleanBindings($values), 'where');
+
         return $this;
+    }
+
+    /**
+     * Add an or where between statement to the query.
+     *
+     * @param $column
+     * @param array $values
+     * @return Query
+     * @throws Exception
+     */
+    public function orWhereBetween($column, array $values)
+    {
+        return $this->whereBetween($column, $values, 'or');
+    }
+
+    /**
+     * Add a where not between statement to the query.
+     *
+     * @param $column
+     * @param array $values
+     * @param string $link
+     * @return Query
+     * @throws Exception
+     */
+    public function whereNotBetween($column, array $values, $link = 'and')
+    {
+        return $this->whereBetween($column, $values, $link, true);
+    }
+
+    /**
+     * Add an or where not between statement to the query.
+     *
+     * @param $column
+     * @param array $values
+     * @return Query
+     * @throws Exception
+     */
+    public function orWhereNotBetween($column, array $values)
+    {
+        return $this->whereNotBetween($column, $values, 'or');
+    }
+
+    /**
+     * Add a raw where clause to the query.
+     *
+     * @param $sql
+     * @param array $bindings
+     * @param string $link
+     * @return $this
+     * @throws Exception
+     */
+    public function whereRaw($sql, $bindings = [], $link = 'and')
+    {
+        $this->where[] = ['type' => 'raw', 'sql' => $sql, 'link' => $link];
+
+        $this->addBinding((array) $bindings, 'where');
+
+        return $this;
+    }
+
+    /**
+     * Add a raw or where clause to the query.
+     *
+     * @param $sql
+     * @param array $bindings
+     * @return Query
+     * @throws Exception
+     */
+    public function orWhereRaw($sql, $bindings = [])
+    {
+        return $this->whereRaw($sql, $bindings, 'or');
+    }
+
+    /**
+     * @param $column
+     * @param $values
+     * @param string $link
+     * @param bool $not
+     * @return $this
+     * @throws Exception
+     */
+    public function whereIn( $column, $values, $link = 'and', $not = false )
+    {
+        $type = $not ? 'NotIn' : 'In';
+
+
+        $this->where[] = compact( 'type', 'column', 'values', 'link' );
+
+        foreach ($values as $value) {
+            if (! $value instanceof Expression) {
+                $this->addBinding( $value, 'where');
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param $column
+     * @param $values
+     * @return Query
+     * @throws Exception
+     */
+    public function orWhereIn($column, $values)
+    {
+        return $this->whereIn($column, $values, 'or');
     }
 
     /**
@@ -311,12 +484,10 @@ class Query {
     {
         return $this->nestedWhere( function() use ( $column, $link, $method ){
             foreach( $column as $key => $value ){
-//                var_dump($value);
                  if( is_numeric( $key ) ){
                      foreach( $value as $valKey => $valValue){
                          $this->$method($valKey, '=', $valValue, $link );
                      }
-
                  }else {
 
                      $this->$method($key,'=',$value, $link);
@@ -383,11 +554,6 @@ class Query {
         return [$value, $operator];
     }
 
-    public function resolveWhere( $where )
-    {
-
-    }
-
     /**
      * Add binding to the query
      *
@@ -412,16 +578,26 @@ class Query {
         return $this;
     }
 
+    /**
+     * Remove all of the expressions from a list of bindings.
+     *
+     * @param  array  $bindings
+     * @return array
+     */
+    protected function cleanBindings(array $bindings)
+    {
+        return array_values(array_filter($bindings, function ($binding) {
+            return ! $binding instanceof Expression;
+        }));
+    }
+
     public function getBindings()
     {
         return $this->bindings;
     }
 
 
-    public function whereRaw( $string )
-    {
 
-    }
 
     /**
      * Determine if the operator is supported
@@ -435,69 +611,6 @@ class Query {
             ! in_array(strtolower($operator), $this->grammar->getOperators(), true);
     }
 
-    public function like( $key, $value )
-    {
-        $this->aggregates[] = "{$key} LIKE {$value}";
-
-        return $this;
-    }
-
-
-    public function in( array $values )
-    {
-        $list = implode( ', ', $values );
-
-        $this->aggregates[] = "IN ($list)";
-
-        return $this;
-    }
-
-
-    public function between( $firstValue, $secondValue )
-    {
-        $this->aggregates[] = "BETWEEN {$firstValue} AND {$secondValue}";
-
-        return $this;
-    }
-
-
-    public function having( $condition )
-    {
-        $this->aggregates[] = "HAVING {$condition}";
-
-        return $this;
-    }
-
-    public function groupBy( $column )
-    {
-        $this->aggregates[] = "GROUP BY {$column}";
-
-        return $this;
-    }
-
-    public function orderBy( $column, $option = "ASC" )
-    {
-        $defaults = ['ASC', 'DESC']; $columns = "";
-
-        //Check on the option that was passed by the user
-        if( ! in_array( $option, $defaults ) ){
-            $option = "ASC"; //Go back to default;
-        }
-
-        //Check if column is an array
-        if( is_array($column) ){
-            $columns = implode( ', ', $column );
-        }
-
-        //Check if column is a string
-        if( is_string($column)){
-            $columns = $column;
-        }
-
-        $this->aggregates[] = "ORDER BY {$columns} {$option}";
-
-        return $this;
-    }
 
     /**
      * Get the statement
