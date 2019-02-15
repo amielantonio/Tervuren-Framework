@@ -27,13 +27,7 @@ class MainController extends CoreController{
 
 //        $devs =  $device->select( '*' )->get();
 
-
-
-        $device->id = "test";
-        $device->name = "name";
-        $device->email = "email@email.com";
-        $device->phone = "123455";
-        $device->address = "hahahaa";
+        $device->address = "tewdw";
 
         $device->save();
 

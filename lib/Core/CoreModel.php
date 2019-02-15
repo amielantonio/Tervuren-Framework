@@ -65,6 +65,11 @@ abstract class CoreModel {
         $this->table = $wpdb->prefix . $this->table;
     }
 
+    public static function find( $primaryKey )
+    {
+
+    }
+
     public function get()
     {
         $this->statement = $this->query->toSQL();
@@ -314,25 +319,11 @@ abstract class CoreModel {
             return $this->wpdb->insert( $this->table, $this->columns );
         }
 
-        // do an update instead
-        $this->{$this->primary_key};
-
-        //Create where array
-        $where = $this->toAssocArray(
-            $this->primary_key,
-            $this->callProperty($this->primary_key)
-        );
-
-        return $this->wpdb->update( $this->table, $this->columns, $where  );
+        return $this->wpdb->update( $this->table, $this->columns, ""  );
     }
 
 
     public function delete()
-    {
-
-    }
-
-    public function update()
     {
 
     }
