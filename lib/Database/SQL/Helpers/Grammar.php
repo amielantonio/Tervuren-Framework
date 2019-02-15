@@ -45,8 +45,6 @@ class Grammar {
      */
     public function compileSelect( Query $query )
     {
-        var_dump($query->where);
-
         if( is_null( $query->columns ) ){
             $query->columns = ['*'];
         }
@@ -178,22 +176,22 @@ class Grammar {
      */
     protected function whereIn( Query $query, $where )
     {
-        return $where['column']." IN (".implode( ', ', $where['values'] ).")";
+        return $where['column']." IN ({$this->columnize($where['values'])})";
     }
 
     protected function whereNotIn( Query $query, $where )
     {
-
+        return $where['column']." NOT IN ({$this->columnize($where['values'])})";
     }
 
     protected function whereNull( Query $query, $where )
     {
-
+        return "{$where['column']} IS NULL";
     }
 
     protected function whereNotNull( Query $query, $where )
     {
-
+        return "{$where['column']} IS NOT NULL";
     }
 
     protected function whereBetween( Query $query, $where )
@@ -236,20 +234,33 @@ class Grammar {
         return '';
     }
 
-
-    /**
-     * @param \App\Database\SQL\Helpers\Query $query
-     * @return string
-     */
-    public function compileInsert( Query $query )
+    public function compileInsert( Query $query , array $values )
     {
-        $grammar = "INSERT INTO {$query->table}";
+        $table = $query->table;
 
-        return "";
+        $columns = $this->columnize(array_keys(reset($values)));
+
+        $parameters = $this->parameterize(array_values(reset($values)));
+
+        return "INSERT INTO {$table}({$columns}) VALUES {$parameters}";
     }
 
     /**
+     * Create query parameter place-holders for an array.
+     *
+     * @param  array   $values
+     * @return string
+     */
+    public function parameterize(array $values)
+    {
+        return implode(', ',  $values);
+    }
+
+
+
+    /**
      * @param \App\Database\SQL\Helpers\Query $query
+     *
      * @return string
      */
     public function compileDelete( Query $query )
@@ -261,7 +272,6 @@ class Grammar {
     public function compileUpdate( Query $query, array $values )
     {
 
-        $table = $query->table;
     }
 
 

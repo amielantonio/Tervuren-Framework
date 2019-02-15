@@ -25,17 +25,18 @@ class MainController extends CoreController{
     {
         $device = new AccessDevice;
 
-        $devs = $device->select( ['1', '2'] )
-//            ->where( 'test','1' )
-//            ->where( [['test2' =>  'yes'],['test3' => 'no']] )
-//            ->where( ['test4' => 'yesno'] )
-            ->whereIn( 'type', ['yow', 'yes'] )
-            ->whereBetween( 'type', ['yow', 'yes'] )
-//            ->where( 'test5','<','test5' )
-            ->get();
+//        $devs =  $device->select( '*' )->get();
 
 
-        var_dump( $devs );
+
+        $device->id = "test";
+        $device->name = "name";
+        $device->email = "email@email.com";
+        $device->phone = "123455";
+        $device->address = "hahahaa";
+
+        $device->save();
+
 
         return ( new View( 'dashboard/dashboard' ) )->render();
     }

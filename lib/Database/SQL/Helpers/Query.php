@@ -175,14 +175,16 @@ class Query {
      */
     public function from( $table )
     {
-        $this->table = $this->from = $table;
+        $this->from = $table;
 
         return $this;
     }
 
     public function table( $table )
     {
-        $this->table = $table;
+        $this->from = $table;
+
+        return $this;
     }
 
     /**
@@ -190,21 +192,35 @@ class Query {
      *
      * @param array $values
      * @param string $table
-     * @return $this
+     * @return bool
      */
     public function insert( array $values, $table )
     {
-
-        foreach ($values as $key => $value) {
-            ksort($value);
-
-            $this->values[$key] = $value;
+        $this->table = $table;
+        // Since every insert gets treated like a batch insert, we will make sure the
+        // bindings are structured in a way that is convenient when building these
+        // inserts statements by verifying these elements are actually an array.
+        if (empty($values)) {
+            return true;
         }
 
-        $this->table = $table;
+        if (! is_array(reset($values))) {
+            $values = [$values];
+        }
 
+        // Here, we will sort the insert keys for every record so that each insert is
+        // in the same order for the record. We need to make sure this is the case
+        // so there are not any errors or problems when inserting these records.
+        else {
+            foreach ($values as $key => $value) {
+                ksort($value);
 
-        return $this;
+                $values[$key] = $value;
+            }
+        }
+
+        return $this->grammar->compileInsert( $this, $values );
+
     }
 
     /**
@@ -643,4 +659,5 @@ class Query {
 
         return $statement;
     }
+
 }

@@ -12,7 +12,6 @@ class AccessDevice extends CoreModel {
     public function __construct()
     {
         parent::__construct();
-
     }
 
 }

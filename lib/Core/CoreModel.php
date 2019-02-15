@@ -67,11 +67,9 @@ abstract class CoreModel {
 
     public function get()
     {
-//        $this->result = $this->wpdb->get_results( $this->statement );
         $this->statement = $this->query->toSQL();
+        return $this->result = $this->wpdb->get_results( $this->statement );
 
-
-        return $this->statement;
     }
 
     /**
@@ -84,8 +82,6 @@ abstract class CoreModel {
      */
     public function select( $columns, $distinct = false )
     {
-//        $this->columns = $columns = ( is_array($columns) ) ? implode( ', ', $columns ) : $columns ;
-
         $this->query->select( $columns )->from( $this->table );
 
         if( $distinct ){
@@ -304,15 +300,32 @@ abstract class CoreModel {
         return $this;
     }
 
+    /**
+     * Save existing
+     *
+     * @return false|int
+     * @throws \Exception
+     */
     public function save()
     {
+        // if there was no saved information on the database
+        // do an insert call
+        if( empty( $this->select( $this->primary_key)->get())){
+            return $this->wpdb->insert( $this->table, $this->columns );
+        }
 
+        // do an update instead
+        $this->{$this->primary_key};
+
+        //Create where array
+        $where = $this->toAssocArray(
+            $this->primary_key,
+            $this->callProperty($this->primary_key)
+        );
+
+        return $this->wpdb->update( $this->table, $this->columns, $where  );
     }
 
-    public function insertOrReplace()
-    {
-
-    }
 
     public function delete()
     {
@@ -346,9 +359,27 @@ abstract class CoreModel {
         $this->columns[ $name ] = $value;
     }
 
-    private function compiler()
+    /**
+     * Call a dynamically created property
+     *
+     * @param $property
+     * @return mixed
+     */
+    protected function callProperty( $property )
     {
+        return $this->$property;
+    }
 
+    /**
+     * Create an associative array based on the passed key and value
+     *
+     * @param $key
+     * @param $value
+     * @return array
+     */
+    protected function toAssocArray( $key, $value )
+    {
+        return [$key => $value ];
     }
 
 }
