@@ -25,11 +25,9 @@ class MainController extends CoreController{
     {
         $device = new AccessDevice;
 
-//        $devs =  $device->select( '*' )->get();
+        $devs = $device->find(0);
 
-        $device->address = "tewdw";
-
-        $device->save();
+        var_dump($device);
 
 
         return ( new View( 'dashboard/dashboard' ) )->render();

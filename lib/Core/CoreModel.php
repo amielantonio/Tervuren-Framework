@@ -48,6 +48,15 @@ abstract class CoreModel {
      */
     protected $query;
 
+    /**
+     * Current Resource Selected
+     *
+     * @var CoreModel
+     */
+    protected static $resource;
+
+
+
     protected $statement;
 
 
@@ -65,14 +74,32 @@ abstract class CoreModel {
         $this->table = $wpdb->prefix . $this->table;
     }
 
-    public static function find( $primaryKey )
+    /**
+     * @param $resource
+     * @return array|null|object
+     * @throws \Exception
+     */
+    public function find( $resource )
     {
+        self::$resource = $resource;
+
+
+        $columns = $this->select('*')->where( $this->primary_key, '=', $resource )->get();
+
+
+        foreach( $columns as $column ){
+            
+        }
+
+        return $columns;
+
 
     }
 
     public function get()
     {
         $this->statement = $this->query->toSQL();
+
         return $this->result = $this->wpdb->get_results( $this->statement );
 
     }
@@ -308,19 +335,34 @@ abstract class CoreModel {
     /**
      * Save existing
      *
+     * @param $where
      * @return false|int
      * @throws \Exception
      */
-    public function save()
+    public function save( $where = [] )
     {
-        // if there was no saved information on the database
-        // do an insert call
-        if( empty( $this->select( $this->primary_key)->get())){
+
+        if( empty( $this->select($this->primary_key)->get()) && self::$resource <> "" ){
             return $this->wpdb->insert( $this->table, $this->columns );
         }
 
-        return $this->wpdb->update( $this->table, $this->columns, ""  );
+        if( self::$resource <> "" ){
+            return $this->wpdb->update(
+                $this->table,
+                $this->columns,
+                [$this->primary_key => self::$resource]);
+        }
+
+
+        return $this->wpdb->update( $this->table, $this->columns, $where  );
     }
+
+
+    public function update()
+    {
+
+    }
+
 
 
     public function delete()
