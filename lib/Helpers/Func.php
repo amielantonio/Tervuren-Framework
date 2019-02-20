@@ -24,5 +24,4 @@ class Func {
         return $value;
     }
 
-
 }

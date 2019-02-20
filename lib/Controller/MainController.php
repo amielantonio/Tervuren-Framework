@@ -25,9 +25,22 @@ class MainController extends CoreController{
     {
         $device = new AccessDevice;
 
-        $devs = $device->find(0);
+//        $device->find(0);
 
-        var_dump($device);
+        $device->where('test', 'tester' )->update( [ 'hehe'=>1 ] );
+
+//        var_dump($device);
+
+//        $device->save();
+
+
+//        echo $devs->name;
+
+//        $devs->name = "Test";
+////
+//        $devs->save();
+////
+//        var_dump($devs);
 
 
         return ( new View( 'dashboard/dashboard' ) )->render();

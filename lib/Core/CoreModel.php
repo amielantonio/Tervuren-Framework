@@ -1,10 +1,10 @@
 <?php
 namespace App\Core;
 
+use App\Helpers\Arr;
 use App\Database\SQL\Helpers\Query;
 
 abstract class CoreModel {
-
 
     /**
      * The table that is being specified
@@ -56,7 +56,11 @@ abstract class CoreModel {
     protected static $resource;
 
 
-
+    /**
+     * Current SQL statement being run
+     *
+     * @var
+     */
     protected $statement;
 
 
@@ -76,7 +80,6 @@ abstract class CoreModel {
 
     /**
      * @param $resource
-     * @return array|null|object
      * @throws \Exception
      */
     public function find( $resource )
@@ -86,15 +89,17 @@ abstract class CoreModel {
 
         $columns = $this->select('*')->where( $this->primary_key, '=', $resource )->get();
 
-
-        foreach( $columns as $column ){
-            
-        }
-
-        return $columns;
-
-
+        $this->columns = $columns[0];
     }
+
+    public function resource( $resource )
+    {
+
+
+        return $this;
+    }
+
+
 
     public function get()
     {
@@ -341,26 +346,43 @@ abstract class CoreModel {
      */
     public function save( $where = [] )
     {
+        // If the model doesn't have any records and the user is not finding any resources
+        // then the user most likely needs to insert the resources given to the database.
+        if( empty(
+                $this->select($this->primary_key)->where( $this->primary_key, $this->columns[$this->primary_key] )->get()
+            ) && empty( $where )) {
 
-        if( empty( $this->select($this->primary_key)->get()) && self::$resource <> "" ){
             return $this->wpdb->insert( $this->table, $this->columns );
         }
 
-        if( self::$resource <> "" ){
+        // If there is a resource that was specified by the user, it means that, the user
+        // is trying to do an update on that resource.
+        if( ! is_null(self::$resource) ){
             return $this->wpdb->update(
                 $this->table,
                 $this->columns,
                 [$this->primary_key => self::$resource]);
         }
 
+        $wherePrimaryKey = [
+            $this->primary_key => $this->columns[$this->primary_key]
+        ];
+
+        // Checking whether the user specified an additional where clause  for updating.
+        // Merge the primary key where clause and the where clause that was specified by
+        // the user. If there are no additional where clause specified, proceed using the
+        // primary key where clause
+        if( isset( $this->columns[ $this->primary_key ]) && ! empty( $where ) ) {
+            $where = array_merge( $where, $wherePrimaryKey );
+        }
 
         return $this->wpdb->update( $this->table, $this->columns, $where  );
     }
 
 
-    public function update()
+    public function update( Array $columns, $where = [] )
     {
-
+        var_dump($this->query);
     }
 
 
@@ -378,7 +400,7 @@ abstract class CoreModel {
      */
     public function __get($name)
     {
-        return $this->columns[ $name ];
+        return $this->columns->$name;
     }
 
     /**
@@ -389,7 +411,13 @@ abstract class CoreModel {
      */
     public function __set($name, $value)
     {
-        $this->columns[ $name ] = $value;
+
+        if( is_array( $this->columns )){
+            $this->columns[$name] = $value;
+        } else{
+            $this->columns->$name = $value;
+        }
+
     }
 
     /**
