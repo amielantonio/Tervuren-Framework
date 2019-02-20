@@ -92,15 +92,6 @@ abstract class CoreModel {
         $this->columns = $columns[0];
     }
 
-    public function resource( $resource )
-    {
-
-
-        return $this;
-    }
-
-
-
     public function get()
     {
         $this->statement = $this->query->toSQL();
@@ -386,10 +377,36 @@ abstract class CoreModel {
     }
 
 
+    /**
+     * Deletes a resource
+     *
+     * @param $resource
+     * @return false|int
+     */
+    public function delete( $resource )
+    {
+        return $this->wpdb->delete( $this->table, [ $this->primary_key => $resource] );
+    }
 
-    public function delete()
+
+    public function softDeletes( $resource )
     {
 
+    }
+
+    public function withTrashed()
+    {
+
+    }
+
+    public function onlyTrashed()
+    {
+
+    }
+
+    public function deleteTrashed()
+    {
+        
     }
 
     /**
