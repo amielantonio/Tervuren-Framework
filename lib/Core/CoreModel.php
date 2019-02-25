@@ -94,7 +94,7 @@ abstract class CoreModel {
 
     public function get()
     {
-        $this->statement = $this->query->toSQL();
+        echo $this->statement = $this->query->toSQL();
 
         return $this->result = $this->wpdb->get_results( $this->statement );
 
@@ -371,11 +371,16 @@ abstract class CoreModel {
     }
 
 
-    public function update( Array $columns, $where = [] )
+    /**
+     * Run an update command
+     *
+     * @param array $columns
+     * @return false|int
+     */
+    public function update( Array $columns )
     {
-        var_dump($this->query);
+        $this->wpdb->query( $this->query->table($this->table)->update( $columns ) );
     }
-
 
     /**
      * Deletes a resource
@@ -385,7 +390,7 @@ abstract class CoreModel {
      */
     public function delete( $resource )
     {
-        return $this->wpdb->delete( $this->table, [ $this->primary_key => $resource] );
+        return $this->wpdb->delete( $this->table, [ $this->primary_key => $resource ] );
     }
 
 
@@ -406,7 +411,7 @@ abstract class CoreModel {
 
     public function deleteTrashed()
     {
-        
+
     }
 
     /**

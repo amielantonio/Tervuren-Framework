@@ -27,7 +27,8 @@ class MainController extends CoreController{
 
 //        $device->find(0);
 
-        $device->where('test', 'tester' )->update( [ 'hehe'=>1 ] );
+        $device->where('email', 'testupdate@email.com' )
+            ->update( [ 'name' => 'updatedViaWhere' ] );
 
 //        var_dump($device);
 
@@ -41,6 +42,7 @@ class MainController extends CoreController{
 //        $devs->save();
 ////
 //        var_dump($devs);
+
 
 
         return ( new View( 'dashboard/dashboard' ) )->render();

@@ -3,6 +3,7 @@
 namespace App\Database\SQL\Helpers;
 
 use App\Database\SQL\Helpers\Query;
+use App\Helpers\Arr;
 
 class Grammar {
 
@@ -105,15 +106,21 @@ class Grammar {
      *
      *
      * @param \App\Database\SQL\Helpers\Query $query
-     * @param $wheres
      * @return string
      */
-    protected function compileWhere( Query $query, $wheres )
+    public function compileWhere( Query $query )
     {
-        if (is_null($wheres)){
+        // Each type of where clauses has its own compiler function which is responsible
+        // for actually creating the where clauses SQL. This helps keep the code nice
+        // and maintainable since each clause has a very small method that it uses.
+        if (is_null($query->where)){
             return '';
         }
 
+
+        // If we actually have some where clauses, we will strip off the first boolean
+        // operator, which is added by the query builders for convenience so we can
+        // avoid checking for the first clauses in each of the compilers methods.
         if( count($sql = $this->wheretoArray( $query ) ) > 0 ){
             return $this->concatenateWhereClauses( $query, $sql );
         }
@@ -166,7 +173,7 @@ class Grammar {
      */
     protected function whereBasic( Query $query, $where )
     {
-        return $where['column']." ".$where['operator']." ".$where['value'];
+        return $where['column']." ".$where['operator']." '".$where['value']."'";
     }
 
     /**
@@ -196,7 +203,7 @@ class Grammar {
 
     protected function whereBetween( Query $query, $where )
     {
-        return $where['column']." BETWEEN ".$where['values'][0]." AND ".$where['values'][1];
+        return $where['column']." BETWEEN '".$where['values'][0]."' AND '".$where['values'][1]."'";
     }
 
     protected function compileGroups( Query $query, $groups )
@@ -269,9 +276,24 @@ class Grammar {
         return "";
     }
 
+    /**
+     *
+     *
+     * @param \App\Database\SQL\Helpers\Query $query
+     * @param array $values
+     * @return string
+     */
     public function compileUpdate( Query $query, array $values )
     {
+        $table = $query->table;
 
+        $columns = (new Arr( $values ))->map( function( $value, $key ){
+            return "{$key}='{$value}'";
+        })->implode( ', ' );
+
+        $wheres = $this->compileWhere( $query );
+
+        return trim( "UPDATE {$table} SET {$columns} {$wheres}" );
     }
 
 

@@ -4,6 +4,17 @@ namespace App\Helpers;
 
 class Arr {
 
+
+    protected $array = [];
+
+    protected $result;
+
+
+    public function __construct( array $array = [] )
+    {
+        $this->array = $array;
+    }
+
     /**
      * Flatten array into a one dimensional array
      *
@@ -26,6 +37,39 @@ class Arr {
         }
         return $result;
 
+    }
+
+    /**
+     * Return a map for each of the items
+     *
+     * @param callable $callback
+     * @return Arr
+     */
+    public function map( callable $callback )
+    {
+        $keys = array_keys($this->array);
+
+        $items = array_map( $callback, $this->array, $keys );
+
+        $this->result = array_combine($keys, $items);
+
+        return $this;
+    }
+
+    /**
+     * Return the resulting array
+     *
+     * @return mixed
+     */
+    public function get()
+    {
+        return $this->result;
+    }
+
+
+    public function implode( $glue )
+    {
+        return implode( $glue, $this->result );
     }
 
 }

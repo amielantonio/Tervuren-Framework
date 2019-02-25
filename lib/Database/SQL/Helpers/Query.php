@@ -176,6 +176,7 @@ class Query {
     public function from( $table )
     {
         $this->from = $table;
+        $this->table = $table;
 
         return $this;
     }
@@ -183,6 +184,7 @@ class Query {
     public function table( $table )
     {
         $this->from = $table;
+        $this->table = $table;
 
         return $this;
     }
@@ -224,15 +226,13 @@ class Query {
     }
 
     /**
-     * @param array $values
+     * @param array $columns
      * @param $table
-     * @return $this
+     * @return string
      */
-    public function update( array $values )
+    public function update( array $columns )
     {
-//        $sql = $this->grammar->compileUpdate( $this, $values );
-
-
+        return $this->grammar->compileUpdate( $this, $columns );
     }
 
 
@@ -488,6 +488,13 @@ class Query {
     {
         return $this->whereIn($column, $values, 'or');
     }
+
+
+    public function getWheres()
+    {
+        return $this->grammar->compileWhere( $this, $this->where );
+    }
+
 
     /**
      * @param $column
