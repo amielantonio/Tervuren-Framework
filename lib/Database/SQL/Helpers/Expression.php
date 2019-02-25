@@ -1,6 +1,6 @@
 <?php
 
-namespace Illuminate\Database\Query;
+namespace App\Database\SQL\Helpers;
 
 class Expression
 {

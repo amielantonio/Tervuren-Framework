@@ -38,6 +38,13 @@ class Query {
     public $where = [];
 
     /**
+     * The table joins for the query.
+     *
+     * @var array
+     */
+    public $joins;
+
+    /**
      * Identifier for distinct
      *
      * @var bool
@@ -492,7 +499,7 @@ class Query {
 
     public function getWheres()
     {
-        return $this->grammar->compileWhere( $this, $this->where );
+        return $this->grammar->compileWhere( $this );
     }
 
 
@@ -547,6 +554,27 @@ class Query {
 
         return $this;
     }
+
+
+    public function join( $table, $first_key, $operator = null, $second_key = null, $type = "inner" )
+    {
+
+        $this->joins[] = $this->on( $first_key, $operator, $second_key );
+
+        var_dump($this);
+
+
+        return $this;
+    }
+
+    public function on( $first_key, $operator = null, $second = null, $link = 'and' )
+    {
+        return [
+            "" => $first_key,
+        ];
+
+    }
+
 
     public function getRawBindings()
     {

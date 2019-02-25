@@ -27,21 +27,7 @@ class MainController extends CoreController{
 
 //        $device->find(0);
 
-        $device->where('email', 'testupdate@email.com' )
-            ->update( [ 'name' => 'updatedViaWhere' ] );
-
-//        var_dump($device);
-
-//        $device->save();
-
-
-//        echo $devs->name;
-
-//        $devs->name = "Test";
-////
-//        $devs->save();
-////
-//        var_dump($devs);
+        $device->select( '*'  )->join(  );
 
 
 
