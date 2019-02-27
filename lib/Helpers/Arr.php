@@ -10,7 +10,7 @@ class Arr {
     protected $result;
 
 
-    public function __construct( array $array = [] )
+    public function __construct( Array $array = [] )
     {
         $this->array = $array;
     }

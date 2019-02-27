@@ -94,9 +94,9 @@ abstract class CoreModel {
 
     public function get()
     {
-        $this->statement = $this->query->toSQL();
+         $this->statement = $this->query->toSQL();
 
-        return $this->result = $this->wpdb->get_results( $this->statement );
+//        return $this->result = $this->wpdb->get_results( $this->statement );
 
     }
 
@@ -440,6 +440,24 @@ abstract class CoreModel {
             $this->columns->$name = $value;
         }
 
+    }
+
+    /**
+     * Create a JOIN clause
+     *
+     * @param $table
+     * @param $first
+     * @param null $operator
+     * @param null $second
+     * @param string $type
+     * @return $this
+     * @throws \Exception
+     */
+    public function join( $table, $first, $operator = null, $second = null, $type = "inner" )
+    {
+        $this->query->join( $table, $first, $operator, $second, $type );
+
+        return $this;
     }
 
     /**

@@ -99,7 +99,22 @@ class Grammar {
 
     protected function compileJoins( Query $query, $joins )
     {
-        return '';
+
+//        echo "outer<br />";
+//        var_dump($joins);
+
+        $test =  ( new Arr( $joins ) )->map( function() use ( $query ){
+
+          $table = $query->table;
+
+
+
+
+            return trim( "JOIN {$table} {$this->compileWhere( $query )}" );
+        })->implode( " " );
+
+        var_dump($test);
+
     }
 
     /**
@@ -236,7 +251,7 @@ class Grammar {
         return '';
     }
 
-    protected function compileLock( Query $query, $lock )
+        protected function compileLock( Query $query, $lock )
     {
         return '';
     }

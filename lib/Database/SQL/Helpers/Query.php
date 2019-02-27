@@ -4,6 +4,7 @@ namespace App\Database\SQL\Helpers;
 
 use App\Database\SQL\Helpers\Grammar;
 use App\Database\SQL\Helpers\Expression;
+use App\Database\SQL\Helpers\Query\JoinClause;
 use Closure;
 use Exception;
 
@@ -496,6 +497,38 @@ class Query {
         return $this->whereIn($column, $values, 'or');
     }
 
+    /**
+     * Add a Where column clause
+     *
+     * @param $first
+     * @param null $operator
+     * @param null $second
+     * @param string $link
+     * @return $this|Query
+     * @throws Exception
+     */
+    public function whereColumn( $first, $operator = null, $second = null, $link = 'and' )
+    {
+
+        if( is_array( $first ) ){
+            return $this->resolveArrayOfWhere( $first, $link, 'whereColumn' );
+        }
+
+
+        if( $this->invalidOperator( $operator ) ){
+            list( $second, $operator ) = [$operator, '='];
+        }
+
+        $type = "Column";
+
+        $this->where = compact(
+            'type', 'first', 'operator', 'second', 'link'
+        );
+
+        return $this;
+
+    }
+
 
     public function getWheres()
     {
@@ -555,22 +588,47 @@ class Query {
         return $this;
     }
 
-
-    public function join( $table, $first_key, $operator = null, $second_key = null, $type = "inner" )
+    /**
+     * Create a join SQL query
+     *
+     * @param $table
+     * @param $first
+     * @param null $operator
+     * @param null $second
+     * @param string $type
+     * @param boolean $where
+     * @return $this
+     * @throws Exception
+     */
+    public function join( $table, $first, $operator = null, $second = null, $type = "inner", $where = false )
     {
+        $join = new JoinClause( $this, $type, $table );
 
-        $this->joins[] = $this->on( $first_key, $operator, $second_key );
+        if( $first instanceof Closure ){
 
-        var_dump($this);
+            call_user_func( $first, $join );
 
+            $this->joins[] = $join;
+
+            $this->addBinding( $join->getBindings(), 'join' );
+
+        } else {
+
+            $method = $where ? 'where' : 'on';
+
+            $this->joins[] = $join->$method($first, $operator, $second );
+
+            $this->addBinding( $join->getBindings(), 'join' );
+
+        }
 
         return $this;
     }
 
-    public function on( $first_key, $operator = null, $second = null, $link = 'and' )
+    public function on( $first, $operator = null, $second = null, $link = 'and' )
     {
         return [
-            "" => $first_key,
+            "" => $first,
         ];
 
     }
