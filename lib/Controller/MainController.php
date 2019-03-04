@@ -26,10 +26,24 @@ class MainController extends CoreController{
         $device = new AccessDevice;
 
 //        $device->find(0);
-
+//
         $device->select( '*'  )
             ->join( 'wp_join_test','test_id','test_id2' )
             ->join( 'wp_join_test2','2test_id','2test_id2' )->get();
+
+//
+//        $device->select( ['1', '2'] )
+////            ->where( 'test','1' )
+////            ->where( [['test2' =>  'yes'],['test3' => 'no']] )
+////            ->where( ['test4' => 'yesno'] )
+//            ->whereIn( 'type', ['yow', 'yes'] )
+//            ->whereBetween( 'type', ['yow', 'yes'] )
+////            ->where( 'test5','<','test5' )
+//            ->get();
+
+//        echo "<pre>";
+//        print_r( $device );
+//        echo "</pre>";
 
 //        var_dump($device);
 

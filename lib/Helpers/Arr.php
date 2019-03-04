@@ -4,9 +4,18 @@ namespace App\Helpers;
 
 class Arr {
 
-
+    /**
+     * Raw array
+     *
+     * @var array
+     */
     protected $array = [];
 
+    /**
+     * Response on modified array
+     *
+     * @var
+     */
     protected $result;
 
 
@@ -14,6 +23,12 @@ class Arr {
     {
         $this->array = $array;
     }
+
+    public function all()
+    {
+        return $this->result;
+    }
+
 
     /**
      * Flatten array into a one dimensional array

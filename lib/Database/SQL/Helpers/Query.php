@@ -4,7 +4,7 @@ namespace App\Database\SQL\Helpers;
 
 use App\Database\SQL\Helpers\Grammar;
 use App\Database\SQL\Helpers\Expression;
-use App\Database\SQL\Helpers\Query\JoinClause;
+use App\Database\SQL\Helpers\JoinClause;
 use Closure;
 use Exception;
 

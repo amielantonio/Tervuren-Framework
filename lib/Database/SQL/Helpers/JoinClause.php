@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Database\SQL\Helpers\Query;
+namespace App\Database\SQL\Helpers;
 
 use App\Database\SQL\Helpers\Query;
 use Closure;
@@ -34,8 +34,7 @@ class JoinClause extends Query
     public function on( $first, $operator = null, $second = null, $link = "and")
     {
 
-        if( $first instanceof Closure)
-        {
+        if( $first instanceof Closure) {
             return $this->nestedWhere( $first );
         }
 

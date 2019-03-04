@@ -5,7 +5,8 @@ namespace App\Database\SQL\Helpers;
 use App\Database\SQL\Helpers\Query;
 use App\Helpers\Arr;
 
-class Grammar {
+class Grammar
+{
 
     /**
      * The grammar specific operators.
@@ -44,9 +45,9 @@ class Grammar {
      * @param \App\Database\SQL\Helpers\Query $query
      * @return string
      */
-    public function compileSelect( Query $query )
+    public function compileSelect(Query $query)
     {
-        if( is_null( $query->columns ) ){
+        if (is_null($query->columns)) {
             $query->columns = ['*'];
         }
 
@@ -63,13 +64,13 @@ class Grammar {
      * @param \App\Database\SQL\Helpers\Query $query
      * @return array
      */
-    protected function compileComponents( Query $query )
+    protected function compileComponents(Query $query)
     {
         $sql = [];
 
-        foreach( $this->selectComponents as $component ){
-            if( ! is_null( $query->$component)){
-                $method = 'compile'.ucfirst($component);
+        foreach ($this->selectComponents as $component) {
+            if (!is_null($query->$component)) {
+                $method = 'compile' . ucfirst($component);
 
                 $sql[$component] = $this->$method($query, $query->$component);
             }
@@ -78,7 +79,7 @@ class Grammar {
         return $sql;
     }
 
-    protected function compileAggregate( Query $query, $aggregate )
+    protected function compileAggregate(Query $query, $aggregate)
     {
         $column = $this->columnize($aggregate['columns']);
 
@@ -86,35 +87,30 @@ class Grammar {
         // we need to prepend "distinct" onto the column name so that the query takes
         // it into account when it performs the aggregating operations on the data.
         if ($query->distinct && $column !== '*') {
-            $column = 'DISTINCT '.$column;
+            $column = 'DISTINCT ' . $column;
         }
 
-        return 'SELECT '.$aggregate['function'].'('.$column.') AS aggregate';
+        return 'SELECT ' . $aggregate['function'] . '(' . $column . ') AS aggregate';
     }
 
-    protected function compileFrom( Query $query, $table )
+    protected function compileFrom(Query $query, $table)
     {
         return "FROM {$table}";
     }
 
-    protected function compileJoins( Query $query, $joins )
+    protected function compileJoins(Query $query, $joins)
     {
+        $array = new Arr($joins);
 
-//        echo "outer<br />";
-//        var_dump($joins);
+        $array->map(function ($join) use ($query) {
+            $table = $join->table;
 
-        $test =  ( new Arr( $joins ) )->map( function() use ( $query ){
+            $nestedJoins = is_null($join->joins) ? '' : ' ' . $this->compileJoins($query, $join->joins);
 
-          $table = $query->table;
+            return trim("{$join->type} JOIN {$table}{$nestedJoins} {$this->compileWhere( $join )}");
+        })->implode(" ");
 
-
-
-
-            return trim( "JOIN {$table} {$this->compileWhere( $query )}" );
-        })->implode( " " );
-
-        var_dump($test);
-
+//        var_dump($array);
     }
 
     /**
@@ -123,12 +119,12 @@ class Grammar {
      * @param \App\Database\SQL\Helpers\Query $query
      * @return string
      */
-    public function compileWhere( Query $query )
+    public function compileWhere(Query $query)
     {
         // Each type of where clauses has its own compiler function which is responsible
         // for actually creating the where clauses SQL. This helps keep the code nice
         // and maintainable since each clause has a very small method that it uses.
-        if (is_null($query->where)){
+        if (is_null($query->where)) {
             return '';
         }
 
@@ -136,8 +132,8 @@ class Grammar {
         // If we actually have some where clauses, we will strip off the first boolean
         // operator, which is added by the query builders for convenience so we can
         // avoid checking for the first clauses in each of the compilers methods.
-        if( count($sql = $this->wheretoArray( $query ) ) > 0 ){
-            return $this->concatenateWhereClauses( $query, $sql );
+        if (count( $sql = $this->compileWheresToArray($query) ) > 0) {
+            return $this->concatenateWhereClauses($query, $sql);
         }
 
         return '';
@@ -145,15 +141,17 @@ class Grammar {
 
 
     /**
+     * Format the where clause statements into one string.
+     *
      * @param $query
      * @param $sql
      * @return string
      */
-    protected function concatenateWhereClauses($query, $sql)
+    protected function concatenateWhereClauses( $query, $sql )
     {
-        $conjunction =  'WHERE';
+        $conjunction = $query instanceof JoinClause ? "ON" : 'WHERE';
 
-        return $conjunction.' '.$this->removeLeadingBoolean( implode( ' ', $sql ) );
+        return $conjunction . ' ' . $this->removeLeadingBoolean(implode(' ', $sql));
     }
 
     /**
@@ -162,19 +160,29 @@ class Grammar {
      * @param $query
      * @return array
      */
-    protected function wheretoArray( $query )
+    protected function compileWheresToArray( $query )
     {
-        $wheres = [];
+//        var_dump($query->where);
 
-        foreach( $query->where as $key => $where ){
-            $wheres[] = "{$where['link']} ". $this->{"where{$where['type']}"}($query, $where );
-        }
 
-        return $wheres;
 
+
+        return (new Arr($query->where) )->map( function( $where ) use ($query){
+//            var_dump($where);
+
+            return $where;
+//            return $where['link'].' '.$this->{"where{$where['type']}"}($query, $where);
+        })->all();
     }
 
-    protected function whereRaw( Query $query, $where )
+    /**
+     * Create a raw Where clause
+     *
+     * @param \App\Database\SQL\Helpers\Query $query
+     * @param $where
+     * @return mixed
+     */
+    protected function whereRaw(Query $query, $where)
     {
         return $where['sql'];
     }
@@ -186,9 +194,9 @@ class Grammar {
      * @param $where
      * @return string
      */
-    protected function whereBasic( Query $query, $where )
+    protected function whereBasic(Query $query, $where)
     {
-        return $where['column']." ".$where['operator']." '".$where['value']."'";
+        return $where['column'] . " " . $where['operator'] . " '" . $where['value'] . "'";
     }
 
     /**
@@ -196,67 +204,98 @@ class Grammar {
      * @param $where
      * @return string
      */
-    protected function whereIn( Query $query, $where )
+    protected function whereIn(Query $query, $where)
     {
-        return $where['column']." IN ({$this->columnize($where['values'])})";
+        return $where['column'] . " IN ({$this->columnize($where['values'])})";
     }
 
-    protected function whereNotIn( Query $query, $where )
+    /**
+     * @param \App\Database\SQL\Helpers\Query $query
+     * @param $where
+     * @return string
+     */
+    protected function whereNotIn(Query $query, $where)
     {
-        return $where['column']." NOT IN ({$this->columnize($where['values'])})";
+        return $where['column'] . " NOT IN ({$this->columnize($where['values'])})";
     }
 
-    protected function whereNull( Query $query, $where )
+    /**
+     * @param \App\Database\SQL\Helpers\Query $query
+     * @param $where
+     * @return string
+     */
+    protected function whereNull(Query $query, $where)
     {
         return "{$where['column']} IS NULL";
     }
 
-    protected function whereNotNull( Query $query, $where )
+    /**
+     * @param \App\Database\SQL\Helpers\Query $query
+     * @param $where
+     * @return string
+     */
+    protected function whereNotNull(Query $query, $where)
     {
         return "{$where['column']} IS NOT NULL";
     }
 
-    protected function whereBetween( Query $query, $where )
+    /**
+     * @param \App\Database\SQL\Helpers\Query $query
+     * @param $where
+     * @return string
+     */
+    protected function whereBetween(Query $query, $where)
     {
-        return $where['column']." BETWEEN '".$where['values'][0]."' AND '".$where['values'][1]."'";
+        return $where['column'] . " BETWEEN '" . $where['values'][0] . "' AND '" . $where['values'][1] . "'";
     }
 
-    protected function compileGroups( Query $query, $groups )
+    /**
+     * @param \App\Database\SQL\Helpers\Query $query
+     * @param $where
+     * @return string
+     */
+    protected function whereColumn(Query $query, $where)
     {
-        return '';
+        return $where['first']. ' '.$where['operator'].' '.$where['second'];
     }
 
-    protected function compileHavings( Query $query, $havings )
-    {
-        return '';
-    }
 
-    protected function compileOrders( Query $query, $orders )
-    {
-        return '';
-    }
-
-    protected function compileLimit( Query $query, $limit )
-    {
-        return '';
-    }
-
-    protected function compileOffset( Query $query, $offset )
+    protected function compileGroups(Query $query, $groups)
     {
         return '';
     }
 
-    protected function compileUnions( Query $query, $unions )
+    protected function compileHavings(Query $query, $havings)
     {
         return '';
     }
 
-        protected function compileLock( Query $query, $lock )
+    protected function compileOrders(Query $query, $orders)
     {
         return '';
     }
 
-    public function compileInsert( Query $query , array $values )
+    protected function compileLimit(Query $query, $limit)
+    {
+        return '';
+    }
+
+    protected function compileOffset(Query $query, $offset)
+    {
+        return '';
+    }
+
+    protected function compileUnions(Query $query, $unions)
+    {
+        return '';
+    }
+
+    protected function compileLock(Query $query, $lock)
+    {
+        return '';
+    }
+
+    public function compileInsert(Query $query, array $values)
     {
         $table = $query->table;
 
@@ -270,14 +309,13 @@ class Grammar {
     /**
      * Create query parameter place-holders for an array.
      *
-     * @param  array   $values
+     * @param  array $values
      * @return string
      */
     public function parameterize(array $values)
     {
-        return implode(', ',  $values);
+        return implode(', ', $values);
     }
-
 
 
     /**
@@ -285,7 +323,7 @@ class Grammar {
      *
      * @return string
      */
-    public function compileDelete( Query $query )
+    public function compileDelete(Query $query)
     {
 
         return "";
@@ -298,44 +336,44 @@ class Grammar {
      * @param array $values
      * @return string
      */
-    public function compileUpdate( Query $query, array $values )
+    public function compileUpdate(Query $query, array $values)
     {
         $table = $query->table;
 
-        $columns = (new Arr( $values ))->map( function( $value, $key ){
+        $columns = (new Arr($values))->map(function ($value, $key) {
             return "{$key}='{$value}'";
-        })->implode( ', ' );
+        })->implode(', ');
 
-        $wheres = $this->compileWhere( $query );
+        $wheres = $this->compileWhere($query);
 
-        return trim( "UPDATE {$table} SET {$columns} {$wheres}" );
+        return trim("UPDATE {$table} SET {$columns} {$wheres}");
     }
 
 
-    protected function compileColumns( Query $query, $columns )
+    protected function compileColumns(Query $query, $columns)
     {
-        $select = $query->distinct ? 'SELECT DISTINCT ' : 'SELECT ' ;
+        $select = $query->distinct ? 'SELECT DISTINCT ' : 'SELECT ';
 
-        return $select.$this->columnize($columns);
+        return $select . $this->columnize($columns);
     }
 
 
-    public function columnize( array $columns )
+    public function columnize(array $columns)
     {
-        return implode(', ', $columns );
+        return implode(', ', $columns);
     }
 
 
     /**
      * Concatenate an array of segments, removing empties.
      *
-     * @param  array   $segments
+     * @param  array $segments
      * @return string
      */
     protected function concatenate($segments)
     {
         return implode(' ', array_filter($segments, function ($value) {
-            return (string) $value !== '';
+            return (string)$value !== '';
         }));
     }
 
