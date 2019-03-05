@@ -71,6 +71,9 @@ class Grammar
         foreach ($this->selectComponents as $component) {
             if (!is_null($query->$component)) {
                 $method = 'compile' . ucfirst($component);
+                if( $component == 'joins'){
+//                    var_dump($query->joins);
+                }
 
                 $sql[$component] = $this->$method($query, $query->$component);
             }
@@ -98,11 +101,17 @@ class Grammar
         return "FROM {$table}";
     }
 
+    /**
+     * compileJoins
+     *
+     * @param \App\Database\SQL\Helpers\Query $query
+     * @param $joins
+     * @return string
+     */
     protected function compileJoins(Query $query, $joins)
     {
-        $array = new Arr($joins);
 
-        $array->map(function ($join) use ($query) {
+        return (new Arr($joins))->map(function ($join) use ($query) {
             $table = $join->table;
 
             $nestedJoins = is_null($join->joins) ? '' : ' ' . $this->compileJoins($query, $join->joins);
@@ -110,7 +119,6 @@ class Grammar
             return trim("{$join->type} JOIN {$table}{$nestedJoins} {$this->compileWhere( $join )}");
         })->implode(" ");
 
-//        var_dump($array);
     }
 
     /**
@@ -162,15 +170,13 @@ class Grammar
      */
     protected function compileWheresToArray( $query )
     {
-//        var_dump($query->where);
 
 
 
+        return ( new Arr($query->where) )->map( function( $where ) use ($query){
 
-        return (new Arr($query->where) )->map( function( $where ) use ($query){
-//            var_dump($where);
+            var_dump($where);
 
-            return $where;
 //            return $where['link'].' '.$this->{"where{$where['type']}"}($query, $where);
         })->all();
     }

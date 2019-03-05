@@ -28,8 +28,7 @@ class MainController extends CoreController{
 //        $device->find(0);
 //
         $device->select( '*'  )
-            ->join( 'wp_join_test','test_id','test_id2' )
-            ->join( 'wp_join_test2','2test_id','2test_id2' )->get();
+            ->join( 'wp_join_test','test_id','test_id2' )->get();
 
 //
 //        $device->select( ['1', '2'] )

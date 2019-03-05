@@ -500,21 +500,26 @@ class Query {
     /**
      * Add a Where column clause
      *
-     * @param $first
-     * @param null $operator
-     * @param null $second
-     * @param string $link
+     * @param string|array $first
+     * @param string|null $operator
+     * @param string|null $second
+     * @param string|null $link
      * @return $this|Query
      * @throws Exception
      */
     public function whereColumn( $first, $operator = null, $second = null, $link = 'and' )
     {
 
+        // If the column is an array, we will assume it is an array of key-value pairs
+        // and can add them each as a where clause. We will maintain the boolean we
+        // received when the method was called and pass it into the nested where.
         if( is_array( $first ) ){
             return $this->resolveArrayOfWhere( $first, $link, 'whereColumn' );
         }
 
-
+        // If the given operator is not found in the list of valid operators we will
+        // assume that the developer is just short-cutting the '=' operators and
+        // we will set the operators to '=' and set the values appropriately.
         if( $this->invalidOperator( $operator ) ){
             list( $second, $operator ) = [$operator, '='];
         }
@@ -604,6 +609,9 @@ class Query {
     {
         $join = new JoinClause( $this, $type, $table );
 
+        // If the first "column" of the join is really a Closure instance the developer
+        // is trying to build a join with a complex "on" clause containing more than
+        // one condition, so we'll add the join and call a Closure with the query.
         if( $first instanceof Closure ){
 
             call_user_func( $first, $join );
@@ -612,11 +620,18 @@ class Query {
 
             $this->addBinding( $join->getBindings(), 'join' );
 
-        } else {
+        }
+
+        // If the column is simply a string, we can assume the join simply has a basic
+        // "on" clause with a single condition. So we will just build the join with
+        // this simple join clauses attached to it. There is not a join callback.
+        else {
 
             $method = $where ? 'where' : 'on';
 
             $this->joins[] = $join->$method($first, $operator, $second );
+
+//            var_dump($this->joins[0]);
 
             $this->addBinding( $join->getBindings(), 'join' );
 
