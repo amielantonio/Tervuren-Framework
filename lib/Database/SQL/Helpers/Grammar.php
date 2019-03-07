@@ -110,13 +110,13 @@ class Grammar
      */
     protected function compileJoins(Query $query, $joins)
     {
-
         return (new Arr($joins))->map(function ($join) use ($query) {
             $table = $join->table;
+            $type = strtoupper( $join->type);
 
             $nestedJoins = is_null($join->joins) ? '' : ' ' . $this->compileJoins($query, $join->joins);
 
-            return trim("{$join->type} JOIN {$table}{$nestedJoins} {$this->compileWhere( $join )}");
+            return trim("{$type} JOIN {$table}{$nestedJoins} {$this->compileWhere( $join )}");
         })->implode(" ");
 
     }
@@ -170,14 +170,8 @@ class Grammar
      */
     protected function compileWheresToArray( $query )
     {
-
-
-
         return ( new Arr($query->where) )->map( function( $where ) use ($query){
-
-            var_dump($where);
-
-//            return $where['link'].' '.$this->{"where{$where['type']}"}($query, $where);
+            return $where['link'].' '.$this->{"where{$where['type']}"}($query, $where);
         })->all();
     }
 

@@ -526,7 +526,7 @@ class Query {
 
         $type = "Column";
 
-        $this->where = compact(
+        $this->where[] = compact(
             'type', 'first', 'operator', 'second', 'link'
         );
 

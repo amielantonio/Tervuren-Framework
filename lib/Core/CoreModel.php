@@ -94,7 +94,7 @@ abstract class CoreModel {
 
     public function get()
     {
-         $this->statement = $this->query->toSQL();
+         echo $this->statement = $this->query->toSQL();
 
 //        return $this->result = $this->wpdb->get_results( $this->statement );
 
