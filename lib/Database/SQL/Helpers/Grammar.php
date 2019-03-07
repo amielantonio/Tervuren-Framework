@@ -440,11 +440,25 @@ class Grammar
         return $conjunction.$union['query']->toSql();
     }
 
+    /**
+     * Compile a lock statement
+     *
+     * @param \App\Database\SQL\Helpers\Query $query
+     * @param $value
+     * @return string
+     */
     protected function compileLock(Query $query, $value)
     {
         return is_string($value) ? $value : '';
     }
 
+    /**
+     * Compile an insert statement
+     *
+     * @param \App\Database\SQL\Helpers\Query $query
+     * @param array $values
+     * @return string
+     */
     public function compileInsert(Query $query, array $values)
     {
         $table = $query->table;
@@ -480,7 +494,7 @@ class Grammar
     }
 
     /**
-     *
+     * Compiles the update sql
      *
      * @param \App\Database\SQL\Helpers\Query $query
      * @param array $values
@@ -499,7 +513,13 @@ class Grammar
         return trim("UPDATE {$table} SET {$columns} {$wheres}");
     }
 
-
+    /**
+     * Compile Columns
+     *
+     * @param \App\Database\SQL\Helpers\Query $query
+     * @param $columns
+     * @return string
+     */
     protected function compileColumns(Query $query, $columns)
     {
         $select = $query->distinct ? 'SELECT DISTINCT ' : 'SELECT ';
@@ -507,7 +527,12 @@ class Grammar
         return $select . $this->columnize($columns);
     }
 
-
+    /**
+     * Process the columns to be in an SQL column format
+     *
+     * @param array $columns
+     * @return string
+     */
     public function columnize(array $columns)
     {
         return implode(', ', $columns);

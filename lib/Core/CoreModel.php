@@ -490,24 +490,16 @@ abstract class CoreModel {
         return $this;
     }
 
-    public function skip( $value )
-    {
-        $this->query->offset( $value );
-    }
-
-    public function take($value)
-    {
-        return $this->query->limit($value);
-    }
-
+    /**
+     * return first element
+     * @param array $columns
+     * @return mixed
+     * @throws \Exception
+     */
     public function first( $columns = ['*'])
     {
-        return $this->take(1)->get($columns)->first();
+        return $this->get($columns)->limit(1);
     }
-
-
-
-
 
     /**
      * Save existing
@@ -572,7 +564,7 @@ abstract class CoreModel {
         return $this->wpdb->delete( $this->table, [ $this->primary_key => $resource ] );
     }
 
-
+    // SOFT DELETE BOILER PLATE
     public function softDeletes( $resource )
     {
 
@@ -592,6 +584,7 @@ abstract class CoreModel {
     {
 
     }
+    //END
 
     /**
      * Dynamically gets an attribute to the field
@@ -612,7 +605,6 @@ abstract class CoreModel {
      */
     public function __set($name, $value)
     {
-
         if( is_array( $this->columns )){
             $this->columns[$name] = $value;
         } else{

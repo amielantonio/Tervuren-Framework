@@ -4,7 +4,6 @@ namespace App\Controller;
 use App\Helpers\Func;
 use App\Helpers\View;
 use App\Core\CoreController;
-use App\Model\AccessDevice;
 use GuzzleHttp\Client;
 
 class MainController extends CoreController{
@@ -23,32 +22,6 @@ class MainController extends CoreController{
      */
     public function index()
     {
-        $device = new AccessDevice;
-
-//        $device->find(0);
-//
-        $device->select( '*'  )
-            ->join( 'wp_join_test','test_id','test_id' )
-            ->join( 'wp_join_test2','test_id2','test_id2' )->get();
-
-//
-//        $device->select( ['1', '2'] )
-////            ->where( 'test','1' )
-////            ->where( [['test2' =>  'yes'],['test3' => 'no']] )
-////            ->where( ['test4' => 'yesno'] )
-//            ->whereIn( 'type', ['yow', 'yes'] )
-//            ->whereBetween( 'type', ['yow', 'yes'] )
-////            ->where( 'test5','<','test5' )
-//            ->get();
-
-//        echo "<pre>";
-//        print_r( $device );
-//        echo "</pre>";
-
-//        var_dump($device);
-
-
-
         return ( new View( 'dashboard/dashboard' ) )->render();
     }
 
