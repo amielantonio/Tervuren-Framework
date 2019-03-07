@@ -930,13 +930,15 @@ class Query {
         }));
     }
 
+    /**
+     * Get the bindings
+     *
+     * @return array
+     */
     public function getBindings()
     {
         return $this->bindings;
     }
-
-
-
 
     /**
      * Determine if the operator is supported

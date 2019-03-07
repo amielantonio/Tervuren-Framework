@@ -323,6 +323,51 @@ class Blueprint
     }
 
     /**
+     * Add a "deleted at" timestamp for the table.
+     *
+     * @param string $column
+     * @param int $precision
+     * @return mixed
+     */
+    public function softDeletes( $column = 'deleted_at', $precision = 0  )
+    {
+        return $this->timestamp( $column, $precision )->nullable();
+    }
+
+    /**
+     * Create a new year column on the table
+     *
+     * @param $column
+     * @return array|string
+     */
+    public function year( $column )
+    {
+        return $this->addColumn( 'year', $column );
+    }
+
+    /**
+     * Create a new binary column on the table
+     *
+     * @param $column
+     * @return array|string
+     */
+    public function binary( $column )
+    {
+        return $this->addColumn( 'binary', $column );
+    }
+
+    /**
+     * Adds the 'remember_token' column to the table.
+     *
+     * @return mixed
+     */
+    public function rememberToken()
+    {
+        return $this->string( 'remember_token', 100 )->nullable();
+    }
+
+
+    /**
      * Add a new column to the blueprint
      *
      * @param $type
