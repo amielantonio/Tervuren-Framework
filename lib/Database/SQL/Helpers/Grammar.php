@@ -71,7 +71,7 @@ class Grammar
         foreach ($this->selectComponents as $component) {
             if (!is_null($query->$component)) {
                 $method = 'compile' . ucfirst($component);
-                if( $component == 'joins'){
+                if ($component == 'joins') {
 //                    var_dump($query->joins);
                 }
 
@@ -112,7 +112,8 @@ class Grammar
     {
         return (new Arr($joins))->map(function ($join) use ($query) {
             $table = $join->table;
-            $type = strtoupper( $join->type);
+
+            $type = strtoupper($join->type);
 
             $nestedJoins = is_null($join->joins) ? '' : ' ' . $this->compileJoins($query, $join->joins);
 
@@ -136,11 +137,10 @@ class Grammar
             return '';
         }
 
-
         // If we actually have some where clauses, we will strip off the first boolean
         // operator, which is added by the query builders for convenience so we can
         // avoid checking for the first clauses in each of the compilers methods.
-        if (count( $sql = $this->compileWheresToArray($query) ) > 0) {
+        if (count($sql = $this->compileWheresToArray($query)) > 0) {
             return $this->concatenateWhereClauses($query, $sql);
         }
 
@@ -155,7 +155,7 @@ class Grammar
      * @param $sql
      * @return string
      */
-    protected function concatenateWhereClauses( $query, $sql )
+    protected function concatenateWhereClauses($query, $sql)
     {
         $conjunction = $query instanceof JoinClause ? "ON" : 'WHERE';
 
@@ -168,10 +168,10 @@ class Grammar
      * @param $query
      * @return array
      */
-    protected function compileWheresToArray( $query )
+    protected function compileWheresToArray($query)
     {
-        return ( new Arr($query->where) )->map( function( $where ) use ($query){
-            return $where['link'].' '.$this->{"where{$where['type']}"}($query, $where);
+        return (new Arr($query->where))->map(function ($where) use ($query) {
+            return $where['link'] . ' ' . $this->{"where{$where['type']}"}($query, $where);
         })->all();
     }
 
@@ -200,6 +200,8 @@ class Grammar
     }
 
     /**
+     * Return a WHERE IN Clause
+     *
      * @param \App\Database\SQL\Helpers\Query $query
      * @param $where
      * @return string
@@ -210,6 +212,8 @@ class Grammar
     }
 
     /**
+     * Return a WHERE NOT IN Clause
+     *
      * @param \App\Database\SQL\Helpers\Query $query
      * @param $where
      * @return string
@@ -220,6 +224,8 @@ class Grammar
     }
 
     /**
+     * Return a WHERE <column> NULL Clause
+     *
      * @param \App\Database\SQL\Helpers\Query $query
      * @param $where
      * @return string
@@ -230,6 +236,8 @@ class Grammar
     }
 
     /**
+     * Return a WHERE <column> NOT NULL Clause
+     *
      * @param \App\Database\SQL\Helpers\Query $query
      * @param $where
      * @return string
@@ -240,6 +248,8 @@ class Grammar
     }
 
     /**
+     * Return a WHERE <column> BETWEEN Clause
+     *
      * @param \App\Database\SQL\Helpers\Query $query
      * @param $where
      * @return string
@@ -250,49 +260,189 @@ class Grammar
     }
 
     /**
+     * Return a Where Column clause
+     *
      * @param \App\Database\SQL\Helpers\Query $query
      * @param $where
      * @return string
      */
     protected function whereColumn(Query $query, $where)
     {
-        return $where['first']. ' '.$where['operator'].' '.$where['second'];
+        return $where['first'] . ' ' . $where['operator'] . ' ' . $where['second'];
     }
 
-
+    /**
+     * Compile the Group statement of the query
+     *
+     * @param \App\Database\SQL\Helpers\Query $query
+     * @param $groups
+     * @return string
+     */
     protected function compileGroups(Query $query, $groups)
     {
-        return '';
+        return 'GROUP BY ' . $this->columnize($groups);
     }
 
+    /**
+     * Compile the Havings statement of the Query
+     *
+     * @param \App\Database\SQL\Helpers\Query $query
+     * @param $havings
+     * @return string
+     */
     protected function compileHavings(Query $query, $havings)
     {
+        $sql = implode(' ', array_map([$this, 'compileHaving'], $havings));
+
         return '';
     }
 
-    protected function compileOrders(Query $query, $orders)
+
+    /**
+     * Compile a sing having clause
+     *
+     * @param array $having
+     * @return string
+     */
+    protected function compileHaving(array $having)
     {
+        if( $having['type'] === 'Raw'){
+            return $having['link'].' '.$having['sql'];
+        }
+
+        return $this->compileBasicHaving($having);
+    }
+
+    /**
+     * Compile a basic having clause
+     *
+     * @param $having
+     * @return string
+     */
+    protected function compileBasicHaving( $having )
+    {
+        $column = $having['column'];
+
+        $parameter = $this->parameterize($having['value']);
+
+        return $having['link'].' '.$column.' '.$having['operator'].' '.$parameter;
+    }
+
+    /**
+     * Compile the Order by portion of the query
+     *
+     * @param \App\Database\SQL\Helpers\Query $query
+     * @param $orders
+     * @return string
+     */
+    protected function compileOrders (Query $query, $orders )
+    {
+        if( ! empty($orders)){
+            return 'ORDER BY '.implode( ", ", $this->compileOrdersToArray( $query, $orders ) );
+        }
+
         return '';
     }
 
+    /**
+     * compile the query orders to an array
+     *
+     * @param \App\Database\SQL\Helpers\Query $query
+     * @param $orders
+     * @return array
+     */
+    protected function compileOrdersToArray( Query $query, $orders)
+    {
+        return array_map( function($order){
+            return ! isset($order['sql'])
+                        ? $order['column'].' '.$order['direction']
+                        : $order['sql'];
+        }, $orders);
+    }
+
+    /**
+     * Compile Random Statement
+     *
+     * @param $seed
+     * @return string
+     */
+    protected function compileRandom( $seed )
+    {
+        return 'RANDOM()';
+    }
+
+    /**
+     * Compile the Limit portions of the query
+     *
+     * @param \App\Database\SQL\Helpers\Query $query
+     * @param $limit
+     * @return string
+     */
     protected function compileLimit(Query $query, $limit)
     {
-        return '';
+        return 'LIMIT '.(int) $limit;
     }
 
+    /**
+     * Compile the Offset portions of the query
+     *
+     * @param \App\Database\SQL\Helpers\Query $query
+     * @param $offset
+     * @return string
+     */
     protected function compileOffset(Query $query, $offset)
     {
-        return '';
+        return 'OFFSET '.(int) $offset;
     }
 
-    protected function compileUnions(Query $query, $unions)
+
+    /**
+     * Compile the UNION queries to the query
+     *
+     * @param \App\Database\SQL\Helpers\Query $query
+     * @param $unions
+     * @return string
+     */
+    protected function compileUnions( Query $query, $unions )
     {
-        return '';
+        $sql = '';
+
+        foreach( $query->unions as $union ){
+            $sql .= $this->compileUnion($union);
+        }
+
+        if( !empty($query->unionorders)) {
+            $sql .= ' '.$this->compileOrders( $query, $query->unionOrders );
+        }
+
+        if( !isset($query->unionLimit)) {
+            $sql .= ' '.$this->compileLimit( $query, $query->unionLimit );
+        }
+
+        if( !isset($query->unionOffset)) {
+            $sql .= ' '.$this->compileOffset( $query, $query->unionOffset );
+        }
+
+
+        return ltrim($sql);
     }
 
-    protected function compileLock(Query $query, $lock)
+    /**
+     * Compile a single Union Clause
+     *
+     * @param array $union
+     * @return string
+     */
+    protected function compileUnion( array $union )
     {
-        return '';
+        $conjunction = $union['all'] ? ' union all ' : ' union ' ;
+
+        return $conjunction.$union['query']->toSql();
+    }
+
+    protected function compileLock(Query $query, $value)
+    {
+        return is_string($value) ? $value : '';
     }
 
     public function compileInsert(Query $query, array $values)

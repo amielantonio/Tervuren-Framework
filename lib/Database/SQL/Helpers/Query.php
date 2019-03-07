@@ -5,6 +5,7 @@ namespace App\Database\SQL\Helpers;
 use App\Database\SQL\Helpers\Grammar;
 use App\Database\SQL\Helpers\Expression;
 use App\Database\SQL\Helpers\JoinClause;
+use App\Helpers\Arr;
 use Closure;
 use Exception;
 
@@ -39,6 +40,35 @@ class Query {
     public $where = [];
 
     /**
+     * The groupings for the query.
+     *
+     * @var array
+     */
+    public $groups;
+
+    /**
+     * The having constrains of the query
+     *
+     * @var array
+     */
+    public $havings;
+
+    /**
+     * The orderings for the query.
+     *
+     * @var array
+     */
+    public $orders;
+
+    /**
+     * The maximum number of records to return.
+     *
+     * @var int
+     */
+    public $limit;
+
+
+    /**
      * The table joins for the query.
      *
      * @var array
@@ -67,34 +97,6 @@ class Query {
     public $aggregates = [];
 
     /**
-     * The groupings for the query.
-     *
-     * @var array
-     */
-    public $groups;
-
-    /**
-     * The having constraints for the query.
-     *
-     * @var array
-     */
-    public $havings;
-
-    /**
-     * The orderings for the query.
-     *
-     * @var array
-     */
-    public $orders;
-
-    /**
-     * The maximum number of records to return.
-     *
-     * @var int
-     */
-    public $limit;
-
-    /**
      * The number of records to skip.
      *
      * @var int
@@ -107,6 +109,34 @@ class Query {
      * @var array
      */
     public $unions;
+
+    /**
+     * The maximum number of union records to return.
+     *
+     * @var int
+     */
+    public $unionLimit;
+
+    /**
+     * The number of union records to skip.
+     *
+     * @var int
+     */
+    public $unionOffset;
+
+    /**
+     * The orderings for the union query.
+     *
+     * @var array
+     */
+    public $unionOrders;
+
+    /**
+     * Indicates whether row locking is being used.
+     *
+     * @var string|bool
+     */
+    public $lock;
 
     /**
      * @var \App\Database\SQL\Helpers\Grammar
@@ -142,7 +172,9 @@ class Query {
         'union'  => [],
     ];
 
-
+    /**
+     * Query constructor.
+     */
     public function __construct()
     {
         $this->grammar = new Grammar;
@@ -631,8 +663,6 @@ class Query {
 
             $this->joins[] = $join->$method($first, $operator, $second );
 
-//            var_dump($this->joins[0]);
-
             $this->addBinding( $join->getBindings(), 'join' );
 
         }
@@ -640,20 +670,205 @@ class Query {
         return $this;
     }
 
-    public function on( $first, $operator = null, $second = null, $link = 'and' )
+    /**
+     * Add a group by clause to the query
+     *
+     * @param mixed ...$groups
+     * @return $this
+     */
+    public function groupBy( ...$groups )
     {
-        return [
-            "" => $first,
-        ];
+        foreach($groups as $group ){
+            $this->groups = array_merge(
+                (array) $this->groups, (new Arr)->wrap($group)
+            );
+        }
 
+        return $this;
     }
 
+    /**
+     * Add a having clause on the query
+     *
+     * @param $column
+     * @param null $operator
+     * @param null $value
+     * @param string $link
+     * @return $this
+     * @throws Exception
+     */
+    public function having( $column, $operator = null, $value = null, $link = 'and' )
+    {
+        $type = 'Basic';
 
+        list( $value, $operator ) = $this->prepareValueAndOperator(
+            $value, $operator, func_num_args() === 2
+        );
+
+        if( $this->invalidOperator($operator)){
+            list($value, $operator) = [$operator, '='];
+        }
+
+        $this->havings[] = compact( 'type', 'column', 'operator', 'value', 'link' );
+
+        if( ! $value instanceof Expression ){
+            $this->addBinding( $value, 'having' );
+        }
+
+        return $this;
+    }
+
+    /**
+     * add an 'or having' clause to the query.
+     *
+     * @param $column
+     * @param null $operator
+     * @param null $value
+     * @return Query
+     * @throws Exception
+     */
+    public function orHaving( $column, $operator = null, $value = null )
+    {
+        list( $value, $operator ) = $this->prepareValueAndOperator(
+            $value, $operator, func_num_args() === 2
+        );
+
+        return $this->having($column, $operator, $value, 'or' );
+    }
+
+    /**
+     * Add a raw having clause to the query.
+     *
+     * @param $sql
+     * @param array $bindings
+     * @param string $link
+     * @return $this
+     * @throws Exception
+     */
+    public function havingRaw( $sql, array $bindings = [], $link = 'and ')
+    {
+        $type = 'Raw';
+
+        $this->havings[] = compact( 'type', 'sql', 'link' );
+
+        $this->addBinding( $bindings, 'having' );
+
+        return $this;
+    }
+
+    /**
+     * Add a raw "or having" clause to the query
+     *
+     * @param $sql
+     * @param array $bindings
+     * @return Query
+     * @throws Exception
+     */
+    public function orHavingRaw( $sql, array $bindings = [] )
+    {
+        return $this->havingRaw( $sql, $bindings, 'or' );
+    }
+
+    /**
+     * Add 'Order by' clause to the query
+     *
+     * @param $column
+     * @param string $direction
+     * @return $this
+     */
+    public function orderBy( $column, $direction = 'asc' )
+    {
+        $this->{$this->unions ? 'unionOrders' : 'orders' }[] = [
+            'column' => $column,
+            'directions' => strtolower($direction) == 'asc' ? 'asc' : 'desc'
+        ];
+
+        return $this;
+    }
+
+    /**
+     * Compile Raw order by clause
+     *
+     * @param $sql
+     * @param array $bindings
+     * @return $this
+     * @throws Exception
+     */
+    public function orderByRaw($sql, $bindings = [])
+    {
+        $type = 'Raw';
+
+        $this->{$this->unions ? 'unionOrders' : 'orders'}[] = compact('type', 'sql' );
+
+        $this->addBinding($bindings, 'order');
+
+        return $this;
+    }
+
+    /**
+     * Set the offset value of the query
+     *
+     * @param $value
+     * @return $this
+     */
+    public function offset( $value )
+    {
+        $property = $this->unions ? "unionOffset" : "offset";
+
+        $this->$property = max( 0, $value );
+
+        return $this;
+    }
+
+    /**
+     * Set the limit for the value of the query
+     *
+     * @param $value
+     * @return $this
+     */
+    public function limit( $value )
+    {
+        $property = $this->unions ? "unionLimit" : "limit";
+
+        if( $value >= 0 ){
+            $this->$property = $value;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Add a union statement to the qery
+     *
+     * @param $query
+     * @param bool $all
+     * @return $this
+     * @throws Exception
+     */
+    public function union($query, $all = false )
+    {
+        $this->unions[] = compact( 'query', 'all' );
+
+        return $this;
+    }
+
+    /**
+     * Get Raw bindings
+     *
+     * @return array
+     */
     public function getRawBindings()
     {
         return $this->bindings;
     }
 
+    /**
+     * Evaluate if the passed operator and value are valid or invalid
+     *
+     * @param $operator
+     * @param $value
+     * @return bool
+     */
     protected function invalidOperatorAndValue($operator, $value)
     {
         return is_null($value) && in_array($operator, $this->operators) &&

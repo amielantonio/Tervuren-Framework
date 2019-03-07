@@ -71,6 +71,15 @@ class Arr {
         return $this;
     }
 
+    public function wrap($value)
+    {
+        if( is_null($value)){
+            return [];
+        }
+
+        return !is_array($value) ? [''] : $value;
+    }
+
     /**
      * Return the resulting array
      *

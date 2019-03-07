@@ -79,24 +79,15 @@ abstract class CoreModel {
     }
 
     /**
-     * @param $resource
-     * @throws \Exception
+     * Returns the result from a select statement running thru the WPDB command
+     *
+     * @return array|null|object
      */
-    public function find( $resource )
+    public function results()
     {
-        self::$resource = $resource;
+         $this->statement = $this->query->toSQL();
 
-
-        $columns = $this->select('*')->where( $this->primary_key, '=', $resource )->get();
-
-        $this->columns = $columns[0];
-    }
-
-    public function get()
-    {
-         echo $this->statement = $this->query->toSQL();
-
-//        return $this->result = $this->wpdb->get_results( $this->statement );
+        return $this->result = $this->wpdb->get_results( $this->statement );
 
     }
 
@@ -117,6 +108,35 @@ abstract class CoreModel {
         }
 
         return $this;
+    }
+
+    /**
+     * Get a certain resource from the database
+     *
+     * @param mixed ...$columns
+     * @return array|null|object
+     * @throws \Exception
+     */
+    public function get( ...$columns )
+    {
+        $columns = func_get_args();
+
+        $query = $this->query->select( $columns )->from( $this->table );
+
+        return $this->wpdb->get_results( $query );
+    }
+
+    /**
+     * @param $resource
+     * @throws \Exception
+     */
+    public function find( $resource )
+    {
+        self::$resource = $resource;
+
+        $columns = $this->select('*')->where( $this->primary_key, '=', $resource )->get();
+
+        $this->columns = $columns[0];
     }
 
     /**
@@ -329,6 +349,167 @@ abstract class CoreModel {
     }
 
     /**
+     * Create a JOIN clause
+     *
+     * @param $table
+     * @param $first
+     * @param null $operator
+     * @param null $second
+     * @param string $type
+     * @return $this
+     * @throws \Exception
+     */
+    public function join( $table, $first, $operator = null, $second = null, $type = "inner" )
+    {
+        $this->query->join( $table, $first, $operator, $second, $type );
+
+        return $this;
+    }
+
+    /**
+     * Create a group by clause
+     *
+     * @param mixed ...$groups
+     * @return $this
+     */
+    public function groupBy( ...$groups )
+    {
+        $this->query->groupBy( $groups );
+
+        return $this;
+    }
+
+    /**
+     * Create a having clause
+     *
+     * @param $column
+     * @param $operator
+     * @param $value
+     * @return $this
+     * @throws \Exception
+     */
+    public function having( $column, $operator, $value )
+    {
+        $this->query->having( $column, $operator, $value );
+
+        return $this;
+    }
+
+    /**
+     * Create a or Having clause for select statement
+     *
+     * @param $column
+     * @param $operator
+     * @param $value
+     * @return $this
+     * @throws \Exception
+     */
+    public function orHaving( $column, $operator, $value )
+    {
+        $this->query->orHaving( $column, $operator, $value );
+
+        return $this;
+    }
+
+    /**
+     * Create a raw SQL for having
+     *
+     * @param $sql
+     * @param array $bindings
+     * @return $this
+     * @throws \Exception
+     */
+    public function havingRaw( $sql, $bindings = [] )
+    {
+        $this->query->havingRaw( $sql, $bindings );
+
+        return $this;
+    }
+
+    /**
+     * Create a raw having
+     *
+     * @param $sql
+     * @param array $bindings
+     * @throws \Exception
+     * @return $this
+     */
+    public function orHavingRaw( $sql, $bindings = [] )
+    {
+        $this->query->orHavingRaw( $sql, $bindings );
+
+        return $this;
+    }
+
+    /**
+     * Create an order by clause in a select statement
+     *
+     * @param $column
+     * @param string $direction
+     * @return $this
+     */
+    public function orderBy( $column, $direction = 'asc' )
+    {
+        $this->query->orderBy( $column, $direction );
+
+        return $this;
+    }
+
+    /**
+     * create a descending order by statement
+     *
+     * @param $column
+     * @return $this
+     */
+    public function orderByDesc( $column )
+    {
+        $this->query->orderBy( $column, 'desc' );
+
+        return $this;
+    }
+
+    /**
+     * raw SQL for order by clause in a select statement
+     *
+     * @param $sql
+     * @param array $bindings
+     * @return $this
+     * @throws \Exception
+     */
+    public function orderByRaw( $sql, $bindings=[] )
+    {
+        $this->query->orderByRaw( $sql, $bindings );
+
+        return $this;
+    }
+
+    public function offset( $value )
+    {
+        $this->query->offset( $value );
+
+        return $this;
+    }
+
+    public function skip( $value )
+    {
+        $this->query->offset( $value );
+    }
+
+    public function take($value)
+    {
+        return $this->query->limit($value);
+    }
+
+    public function first( $columns = ['*'])
+    {
+        return $this->take(1)->get($columns)->first();
+    }
+
+
+
+
+
+    /**
      * Save existing
      *
      * @param $where
@@ -339,9 +520,8 @@ abstract class CoreModel {
     {
         // If the model doesn't have any records and the user is not finding any resources
         // then the user most likely needs to insert the resources given to the database.
-        if( empty(
-                $this->select($this->primary_key)->where( $this->primary_key, $this->columns[$this->primary_key] )->get()
-            ) && empty( $where )) {
+        if( empty( $this->get( $this->columns[$this->primary_key] )->results())
+            && empty( $where )) {
 
             return $this->wpdb->insert( $this->table, $this->columns );
         }
@@ -370,16 +550,15 @@ abstract class CoreModel {
         return $this->wpdb->update( $this->table, $this->columns, $where  );
     }
 
-
     /**
-     * Run an update command
+     * Do an update query
      *
      * @param array $columns
      * @return false|int
      */
     public function update( Array $columns )
     {
-        $this->wpdb->query( $this->query->table($this->table)->update( $columns ) );
+        return $this->wpdb->query( $this->query->table($this->table)->update( $columns ) );
     }
 
     /**
@@ -442,23 +621,7 @@ abstract class CoreModel {
 
     }
 
-    /**
-     * Create a JOIN clause
-     *
-     * @param $table
-     * @param $first
-     * @param null $operator
-     * @param null $second
-     * @param string $type
-     * @return $this
-     * @throws \Exception
-     */
-    public function join( $table, $first, $operator = null, $second = null, $type = "inner" )
-    {
-        $this->query->join( $table, $first, $operator, $second, $type );
 
-        return $this;
-    }
 
     /**
      * Call a dynamically created property
