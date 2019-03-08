@@ -57,17 +57,14 @@ final class StrataplanFormManager {
      */
     private function start()
     {
-
         //Check if the current PHP version
         //register_activation_hook( __FILE__, array( $this, 'auto_deactivate') );
-
-        $this->define_constants();
+        $this->defineConstants();
         $this->registerAutoload();
-        $this->load_dependencies();
+        $this->loadDependencies();
 
         // Once all dependencies and services has been loaded, install database
         // and boot up the entire plugin
-
         $this->boot();
 
     }
@@ -75,7 +72,7 @@ final class StrataplanFormManager {
     /**
      * Define Class constants
      */
-    private function define_constants()
+    private function defineConstants()
     {
         //Libraries
         define( 'S_BASEPATH'    , dirname( __FILE__ ) );
@@ -127,13 +124,15 @@ final class StrataplanFormManager {
     /**
      * Loads all dependencies
      */
-    private function load_dependencies()
+    private function loadDependencies()
     {
         //Load dependency classes such as custom post types,
         //roles, databases and other wordpress instantiation before adding
         //it to any navigation.
 
         $installer = new \App\Helpers\Installer;
+
+
 
         $installer->install();
 
@@ -151,3 +150,9 @@ final class StrataplanFormManager {
  * Start the App
  */
 StrataplanFormManager::init();
+
+//Run Global Functions
+use \App\Core\Page;
+Page::set( 'test2', 'actions2', 'test2' );
+
+var_dump(Page::getActions());

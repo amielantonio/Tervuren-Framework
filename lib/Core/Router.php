@@ -10,6 +10,11 @@ class Router {
      */
     protected $channel;
 
+    /**
+     * Controller being called by the router specified in the channel
+     *
+     * @var
+     */
     protected $controller;
 
     /**

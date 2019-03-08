@@ -58,50 +58,50 @@ class Kernel {
             );
 
 
-            add_submenu_page(
-                "strataplan-form-manager",
-                __( "Access Device Form", "textdomain" ),
-                __( "Access Device Form", "textdomain" ),
-                "manage_options",
-                "access-device-form",
-                array( $this::$router, "access_form" )
-            );
-
-            add_submenu_page(
-                "strataplan-form-manager",
-                __( "Move In/Out Form", "textdomain" ),
-                __( "Move In/Out Form", "textdomain" ),
-                "manage_options",
-                "move-in-out-form1",
-                array( $this::$router, "move_form" )
-            );
-
-            add_submenu_page(
-                "strataplan-form-manager",
-                __( "Move In/Out Form", "textdomain" ),
-                __( "Acquisition", "textdomain" ),
-                "manage_options",
-                "move-in-out-form2",
-                array( $this::$router, "move_form" )
-            );
-
-            add_submenu_page(
-                "strataplan-form-manager",
-                __( "Move In/Out Form", "textdomain" ),
-                __( "Customers", "textdomain" ),
-                "manage_options",
-                "move-in-out-form3",
-                array( $this::$router, "move_form" )
-            );
-
-            add_submenu_page(
-                "strataplan-form-manager",
-                __( "Move In/Out Form", "textdomain" ),
-                __( "Settings", "textdomain" ),
-                "manage_options",
-                "move-in-out-form4",
-                array( $this::$router, "move_form" )
-            );
+//            add_submenu_page(
+//                "strataplan-form-manager",
+//                __( "Access Device Form", "textdomain" ),
+//                __( "Access Device Form", "textdomain" ),
+//                "manage_options",
+//                "access-device-form",
+//                array( $this::$router, "access_form" )
+//            );
+//
+//            add_submenu_page(
+//                "strataplan-form-manager",
+//                __( "Move In/Out Form", "textdomain" ),
+//                __( "Move In/Out Form", "textdomain" ),
+//                "manage_options",
+//                "move-in-out-form1",
+//                array( $this::$router, "move_form" )
+//            );
+//
+//            add_submenu_page(
+//                "strataplan-form-manager",
+//                __( "Move In/Out Form", "textdomain" ),
+//                __( "Acquisition", "textdomain" ),
+//                "manage_options",
+//                "move-in-out-form2",
+//                array( $this::$router, "move_form" )
+//            );
+//
+//            add_submenu_page(
+//                "strataplan-form-manager",
+//                __( "Move In/Out Form", "textdomain" ),
+//                __( "Customers", "textdomain" ),
+//                "manage_options",
+//                "move-in-out-form3",
+//                array( $this::$router, "move_form" )
+//            );
+//
+//            add_submenu_page(
+//                "strataplan-form-manager",
+//                __( "Move In/Out Form", "textdomain" ),
+//                __( "Settings", "textdomain" ),
+//                "manage_options",
+//                "move-in-out-form4",
+//                array( $this::$router, "move_form" )
+//            );
         }
 
 
