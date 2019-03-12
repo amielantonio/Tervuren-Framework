@@ -47,15 +47,15 @@ class Kernel {
 
         if( !current_user_can( 'manage_strata_forms' ) ){
 
-            add_menu_page(
-                __( "Strataplan Form Manager", "textdomain" ),
-                __( "Strataplan Form Manager", "textdomain" ),
-                "manage_options",
-                "strataplan-form-manager",
-                array( $this::$router, 'index' ),
-                "dashicons-image-filter",
-                "2"
-            );
+//            add_menu_page(
+//                __( "Strataplan Form Manager", "textdomain" ),
+//                __( "Strataplan Form Manager", "textdomain" ),
+//                "manage_options",
+//                "strataplan-form-manager",
+//                array( $this::$router, 'index' ),
+//                "dashicons-image-filter",
+//                "2"
+//            );
 
 
 //            add_submenu_page(
