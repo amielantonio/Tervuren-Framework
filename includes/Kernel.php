@@ -45,8 +45,8 @@ class Kernel {
 
         $this::$router->setController( $mainController );
 
-        if( !current_user_can( 'manage_strata_forms' ) ){
-
+//        if( !current_user_can( 'manage_strata_forms' ) ){
+//
 //            add_menu_page(
 //                __( "Strataplan Form Manager", "textdomain" ),
 //                __( "Strataplan Form Manager", "textdomain" ),
@@ -120,6 +120,6 @@ class Kernel {
 //        }
 
 
-    }
+//    }
 
 }

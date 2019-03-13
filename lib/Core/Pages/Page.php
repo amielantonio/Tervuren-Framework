@@ -1,153 +1,164 @@
 <?php
+namespace App\Core\Pages;
 
+use Closure;
+use App\Core\Pages\PageCreator;
 
 class Page {
 
-    protected $options = [
-        'menu' => 'add_menu_page',
-        'submenu' => 'add_submenu_page',
-        'utility' => 'add_utility_page',
-        'dashboard' => 'add_utility_page',
-        'posts' => 'add_posts_page',
-        'media' => 'add_media_page',
-        'pages' => 'add_media_page',
-        'comments' => 'add_media_page',
-        'theme' => 'add_theme_page',
-        'plugins' => 'add_plugins_page',
-        'users' => 'add_users_page',
-        'management' => 'add_management_page',
-        'options' => 'add_options_page'
-    ];
 
-    protected $pages = [];
+    /**
+     * Storage for page information
+     *
+     *
+     * @var array
+     */
+    public static $pages = [];
 
+    /**
+     * Page Instance
+     *
+     * @var Page
+     */
     protected static $instance;
 
     /**
-     * @var array
+     * @var \App\Core\Pages\PageCreator
      */
     protected $creator;
 
+    /**
+     * Page constructor.
+     */
     public function __construct()
     {
-
+        $this->creator = new PageCreator();
     }
 
     /**
      * Create a page?
      *
-     * @param $location
-     * @param $name
-     * @param $controller
-     * @param $settings
+     * @param string $location
+     * @param string $title
+     * @param Closure|string $controller
+     * @param array $settings
      * @return Page
      */
-    public static function add( $location, $name, $controller, $settings )
+    public static function add( $location, $title, $controller, $settings = [] )
     {
-        if ( ! self::$instance ) {
+        //Check for Instance
+        if( self::$instance === null ) {
             self::$instance = new self;
         }
 
-//        self::$instance->bindings[$location]();
-
-        if( is_string( $controller )) {
-            self::$instance->controller = explode( '@', $controller );
-        }
-
-        // run location to create page
+        $function = ( $controller instanceof Closure )
+                        ? $controller
+                        : self::$instance->setController( $controller );
 
 
-
+        self::$pages[] = array_merge( compact( 'location', 'title', 'function' ), $settings );
 
         return self::$instance;
 
     }
 
-    protected function create()
+    public static function create()
     {
-
+        add_action( 'admin_menu', array( self::$instance, 'create_pages' ) );
     }
 
-    public static function addMenu( $name, $controller, $settings )
+    public function create_pages()
+    {
+         return self::$instance->creator->create( self::$instance ) ;
+    }
+
+
+    public static function addMenu( $name, $controller, $settings = [] )
     {
         self::add( 'menu', $name, $controller, $settings );
 
         return self::$instance;
     }
 
-    public function addSubmenu( $name, $controller, $settings )
+    public function addSubmenu( $name, $controller, $settings = [] )
     {
 
     }
 
-    public function addDashboard( $name, $controller, $settings )
+    public function addDashboard( $name, $controller, $settings = [] )
     {
 
     }
 
-    public function addPosts( $name, $controller, $settings )
+    public function addPosts( $name, $controller, $settings = [] )
     {
 
     }
 
-    public function addUtility( $name, $controller, $settings )
+    public function addUtility( $name, $controller, $settings = [] )
     {
 
     }
 
-    public function addMedia( $name, $controller, $settings )
+    public function addMedia( $name, $controller, $settings = [] )
     {
 
     }
 
-    public function addComments( $name, $controller, $settings )
+    public function addComments( $name, $controller, $settings = [] )
     {
 
     }
 
-    public function addPages( $name, $controller, $settings )
+    public function addPages( $name, $controller, $settings = [] )
     {
 
     }
 
-    public function addUsers( $name, $controller, $settings )
+    public function addUsers( $name, $controller, $settings = [] )
     {
 
     }
 
-    public function addTheme( $name, $controller, $settings )
+    public function addTheme( $name, $controller, $settings = [] )
     {
 
     }
 
-    public function addPlugins( $name, $controller, $settings )
+    public function addPlugins( $name, $controller, $settings = [] )
     {
 
     }
 
-    public function addManagement( $name, $controller, $settings )
+    public function addManagement( $name, $controller, $settings = [] )
     {
 
     }
 
-    public function addOptions( $name, $controller, $settings )
+    public function addOptions( $name, $controller, $settings = [] )
     {
 
     }
 
-    public function name()
+    public function name( $name )
     {
-
+        echo $name;
     }
 
-    protected function setController()
+    /**
+     * Set Controller and method to array
+     *
+     * @param $controller
+     * @return array
+     */
+    protected function setController( $controller )
     {
+        $method = explode( '@', $controller );
 
-    }
-
-    protected function toSlug()
-    {
-
+        return [
+            'controller' => $method[0],
+            'method' => $method[1]
+        ];
     }
 
     protected function instance()

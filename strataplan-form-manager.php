@@ -152,5 +152,8 @@ final class StrataplanFormManager {
 StrataplanFormManager::init();
 
 //Run Global Functions
-require_once "includes/Page.php";
-Page::addMenu('Test', 'MainController@test', []);
+use App\Core\Pages\Page;
+
+Page::addMenu('Test', 'MainController@index', [ 'capability'=> 'manage_options' ]);
+
+Page::create();
