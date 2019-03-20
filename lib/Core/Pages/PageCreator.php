@@ -26,7 +26,7 @@ class PageCreator {
         'options' => 'add_options_page'
     ];
 
-    protected $controllerURL = "\\App\\Controller\\";
+    protected $controllerURL = "\App\Controller\\";
 
     public function create( Page $page )
     {
@@ -35,6 +35,8 @@ class PageCreator {
             $this->{'create_'.$page['location']}( $page );
 
         }
+
+        return true;
     }
 
     protected function create_menu( $page )
@@ -54,17 +56,21 @@ class PageCreator {
         return "";
     }
 
+    /**
+     * Sets the method to be used for the menu
+     *
+     * @param $method
+     * @return array | Closure
+     */
     protected function setMethod( $method )
     {
         if( $method instanceof Closure) {
             return $method;
         }
 
-        $class = new $this->controllerURL.$method['controller'];
+        $setClass =  $this->controllerURL.$method['controller'];
 
-        echo $this->controllerURL.$method['controller'];
-
-//        var_dump([ $class, $method['method'] ]);
+        $class = new $setClass;
 
         return [ $class, $method['method'] ];
     }

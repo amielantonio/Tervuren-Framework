@@ -80,9 +80,9 @@ class Page {
         return self::$instance;
     }
 
-    public function addSubmenu( $name, $controller, $settings = [] )
+    public function addSubmenu( $parent_name, $name, $controller, $settings = [] )
     {
-
+        self::add( 'submenu' );
     }
 
     public function addDashboard( $name, $controller, $settings = [] )

@@ -22,7 +22,8 @@ class MainController extends CoreController{
      */
     public function index()
     {
-        return ( new View( 'dashboard/dashboard' ) )->render();
+//        return ( new View( 'dashboard/dashboard', compact( 'test' ) ) )->render();
+        return ( new View( 'dashboard/dashboard') )->with( 'testKey', 'testVal' )->render();
     }
 
     /**

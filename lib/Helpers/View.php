@@ -2,6 +2,8 @@
 
 namespace App\Helpers;
 
+use ReflectionMethod;
+
 class View {
 
     /**
@@ -25,12 +27,18 @@ class View {
      */
     protected $data;
 
+    /**
+     * View constructor.
+     *
+     * @param $view
+     * @param array $data
+     */
     public function __construct( $view, $data = [] )
     {
         $this->view = $view;
         $this->data = $data;
 
-        $this->path = S_VIEWPATH . "{$this->view}.view.php";
+        $this->path = S_VIEWPATH . "/{$this->view}.view.php";
     }
 
     /**
@@ -47,35 +55,25 @@ class View {
         return require $this->path;
     }
 
-
-    public function addScript( $scripts = [] )
-    {
-        // accepted variables
-        // handle
-        // src
-        // deps
-        // version
-        // in-footer
-    }
-
     /**
-     * @param array $styles
-     * @throws \exception
+     * Check if the view file exists
+     *
+     * @return bool
      */
-    public function addStyles( $styles = [] )
-    {
-        // accepted variables
-        // handle
-        // src
-        // deps
-        // version
-        // media
-
-    }
-
     public function exists()
     {
         return ( file_exists( $this->path ) );
+    }
+
+    /**
+     * Adds the Data to the view
+     *
+     * @param $array
+     * @return array
+     */
+    public function addData( $array )
+    {
+        return $this->data =  array_merge( $this->data, $array );
     }
 
     /**
@@ -84,8 +82,9 @@ class View {
      * @param mixed ...$data
      * @return $this
      */
-    public function with( ...$data ){
-        $this->data = $data;
+    public function with( $key, $value ){
+
+        $this->addData( [$key => $value] );
 
         return $this;
     }
