@@ -155,5 +155,6 @@ StrataplanFormManager::init();
 use App\Core\Pages\Page;
 
 Page::addMenu('Test', 'MainController@index', [ 'capability'=> 'manage_options' ]);
+Page::addSubMenu('Test', 'TheSubmenu', function(){ echo "submenu"; });
 
 Page::create();

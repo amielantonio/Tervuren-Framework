@@ -4,7 +4,6 @@ namespace App\Controller;
 use App\Helpers\Func;
 use App\Helpers\View;
 use App\Core\CoreController;
-use GuzzleHttp\Client;
 
 class MainController extends CoreController{
 
@@ -22,8 +21,10 @@ class MainController extends CoreController{
      */
     public function index()
     {
-//        return ( new View( 'dashboard/dashboard', compact( 'test' ) ) )->render();
-        return ( new View( 'dashboard/dashboard') )->with( 'testKey', 'testVal' )->render();
+        return ( new View( 'dashboard/dashboard', ["testKey"=>'TestAray'] ) )->render();
+//        return ( new View( 'dashboard/dashboard') )
+//            ->with( 'testKey', 'testVal' )
+//            ->with( 'testKey2', 'testVal2' )->render();
     }
 
     /**

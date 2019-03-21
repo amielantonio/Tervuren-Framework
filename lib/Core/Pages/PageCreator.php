@@ -10,30 +10,17 @@ class PageCreator {
 
     protected $capabilityDefault = "manage_options";
 
-    protected $options = [
-        'menu' => 'add_menu_page',
-        'submenu' => 'add_submenu_page',
-        'utility' => 'add_utility_page',
-        'dashboard' => 'add_utility_page',
-        'posts' => 'add_posts_page',
-        'media' => 'add_media_page',
-        'pages' => 'add_media_page',
-        'comments' => 'add_media_page',
-        'theme' => 'add_theme_page',
-        'plugins' => 'add_plugins_page',
-        'users' => 'add_users_page',
-        'management' => 'add_management_page',
-        'options' => 'add_options_page'
-    ];
-
+    /**
+     * Controller Namespace
+     *
+     * @var string
+     */
     protected $controllerURL = "\App\Controller\\";
 
     public function create( Page $page )
     {
         foreach( $page::$pages as $page ) {
-
             $this->{'create_'.$page['location']}( $page );
-
         }
 
         return true;
@@ -41,18 +28,38 @@ class PageCreator {
 
     protected function create_menu( $page )
     {
-        if( current_user_can( $page['capability'] ) ){
+        $capability = isset($page['capability']) ? $page['capability'] : $this->capabilityDefault;
+
+        if( current_user_can( $capability ) ){
             return add_menu_page(
                 __( $page['title'], 'textdomain' ),
                 __( $page['title'], 'textdomain' ),
                 isset($page['capability']) ? $page['capability'] : $this->capabilityDefault,
                 isset( $page['menu_slug'] ) ? $page['menu_slug'] : $this->toSlug( $page['title'] ),
                 $this->setMethod( $page['function'] ),
-                isset( $page[''] ),
+                isset( $page['icon_url'] ) ? $page['icon_url'] : "",
                 5
             );
         }
 
+        return "";
+    }
+
+    protected function create_submenu( $page )
+    {
+        $capability = isset($page['capability']) ? $page['capability'] : $this->capabilityDefault;
+        $parent_slug = $this->toSlug( $page['parent_name'] );
+
+        if( current_user_can( $capability ) ){
+            return add_submenu_page(
+                $parent_slug,
+                __($page['title'], 'textdomain' ),
+                __($page['title'], 'textdomain' ),
+                isset($page['capability']) ? $page['capability'] : $this->capabilityDefault,
+                isset( $page['menu_slug'] ) ? $page['menu_slug'] : $this->toSlug( $page['title'] ),
+                $this->setMethod( $page['function'] )
+            );
+        }
         return "";
     }
 
