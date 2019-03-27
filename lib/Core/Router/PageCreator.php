@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Core\Pages;
+namespace App\Core\Router;
 
 use Closure;
 use ReflectionMethod;
-use App\Core\Pages\Page;
+use App\Core\Router\Router;
 
 class PageCreator {
 
@@ -17,7 +17,7 @@ class PageCreator {
      */
     protected $controllerURL = "\App\Controller\\";
 
-    public function create( Page $page )
+    public function create(Router $page )
     {
         foreach( $page::$pages as $page ) {
             $this->{'create_'.$page['location']}( $page );
@@ -60,6 +60,7 @@ class PageCreator {
                 $this->setMethod( $page['function'] )
             );
         }
+
         return "";
     }
 

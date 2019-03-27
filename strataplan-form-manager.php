@@ -58,7 +58,7 @@ final class StrataplanFormManager {
     private function start()
     {
         //Check if the current PHP version
-        //register_activation_hook( __FILE__, array( $this, 'auto_deactivate') );
+        register_activation_hook( __FILE__, array( $this, 'auto_deactivate') );
         $this->defineConstants();
         $this->registerAutoload();
         $this->loadDependencies();
@@ -103,13 +103,16 @@ final class StrataplanFormManager {
             return;
         }
 
+        add_action( 'admin_notices', function(){ ?>
+
+
+        <?php });
+
         deactivate_plugins( basename(__FILE__) );
-
-        $error = "<h1>Plugin Activation Error</h1>";
-        $error .= "<p>Required PHP Version: {$this->version}</p>";
-
-        wp_die( $error, "Plugin Activation Error", array( 'response' => 200, 'back_link' => true ));
     }
+
+
+
 
 
     /**
@@ -138,6 +141,9 @@ final class StrataplanFormManager {
 
     }
 
+    /**
+     *
+     */
     private function boot()
     {
         require_once "includes/Kernel.php";
@@ -152,9 +158,10 @@ final class StrataplanFormManager {
 StrataplanFormManager::init();
 
 //Run Global Functions
-use App\Core\Pages\Page;
 
-Page::addMenu('Test', 'MainController@index', [ 'capability'=> 'manage_options' ]);
-Page::addSubMenu('Test', 'TheSubmenu', function(){ echo "submenu"; });
+Router::addMenu('Test', 'MainController@index', [ 'capability'=> 'manage_options' ]);
 
-Page::create();
+Router::addSubMenu('Test', 'TheSubmenu', function(){ echo "submenu"; });
+
+
+Router::create();

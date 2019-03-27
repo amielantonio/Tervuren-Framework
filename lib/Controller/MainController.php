@@ -21,10 +21,10 @@ class MainController extends CoreController{
      */
     public function index()
     {
-        return ( new View( 'dashboard/dashboard', ["testKey"=>'TestAray'] ) )->render();
-//        return ( new View( 'dashboard/dashboard') )
-//            ->with( 'testKey', 'testVal' )
-//            ->with( 'testKey2', 'testVal2' )->render();
+//        return ( new View( 'dashboard/dashboard', ["testKey"=>'Julz Panget'] ) )->render();
+        return ( new View( 'dashboard/dashboard') )
+            ->with( 'testKey', '' )
+            ->with( 'testKey2', 'testVal2' )->render();
     }
 
     /**

@@ -1,10 +1,10 @@
 <?php
-namespace App\Core\Pages;
+namespace App\Core\Router;
 
 use Closure;
-use App\Core\Pages\PageCreator;
+use App\Core\Router\PageCreator;
 
-class Page {
+class Router {
 
     /**
      * Storage for page information
@@ -17,12 +17,12 @@ class Page {
     /**
      * Page Instance
      *
-     * @var Page
+     * @var Router
      */
     protected static $instance;
 
     /**
-     * @var \App\Core\Pages\PageCreator
+     * @var \App\Core\Router\PageCreator
      */
     protected $creator;
 
@@ -35,13 +35,23 @@ class Page {
     }
 
     /**
-     * Create a page?
+     * Router Instance
+     *
+     * @return $this
+     */
+    protected function instance()
+    {
+        return $this;
+    }
+
+    /**
+     * Adds the page to the array
      *
      * @param string $location
      * @param string $title
      * @param Closure|string $controller
      * @param array $settings
-     * @return Page
+     * @return Router
      */
     public static function add( $location, $title, $controller, $settings = [] )
     {
@@ -86,7 +96,7 @@ class Page {
      * @param $name
      * @param $controller
      * @param array $settings
-     * @return Page
+     * @return Router
      */
     public static function addMenu( $name, $controller, $settings = [] )
     {
@@ -102,7 +112,7 @@ class Page {
      * @param $name
      * @param $controller
      * @param array $settings
-     * @return Page
+     * @return Router
      */
     public static function addSubMenu( $parent_name, $name, $controller, $settings = [] )
     {
@@ -139,6 +149,8 @@ class Page {
     }
 
     /**
+     * Create a submenu under the Settings tab
+     *
      * @param $name
      * @param $controller
      * @param array $settings
@@ -149,6 +161,8 @@ class Page {
     }
 
     /**
+     * Create a submenu under the Media Tab
+     *
      * @param $name
      * @param $controller
      * @param array $settings
@@ -159,6 +173,8 @@ class Page {
     }
 
     /**
+     * Create a submenu under the Comments tab
+     *
      * @param $name
      * @param $controller
      * @param array $settings
@@ -169,6 +185,8 @@ class Page {
     }
 
     /**
+     * Create a submenu under the Pages tab
+     *
      * @param $name
      * @param $controller
      * @param array $settings
@@ -179,6 +197,8 @@ class Page {
     }
 
     /**
+     * Create a submenu under the Users tab
+     *
      * @param $name
      * @param $controller
      * @param array $settings
@@ -189,6 +209,8 @@ class Page {
     }
 
     /**
+     * Create a submenu under the Appearance tab
+     *
      * @param $name
      * @param $controller
      * @param array $settings
@@ -199,6 +221,8 @@ class Page {
     }
 
     /**
+     * Create a submenu under the Plugins tab
+     *
      * @param $name
      * @param $controller
      * @param array $settings
@@ -248,21 +272,5 @@ class Page {
             'method' => $method[1]
         ];
     }
-
-    protected function instance()
-    {
-        return $this;
-    }
-
-    protected function bindAction( $location, $action, $settings )
-    {
-
-    }
-
-    protected function getBinding( $key )
-    {
-
-    }
-
 
 }
