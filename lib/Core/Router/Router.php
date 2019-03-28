@@ -1,8 +1,4 @@
 <?php
-namespace App\Core\Router;
-
-use Closure;
-use App\Core\Router\PageCreator;
 
 class Router {
 
@@ -24,15 +20,14 @@ class Router {
     /**
      * @var \App\Core\Router\PageCreator
      */
-    protected $creator;
+    protected static $creator;
 
     /**
-     * Page constructor.
+     * Storage for web channels
+     *
+     * @var
      */
-    public function __construct()
-    {
-        $this->creator = new PageCreator();
-    }
+    protected static $channel;
 
     /**
      * Router Instance
@@ -42,6 +37,11 @@ class Router {
     protected function instance()
     {
         return $this;
+    }
+
+    public static function start(PageCreator $creator)
+    {
+        self::$creator = new $creator;
     }
 
     /**
@@ -64,13 +64,11 @@ class Router {
                         ? $controller
                         : self::$instance->setController( $controller );
 
-
         self::$pages[] = array_merge( compact( 'location', 'title', 'function' ), $settings );
 
         return self::$instance;
 
     }
-
 
     /**
      * Binds the built array to the admin_menu action of Wordpress
@@ -87,7 +85,7 @@ class Router {
      */
     public function create_pages()
     {
-         return self::$instance->creator->create( self::$instance ) ;
+         return self::$creator->create( self::$instance ) ;
     }
 
     /**
@@ -252,11 +250,6 @@ class Router {
         self::add( 'options', $name, $controller, $settings );
     }
 
-    public function name( $name )
-    {
-
-    }
-
     /**
      * Set Controller and method to array
      *
@@ -271,6 +264,16 @@ class Router {
             'controller' => $method[0],
             'method' => $method[1]
         ];
+    }
+
+    public function channel( $channel )
+    {
+
+    }
+
+    public function name( $name )
+    {
+
     }
 
 }

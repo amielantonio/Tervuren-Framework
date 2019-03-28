@@ -21,7 +21,9 @@ class MainController extends CoreController{
      */
     public function index()
     {
-//        return ( new View( 'dashboard/dashboard', ["testKey"=>'Julz Panget'] ) )->render();
+
+
+
         return ( new View( 'dashboard/dashboard') )
             ->with( 'testKey', '' )
             ->with( 'testKey2', 'testVal2' )->render();
@@ -35,6 +37,13 @@ class MainController extends CoreController{
      */
     public function access_form()
     {
+        $shared = [ 'shared' => 'yes this is a shared data' ];
+
+        \SharedData::share( $shared );
+
+        var_dump(\SharedData::getAll());
+
+
         return ( new View( 'access_device_form/access_device' ) )->render();
     }
 

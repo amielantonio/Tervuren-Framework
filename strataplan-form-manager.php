@@ -58,7 +58,7 @@ final class StrataplanFormManager {
     private function start()
     {
         //Check if the current PHP version
-        register_activation_hook( __FILE__, array( $this, 'auto_deactivate') );
+//        register_activation_hook( __FILE__, array( $this, 'auto_deactivate') );
         $this->defineConstants();
         $this->registerAutoload();
         $this->loadDependencies();
@@ -66,7 +66,6 @@ final class StrataplanFormManager {
         // Once all dependencies and services has been loaded, install database
         // and boot up the entire plugin
         $this->boot();
-
     }
 
     /**
@@ -121,7 +120,7 @@ final class StrataplanFormManager {
     private function registerAutoload()
     {
         //Require Vendor Autoload
-        require_once 'vendor/autoload.php';
+        require __DIR__ . '/vendor/autoload.php';
     }
 
     /**
@@ -146,9 +145,8 @@ final class StrataplanFormManager {
      */
     private function boot()
     {
-        require_once "includes/Kernel.php";
-
-        ( new Kernel )->run();
+        Kernel::run();
+        Router::start( (new PageCreator) );
     }
 }
 
@@ -158,10 +156,3 @@ final class StrataplanFormManager {
 StrataplanFormManager::init();
 
 //Run Global Functions
-
-Router::addMenu('Test', 'MainController@index', [ 'capability'=> 'manage_options' ]);
-
-Router::addSubMenu('Test', 'TheSubmenu', function(){ echo "submenu"; });
-
-
-Router::create();

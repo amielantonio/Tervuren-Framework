@@ -1,23 +1,20 @@
 <?php
-use App\Core\Router\Router;
 
 class Kernel {
 
     /**
      * Run the kernel class
      */
-    public function run()
+    public static function run()
     {
-
-        $this->startRouter();
-
-
-
+        static::runRouters();
     }
 
-    protected function startRouter()
-    {
 
+    protected static function runRouters()
+    {
+        require_once S_BASEPATH . "/routes/web.php";
+        Router::create();
     }
 
 }

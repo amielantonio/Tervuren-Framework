@@ -1,11 +1,5 @@
 <?php
 
-namespace App\Core\Router;
-
-use Closure;
-use ReflectionMethod;
-use App\Core\Router\Router;
-
 class PageCreator {
 
     protected $capabilityDefault = "manage_options";

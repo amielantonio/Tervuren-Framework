@@ -1,3 +1,5 @@
+<?php var_dump($shared); ?>
+
 <section class="">
     <h1>Access Device Forms </h1>
 </section>

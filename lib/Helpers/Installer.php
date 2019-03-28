@@ -6,7 +6,7 @@ use App\Database\Database;
 
 class Installer{
 
-    protected $pipe = [];
+    protected static $pipe = [];
 
     /**
      * Installation that is hooked with wordpress plugin activation
@@ -29,13 +29,11 @@ class Installer{
      */
     public function boot()
     {
-
         //Install all things that are needed to be installed first.
         ( new Database() )->install();
 
         //Run the Queue pipe!
-        $this->install_pipe();
-
+        static::install_pipe();
     }
 
     /**
@@ -44,9 +42,9 @@ class Installer{
      * @param $class::Class
      * @param $method
      */
-    public function pipe( $class, $method )
+    public static function pipe( $class, $method )
     {
-        $this->pipe[] = [
+        static::$pipe[] = [
             'class' => $class,
             'method'=> $method
         ];
@@ -55,9 +53,9 @@ class Installer{
     /**
      * Install all the class that are inside the pipe
      */
-    public function install_pipe()
+    public static function install_pipe()
     {
-        foreach( $this->pipe as $pipe ){
+        foreach( static::$pipe as $pipe ){
             ( new $pipe['class'] )->$pipe['method'];
         }
     }
