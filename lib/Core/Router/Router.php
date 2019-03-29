@@ -27,7 +27,7 @@ class Router {
      *
      * @var
      */
-    protected static $channel;
+    protected static $channels;
 
     /**
      * Router Instance
@@ -266,9 +266,21 @@ class Router {
         ];
     }
 
-    public function channel( $channel )
+    public static function setChannel()
     {
 
+    }
+
+    public static function direct()
+    {
+
+    }
+
+    public static function addChannel( $controller )
+    {
+
+
+        return static::$instance;
     }
 
     public function name( $name )

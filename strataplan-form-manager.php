@@ -102,17 +102,8 @@ final class StrataplanFormManager {
             return;
         }
 
-        add_action( 'admin_notices', function(){ ?>
-
-
-        <?php });
-
         deactivate_plugins( basename(__FILE__) );
     }
-
-
-
-
 
     /**
      * Load all helper functions
@@ -154,5 +145,3 @@ final class StrataplanFormManager {
  * Start the App
  */
 StrataplanFormManager::init();
-
-//Run Global Functions
