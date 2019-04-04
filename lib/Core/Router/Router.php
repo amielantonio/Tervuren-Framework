@@ -25,9 +25,21 @@ class Router {
     /**
      * Storage for web channels
      *
+     * @var array
+     */
+    public static $channels;
+
+    /**
+     * @var array
+     */
+    private static $currentChannel;
+
+    /**
      * @var
      */
-    protected static $channels;
+    public static $routeChannel = 'route';
+
+    protected $namespace = "\\App\\Controller\\";
 
     /**
      * Router Instance
@@ -73,7 +85,7 @@ class Router {
     /**
      * Binds the built array to the admin_menu action of Wordpress
      */
-    public static function create()
+    public static function run()
     {
         add_action( 'admin_menu', array( self::$instance, 'create_pages' ) );
     }
@@ -266,26 +278,33 @@ class Router {
         ];
     }
 
-    public static function setChannel()
+    public static function setChannel( $channel )
     {
-
+        static::$routeChannel = $channel;
     }
 
+    /**
+     * Directs the traffic to the correct route
+     */
     public static function direct()
     {
+        $controllerMethod = explode( '@', static::$channels[$_GET[ static::$routeChannel ]][0]['controller'] );
 
+        $controller = static::$instance->namespace . $controllerMethod[0];
+        $method = $controllerMethod[1];
+
+        return ( new $controller )->$method();
     }
 
-    public static function addChannel( $controller )
+    /**
+     * Adds a channel to a specific route
+     *
+     * @param $verb
+     * @param $controller
+     * @param $name
+     */
+    public static function addChannel( $verb, $controller, $name )
     {
-
-
-        return static::$instance;
+        static::$currentChannel = static::$channels[$name][] = compact('verb', 'controller', 'name' );
     }
-
-    public function name( $name )
-    {
-
-    }
-
 }

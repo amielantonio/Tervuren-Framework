@@ -11,6 +11,12 @@ class PageCreator {
      */
     protected $controllerURL = "\App\Controller\\";
 
+    /**
+     * Entrance to create the pages
+     *
+     * @param Router $page
+     * @return bool
+     */
     public function create(Router $page )
     {
         foreach( $page::$pages as $page ) {
@@ -20,6 +26,12 @@ class PageCreator {
         return true;
     }
 
+    /**
+     * Create a menu page
+     *
+     * @param $page
+     * @return string
+     */
     protected function create_menu( $page )
     {
         $capability = isset($page['capability']) ? $page['capability'] : $this->capabilityDefault;
@@ -39,6 +51,12 @@ class PageCreator {
         return "";
     }
 
+    /**
+     * Create a Submenu page
+     *
+     * @param $page
+     * @return false|string
+     */
     protected function create_submenu( $page )
     {
         $capability = isset($page['capability']) ? $page['capability'] : $this->capabilityDefault;
@@ -66,6 +84,16 @@ class PageCreator {
      */
     protected function setMethod( $method )
     {
+        //if there
+        if( isset( $_GET[ Router::$routeChannel ]) || ! is_null( $_GET[ Router::$routeChannel] )) {
+            $controllerMethod = explode( '@', Router::$channels[$_GET[ Router::$routeChannel ]][0]['controller'] );
+
+            return [
+                "\\App\\Controller\\" . $controllerMethod[0],
+                $controllerMethod[1]
+            ];
+        }
+
         if( $method instanceof Closure) {
             return $method;
         }

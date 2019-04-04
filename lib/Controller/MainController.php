@@ -46,13 +46,10 @@ class MainController extends CoreController{
     public function move_form()
     {
         return ( new View( 'move_in_out_form/move_form' ) )->render();
-
     }
 
     public function test()
     {
-        echo "Did i reached this part?";
+       echo 'YESSSSSSSSSS';
     }
-
-
 }

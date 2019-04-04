@@ -10,11 +10,20 @@ class Kernel {
         static::runRouters();
     }
 
-
     protected static function runRouters()
     {
         require_once S_BASEPATH . "/routes/web.php";
-        Router::create();
+        Router::run();
+    }
+
+    protected static function runScripts()
+    {
+
+    }
+
+    protected static function runAjax()
+    {
+
     }
 
 }
