@@ -7,9 +7,37 @@ use App\Helpers\Contracts\Arrayable;
 
 class Request implements Arrayable, ArrayAccess {
 
+    /**
+     * @var
+     */
+    protected $currentPage;
 
+    /**
+     * @var
+     */
+    protected $currentRoute;
 
-    public function has()
+    protected $post = [];
+
+    protected $get = [];
+
+    protected $file = [];
+
+    public function __construct( $post = [], $get = [], $file = [] )
+    {
+        $this->post = $post;
+
+        $this->currentPage = $post['page'];
+
+        $this->currentRoute = $post['route'];
+    }
+
+    public function method()
+    {
+
+    }
+
+    public function has( $key )
     {
 
     }
@@ -19,7 +47,7 @@ class Request implements Arrayable, ArrayAccess {
 
     }
 
-    public function input()
+    public function input( $key, $default = null )
     {
 
     }

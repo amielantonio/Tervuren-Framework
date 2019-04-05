@@ -84,20 +84,47 @@ class PageCreator {
      */
     protected function setMethod( $method )
     {
-        //if there
-        if( isset( $_GET[ Router::$routeChannel ]) || ! is_null( $_GET[ Router::$routeChannel] )) {
+        //Check whether the url specifies a channel for the route,
+        //If it has then return the associated controller and method
+        //for the route channel.
+        if( isset( $_GET[ Router::$routeChannel ])
+            || ! is_null( $_GET[ Router::$routeChannel] )) {
             $controllerMethod = explode( '@', Router::$channels[$_GET[ Router::$routeChannel ]][0]['controller'] );
 
-            return [
-                "\\App\\Controller\\" . $controllerMethod[0],
-                $controllerMethod[1]
-            ];
+            $controller = "\\App\\Controller\\{$controllerMethod[0]}";
+            $method = $controllerMethod[1];
+
+            $class = new $controller;
+
+            return function() use ($class, $method){
+
+                $request = new \App\Core\Request($_POST, $_GET, $_FILES);
+
+                $r = new ReflectionMethod($class, $method );
+
+                $params = $r->getParameters();
+
+                $this->paramBinder($r);
+
+//
+//                echo $params[1]->name;
+//                echo $params[1]->getType();
+
+
+
+
+                return $class->$method(  );
+            };
         }
 
+        //Return the closure immediately
         if( $method instanceof Closure) {
             return $method;
         }
 
+        //If we don't have any route channel specified or the method being passed
+        //is not an instance of a Closure, then return the class and method that
+        //the user defined on its routes
         $setClass =  $this->controllerURL.$method['controller'];
 
         $class = new $setClass;
@@ -130,5 +157,15 @@ class PageCreator {
         }
 
         return $string;
+    }
+    protected function routeDirect()
+    {
+
+    }
+
+    protected function paramBinder(ReflectionMethod $reflection)
+    {
+        $params = [];
+        var_dump($reflection->getParameters());
     }
 }

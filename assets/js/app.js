@@ -104,7 +104,7 @@ eval("/**\r\n *\r\n */\r\n\r\n__webpack_require__( /*! ./components/access-devic
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-eval("( function ($){\r\n\r\n\r\n  $( function(){\r\n\r\n    $( '#access-device-buildings' ).DataTable();\r\n\r\n  });\r\n\r\n\r\n  function ajax(){\r\n\r\n  }\r\n\r\n\r\n\r\n\r\n\r\n})(jQuery);\r\n\n\n//# sourceURL=webpack:///./src/js/components/access-device.js?");
+eval("alert( 'test' );\r\n\n\n//# sourceURL=webpack:///./src/js/components/access-device.js?");
 
 /***/ }),
 

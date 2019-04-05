@@ -3,7 +3,10 @@ namespace App\Controller;
 
 use App\Helpers\Func;
 use App\Helpers\View;
+use App\Core\Request;
 use App\Core\CoreController;
+use App\Model\AccessDevice;
+
 
 class MainController extends CoreController{
 
@@ -48,8 +51,10 @@ class MainController extends CoreController{
         return ( new View( 'move_in_out_form/move_form' ) )->render();
     }
 
-    public function test()
+    public function test( Request $request, AccessDevice $accessDevice )
     {
-       echo 'YESSSSSSSSSS';
+       echo $request->input( 'sampleInput' );
+
+//       var_dump($request);
     }
 }
