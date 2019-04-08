@@ -12,12 +12,23 @@ class PageCreator {
     protected $controllerURL = "\App\Controller\\";
 
     /**
+     * @var RouteModels
+     */
+    protected $routeModel;
+
+
+    public function __construct( RouteModels $routeModels = null )
+    {
+        $this->routeModel = ( is_null($routeModels) ) ? (new RouteModels) : $routeModels;
+    }
+
+    /**
      * Entrance to create the pages
      *
      * @param Router $page
      * @return bool
      */
-    public function create(Router $page )
+    public function create( Router $page )
     {
         foreach( $page::$pages as $page ) {
             $this->{'create_'.$page['location']}( $page );

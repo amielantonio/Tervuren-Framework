@@ -10,7 +10,6 @@ use App\Model\AccessDevice;
 
 class MainController extends CoreController{
 
-
     public function __construct()
     {
         parent::__construct();
