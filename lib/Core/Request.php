@@ -39,7 +39,7 @@ class Request implements Arrayable, ArrayAccess {
 
     public function has( $key )
     {
-
+        return array_key_exists( $key, $this->post);
     }
 
     public function is()
@@ -49,7 +49,7 @@ class Request implements Arrayable, ArrayAccess {
 
     public function input( $key, $default = null )
     {
-        return ( in_array( $key, $this->post) )
+        return ( $this->has($key) )
             ? $this->post[$key]
             : $default;
     }
@@ -61,7 +61,7 @@ class Request implements Arrayable, ArrayAccess {
 
     public function all()
     {
-
+        return $this->post;
     }
 
     public function isMethod()

@@ -1,8 +1,9 @@
 <h1>Hello World!</h1>
 
 
-<form action="?page=test&route=test&accessDevice=1" method="post">
+<form action="?page=test&route=test" method="post">
 
-    <input type="text" name="sampleInput">
+    <input type="text" name="firstname">
+    <input type="text" name="lastname">
     <button type="submit">Pass</button>
 </form>

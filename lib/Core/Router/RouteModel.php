@@ -54,7 +54,7 @@ class RouteModel {
             // This is where we bind the model class. Since we only bind
             // the Request class and the Model Class, we can process now
             // the arguments needed.
-            } elseif (static::instance()->is_model( $param['class'])) {
+            } else if (static::instance()->is_model( $param['class'])) {
                 $requestedClass = "\\".$param['class'];
                 $modelClass = new $requestedClass;
                 $modelClass->find($_GET[$param['method']]);
