@@ -12,14 +12,14 @@ class PageCreator {
     protected $controllerURL = "\App\Controller\\";
 
     /**
-     * @var RouteModels
+     * @var RouteModel
      */
     protected $routeModel;
 
 
-    public function __construct( RouteModels $routeModels = null )
+    public function __construct( RouteModel $routeModel = null )
     {
-        $this->routeModel = ( is_null($routeModels) ) ? (new RouteModels) : $routeModels;
+        $this->routeModel = ( is_null($routeModel) ) ? (new RouteModel) : $routeModel;
     }
 
     /**
@@ -98,33 +98,12 @@ class PageCreator {
         //Check whether the url specifies a channel for the route,
         //If it has then return the associated controller and method
         //for the route channel.
-        if( isset( $_GET[ Router::$routeChannel ])
-            || ! is_null( $_GET[ Router::$routeChannel] )) {
-            $controllerMethod = explode( '@', Router::$channels[$_GET[ Router::$routeChannel ]][0]['controller'] );
+        if( Router::isBeingListened() ) {
+            $controller = "\\App\\Controller\\".Router::getController();
+            $method = Router::getMethod();
 
-            $controller = "\\App\\Controller\\{$controllerMethod[0]}";
-            $method = $controllerMethod[1];
-
-            $class = new $controller;
-
-            return function() use ($class, $method){
-
-                $request = new \App\Core\Request($_POST, $_GET, $_FILES);
-
-                $r = new ReflectionMethod($class, $method );
-
-                $params = $r->getParameters();
-
-                $this->paramBinder($r);
-
-//
-//                echo $params[1]->name;
-//                echo $params[1]->getType();
-
-
-
-
-                return $class->$method(  );
+            return function() use ($controller, $method){
+                return RouteModel::bind( $controller, $method );
             };
         }
 
@@ -143,6 +122,12 @@ class PageCreator {
         return [ $class, $method['method'] ];
     }
 
+    /**
+     * To slug, {Should transfer to helper functions instead}
+     *
+     * @param $string
+     * @return null|string|string[]
+     */
     protected function toSlug( $string )
     {
         // replace non letter or digits by -
@@ -168,15 +153,5 @@ class PageCreator {
         }
 
         return $string;
-    }
-    protected function routeDirect()
-    {
-
-    }
-
-    protected function paramBinder(ReflectionMethod $reflection)
-    {
-        $params = [];
-        var_dump($reflection->getParameters());
     }
 }

@@ -123,6 +123,8 @@ abstract class CoreModel {
 
         $query = $this->query->select( $columns )->from( $this->table );
 
+        var_dump($query);
+
         return $this->wpdb->get_results( $query );
     }
 
@@ -134,7 +136,7 @@ abstract class CoreModel {
     {
         self::$resource = $resource;
 
-        $columns = $this->select('*')->where( $this->primary_key, '=', $resource )->get();
+        $columns = $this->select('*')->where( $this->primary_key, '=', $resource )->results();
 
         $this->columns = $columns[0];
     }

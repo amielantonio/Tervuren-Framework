@@ -27,9 +27,9 @@ class Request implements Arrayable, ArrayAccess {
     {
         $this->post = $post;
 
-        $this->currentPage = $post['page'];
+        $this->currentPage = $get['page'];
 
-        $this->currentRoute = $post['route'];
+        $this->currentRoute = $get['route'];
     }
 
     public function method()
@@ -49,7 +49,9 @@ class Request implements Arrayable, ArrayAccess {
 
     public function input( $key, $default = null )
     {
-
+        return ( in_array( $key, $this->post) )
+            ? $this->post[$key]
+            : $default;
     }
 
     public function file()

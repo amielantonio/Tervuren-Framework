@@ -52,7 +52,7 @@ class MainController extends CoreController{
 
     public function test( Request $request, AccessDevice $accessDevice )
     {
-       echo $request->input( 'sampleInput' );
+//       $request->input( 'sampleInput', 'withDefault' );
 
 //       var_dump($request);
     }

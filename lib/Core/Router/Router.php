@@ -39,6 +39,11 @@ class Router {
      */
     public static $routeChannel = 'route';
 
+    /**
+     * Base namespace of the controller
+     *
+     * @var string
+     */
     protected $namespace = "\\App\\Controller\\";
 
     /**
@@ -284,17 +289,34 @@ class Router {
     }
 
     /**
-     * Directs the traffic to the correct route
+     * Check of the Router Class is being listened
+     *
+     * @return bool
      */
-    public static function direct()
+    public static function isBeingListened()
     {
-        $controllerMethod = explode( '@', static::$channels[$_GET[ static::$routeChannel ]][0]['controller'] );
-
-        $controller = static::$instance->namespace . $controllerMethod[0];
-        $method = $controllerMethod[1];
-
-        return ( new $controller )->$method();
+        return isset( $_GET[ static::$routeChannel] ) && ! is_null( $_GET[ static::$routeChannel] );
     }
+
+    /**
+     * Get the controller of the router being listened
+     *
+     * @return mixed
+     */
+    public static function getController()
+    {
+        return (static::isBeingListened())
+            ? explode( '@', static::$channels[$_GET[ static::$routeChannel ]][0]['controller'] )[0]
+            : "" ;
+    }
+
+    public static function getMethod()
+    {
+        return (static::isBeingListened())
+            ? explode( '@', static::$channels[$_GET[ static::$routeChannel ]][0]['controller'] )[1]
+            : "" ;
+    }
+
 
     /**
      * Adds a channel to a specific route
