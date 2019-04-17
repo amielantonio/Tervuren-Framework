@@ -47,6 +47,13 @@ class Request implements Arrayable, ArrayAccess {
 
     }
 
+    /**
+     *
+     *
+     * @param $key
+     * @param null $default
+     * @return mixed|null
+     */
     public function input( $key, $default = null )
     {
         return ( $this->has($key) )
@@ -59,12 +66,17 @@ class Request implements Arrayable, ArrayAccess {
 
     }
 
+    /**
+     * Returns all request
+     *
+     * @return array
+     */
     public function all()
     {
         return $this->post;
     }
 
-    public function isMethod()
+    public function isMethod( $key, $method )
     {
 
     }
@@ -74,7 +86,35 @@ class Request implements Arrayable, ArrayAccess {
 
     }
 
+    /**
+     * @return array
+     */
     public function toArray()
+    {
+        return $this->all();
+    }
+
+    public function toJSON()
+    {
+
+    }
+
+    public function getHeaders()
+    {
+
+    }
+
+    public function userAgent()
+    {
+
+    }
+
+    public function ip()
+    {
+
+    }
+
+    public function route()
     {
 
     }
@@ -87,6 +127,7 @@ class Request implements Arrayable, ArrayAccess {
     public function offsetGet($offset)
     {
         // TODO: Implement offsetGet() method.
+        return $this->__get($offset);
     }
 
     public function offsetSet($offset, $value)
@@ -97,6 +138,16 @@ class Request implements Arrayable, ArrayAccess {
     public function offsetUnset($offset)
     {
         // TODO: Implement offsetUnset() method.
+    }
+
+    public function __isset($key)
+    {
+
+    }
+
+    public function __get($key)
+    {
+
     }
 
 }

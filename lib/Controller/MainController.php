@@ -52,6 +52,6 @@ class MainController extends CoreController{
 
     public function test( Request $request, AccessDevice $accessDevice )
     {
-       echo $accessDevice->name;
+       var_dump($request);
     }
 }

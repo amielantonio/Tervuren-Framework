@@ -12,7 +12,7 @@ class Kernel {
 
     protected static function runRouters()
     {
-        require_once S_BASEPATH . "/routes/web.php";
+        require_once S_BASEPATH . "/start/web.php";
         Router::run();
     }
 

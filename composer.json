@@ -18,7 +18,7 @@
       },
       "classmap" : [
         "lib/Core/",
-        "includes"
+        "start"
       ]
     }
 }
