@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Helpers;
+namespace AWC\Helpers;
 
 class Arr {
 

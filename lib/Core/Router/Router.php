@@ -18,7 +18,7 @@ class Router {
     protected static $instance;
 
     /**
-     * @var \App\Core\Router\PageCreator
+     * @var \AWC\Core\Router\PageCreator
      */
     protected static $creator;
 
@@ -44,7 +44,7 @@ class Router {
      *
      * @var string
      */
-    protected $namespace = "\\App\\Controller\\";
+    protected $namespace = "\\AWC\Controller\\";
 
     /**
      * Router Instance
@@ -299,6 +299,18 @@ class Router {
     }
 
     /**
+     * Adds a channel to a specific route
+     *
+     * @param $verb
+     * @param $name
+     * @param $controller
+     */
+    public static function addChannel( $verb, $name, $controller )
+    {
+        static::$currentChannel = static::$channels[$name][] = compact('verb', 'controller', 'name' );
+    }
+
+    /**
      * Get the controller of the router being listened
      *
      * @return mixed
@@ -310,6 +322,7 @@ class Router {
             : "" ;
     }
 
+
     public static function getMethod()
     {
         return (static::isBeingListened())
@@ -317,16 +330,34 @@ class Router {
             : "" ;
     }
 
+    public function redirect( $from, $to, $redirect = 302)
+    {
+
+    }
 
     /**
-     * Adds a channel to a specific route
+     * A wrapper for the add Channel with a GET http request
      *
-     * @param $verb
-     * @param $controller
      * @param $name
+     * @param $controller
      */
-    public static function addChannel( $verb, $controller, $name )
+    public function get($name, $controller)
     {
+        $verb = "get";
         static::$currentChannel = static::$channels[$name][] = compact('verb', 'controller', 'name' );
     }
+
+    /**
+     * A wrapper for the add Channel with a POST http request
+     *
+     * @param $name
+     * @param $controller
+     */
+    public function post($name, $controller)
+    {
+        $verb = "post";
+        static::$currentChannel = static::$channels[$name][] = compact('verb', 'controller', 'name' );
+    }
+
+
 }

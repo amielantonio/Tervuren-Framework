@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Helpers\Contracts;
+namespace AWC\Helpers\Contracts;
 
 interface Arrayable
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Helpers;
+namespace AWC\Helpers;
 
-use App\Database\Database;
+use AWC\Database\Database;
 
 class Installer{
 
@@ -13,7 +13,7 @@ class Installer{
      */
     public function install()
     {
-        register_activation_hook( S_BASEPATH.'/strataplan-form-manager.php', array( $this, 'boot') );
+        register_activation_hook( S_BASEPATH.'/one-click-course-creation.php', array( $this, 'boot') );
     }
 
     /**
@@ -30,7 +30,7 @@ class Installer{
     public function boot()
     {
         //Install all things that are needed to be installed first.
-        ( new Database() )->install();
+//        ( new Database() )->install();
 
         //Run the Queue pipe!
         static::install_pipe();
