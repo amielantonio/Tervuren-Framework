@@ -99,7 +99,7 @@ class PageCreator {
         //If it has then return the associated controller and method
         //for the route channel.
         if( Router::isBeingListened() ) {
-            $controller = "\\App\\Controller\\".Router::getController();
+            $controller = "\\App\Controller\\".Router::getController();
             $method = Router::getMethod();
 
             return function() use ($controller, $method){

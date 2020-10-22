@@ -125,9 +125,13 @@ final class StrataplanFormManager {
 
         $installer = new \App\Helpers\Installer;
 
-
-
         $installer->install();
+
+        include_once S_LIBPATH . "/Helpers/Functions/helpers.php";
+
+    }
+    public function scripts()
+    {
 
     }
 

@@ -10,12 +10,12 @@ class Request implements Arrayable, ArrayAccess {
     /**
      * @var
      */
-    protected $currentPage;
+    protected $requestPage;
 
     /**
      * @var
      */
-    protected $currentRoute;
+    protected $requestRoute;
 
     protected $post = [];
 
@@ -23,13 +23,19 @@ class Request implements Arrayable, ArrayAccess {
 
     protected $file = [];
 
+    protected $all = [];
+
     public function __construct( $post = [], $get = [], $file = [] )
     {
         $this->post = $post;
 
-        $this->currentPage = $get['page'];
+        $this->get = $this->processGet($get);
 
-        $this->currentRoute = $get['route'];
+        $this->requestPage = $get['page'];
+
+        $this->requestRoute = $get['route'];
+
+        $this->all = array_merge($this->post, $this->get);
     }
 
     public function method()
@@ -37,18 +43,43 @@ class Request implements Arrayable, ArrayAccess {
 
     }
 
+    /**
+     * Check if the data has the data
+     *
+     * @param $key
+     * @return bool
+     */
     public function has( $key )
     {
         return array_key_exists( $key, $this->post);
     }
 
-    public function is()
+    /**
+     *
+     *
+     * @param array $keys
+     * @return bool
+     */
+    public function hasAny( $keys = [] )
     {
+        if( is_array($keys) ){
+            foreach( $keys as $key ) {
+                return array_key_exists( $key, $this->post);
+            }
 
+        }
+
+        return false;
+    }
+
+
+    public function is( $path )
+    {
+        return ( $path == $this->requestPage );
     }
 
     /**
-     *
+     * get input from the requests
      *
      * @param $key
      * @param null $default
@@ -61,7 +92,34 @@ class Request implements Arrayable, ArrayAccess {
             : $default;
     }
 
+    /**
+     * Unset some GET requests
+     *
+     * @param $getRequest
+     * @return mixed
+     */
+    public function processGet( $getRequest )
+    {
+
+        unset($getRequest['page']);
+        unset($getRequest['route']);
+
+        return $getRequest;
+
+    }
+
+
     public function file()
+    {
+
+    }
+
+    public function except()
+    {
+
+    }
+
+    public function only()
     {
 
     }
@@ -78,7 +136,12 @@ class Request implements Arrayable, ArrayAccess {
 
     public function isMethod( $key, $method )
     {
+        var_dump($_REQUEST);
+    }
 
+    public function page()
+    {
+        return $this->requestPage;
     }
 
     public function query()
