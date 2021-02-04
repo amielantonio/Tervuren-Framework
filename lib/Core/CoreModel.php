@@ -566,6 +566,74 @@ abstract class CoreModel {
         return $this->wpdb->delete( $this->table, [ $this->primary_key => $resource ] );
     }
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | Wordpress Post Type
+    |--------------------------------------------------------------------------
+    |
+    | Add methods to capture wordpress specific methods
+    | and post type support. Post types are data inside
+    | Wordpress's database that has specific information
+    | regarding a data.
+    |
+    */
+    public function getPost( $id, $post_type="")
+    {
+
+    }
+
+    public function allPostsWithType( $post_type )
+    {
+
+    }
+
+    public function toPostObject()
+    {
+
+    }
+
+    public function isPostType( $post_type )
+    {
+
+    }
+
+    public function authoredBy()
+    {
+
+    }
+
+    public function isAuthoredBy( $author_id )
+    {
+
+    }
+
+    // Post meta related below
+
+
+    public function getPostMeta( $id, $key, $value="")
+    {
+
+    }
+
+    public function withPostMeta( $key, $value = "")
+    {
+
+    }
+
+    public function hasMeta()
+    {
+
+    }
+
+
+
+
+
+
+
+
+
     // SOFT DELETE BOILER PLATE
     public function softDeletes( $resource )
     {

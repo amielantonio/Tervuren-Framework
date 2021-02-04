@@ -1,8 +1,8 @@
 <?php
 /**
- * Plugin Name: Strataplan From Manager
- * Plugin URI: http://yourvirtualpeople.com.au
- * Description: Lorem ipsum dolor sit amet
+ * Plugin Name: WP Plugin MVC
+ * Plugin URI: https://github.com/amielantonio
+ * Description: An MVC Plugin Boiler plate
  * Author: Amiel Antonio
  * Version 1.0.0
  * Text Domain: strataplan-form-manager
@@ -12,14 +12,14 @@
 
 if( ! defined( 'WPINC' ) ) die;
 
-final class StrataplanFormManager {
+final class WPPluginMVC {
 
     /**
      * Current's Plugin Version
      *
      * @var string
      */
-    protected $version = "1.0.0";
+    protected $version = "2.3.0";
 
     /**
      * Minimum required PHP version
@@ -31,7 +31,7 @@ final class StrataplanFormManager {
     /**
      * Singleton instance for the plugin
      *
-     * @var StrataplanFormManager
+     * @var WPPluginMVC
      */
     private static $instance;
 
@@ -39,12 +39,12 @@ final class StrataplanFormManager {
      * Creates a single instance of the plugin
      *
      * @since 1.0.0
-     * @return StrataplanFormManager
+     * @return WPPluginMVC
      */
     public static function init()
     {
-        if( ! isset( self::$instance ) && !( self::$instance instanceof StrataplanFormManager) ){
-            self::$instance = new StrataplanFormManager();
+        if( ! isset( self::$instance ) && !( self::$instance instanceof WPPluginMVC) ){
+            self::$instance = new WPPluginMVC();
             self::$instance->start();
         }
 
@@ -126,7 +126,6 @@ final class StrataplanFormManager {
         $installer = new \App\Helpers\Installer;
 
 
-
         $installer->install();
 
     }
@@ -144,4 +143,4 @@ final class StrataplanFormManager {
 /**
  * Start the App
  */
-StrataplanFormManager::init();
+WPPluginMVC::init();

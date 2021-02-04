@@ -1,0 +1,63 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Users\Amiel\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js install
+
+PATH: 
+  C:\Users\Amiel\Downloads\cmder\bin;C:\Users\Amiel\Downloads\cmder\vendor\bin;C:\Users\Amiel\Downloads\cmder\vendor\conemu-maximus5\ConEmu\Scripts;C:\Users\Amiel\Downloads\cmder\vendor\conemu-maximus5;C:\Users\Amiel\Downloads\cmder\vendor\conemu-maximus5\ConEmu;C:\Program Files\Common Files\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\xampp\php;C:\ProgramData\ComposerSetup\bin;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\nodejs\;C:\Program Files\PuTTY\;C:\Program Files\Git\cmd;C:\Users\Amiel\AppData\Local\Microsoft\WindowsApps;C:\Users\Amiel\AppData\Roaming\Composer\vendor\bin;C:\Users\Amiel\AppData\Roaming\npm;C:\Program Files\Theme Kit;C:\Program Files\Git\cmd;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Users\Amiel\Downloads\cmder
+
+Yarn version: 
+  1.16.0
+
+Node version: 
+  10.16.0
+
+Platform: 
+  win32 x64
+
+Trace: 
+  Error: connect ETIMEDOUT 104.16.18.35:443
+      at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1106:14)
+
+npm manifest: 
+  {
+    "name": "strataplan-form-manager",
+    "version": "1.0.0",
+    "description": "Test project for building WordPress plugins using MVC Pattern, Webpack, and VueJS",
+    "main": "strataplan-form-manager.php",
+    "directories": {
+      "lib": "lib"
+    },
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1",
+      "dev": "webpack --config webpack.config.js",
+      "watch": "webpack --watch --config webpack.config.js"
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/amielantonio/Strata-Form-Manager.git"
+    },
+    "keywords": [
+      "Wordpress",
+      "Plugin"
+    ],
+    "author": "Amiel Antonio",
+    "license": "ISC",
+    "bugs": {
+      "url": "https://github.com/amielantonio/Strata-Form-Manager/issues"
+    },
+    "homepage": "https://github.com/amielantonio/Strata-Form-Manager#readme",
+    "devDependencies": {
+      "css-loader": "^1.0.0",
+      "extract-text-webpack-plugin": "^4.0.0-beta.0",
+      "node-sass": "^4.9.3",
+      "sass-loader": "^7.1.0",
+      "style-loader": "^0.23.0",
+      "webpack": "^4.19.0",
+      "webpack-cli": "^3.1.0"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
