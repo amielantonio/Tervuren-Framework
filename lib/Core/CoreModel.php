@@ -1,8 +1,8 @@
 <?php
-namespace App\Core;
+namespace AWC\Core;
 
-use App\Helpers\Arr;
-use App\Database\SQL\Helpers\Query;
+use AWC\Helpers\Arr;
+use AWC\Database\SQL\Helpers\Query;
 
 abstract class CoreModel {
 

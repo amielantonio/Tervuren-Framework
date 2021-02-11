@@ -18,7 +18,7 @@ class Router {
     protected static $instance;
 
     /**
-     * @var \App\Core\Router\PageCreator
+     * @var \AWC\Core\Router\PageCreator
      */
     protected static $creator;
 
@@ -44,7 +44,11 @@ class Router {
      *
      * @var string
      */
+<<<<<<< HEAD
     protected $namespace = "\\App\Controller\\";
+=======
+    protected $namespace = "\\AWC\Controller\\";
+>>>>>>> d0ea4d304a9f646bb1dd3a372b59e3b7a4c5ca9f
 
     /**
      * Router Instance
@@ -330,7 +334,11 @@ class Router {
             : "" ;
     }
 
+<<<<<<< HEAD
     public static function redirect( $from, $to, $redirect = 302)
+=======
+    public function redirect( $from, $to, $redirect = 302)
+>>>>>>> d0ea4d304a9f646bb1dd3a372b59e3b7a4c5ca9f
     {
 
     }
@@ -341,7 +349,11 @@ class Router {
      * @param $name
      * @param $controller
      */
+<<<<<<< HEAD
     public static function get($name, $controller)
+=======
+    public function get($name, $controller)
+>>>>>>> d0ea4d304a9f646bb1dd3a372b59e3b7a4c5ca9f
     {
         $verb = "get";
         static::$currentChannel = static::$channels[$name][] = compact('verb', 'controller', 'name' );
@@ -353,7 +365,11 @@ class Router {
      * @param $name
      * @param $controller
      */
+<<<<<<< HEAD
     public static function post($name, $controller)
+=======
+    public function post($name, $controller)
+>>>>>>> d0ea4d304a9f646bb1dd3a372b59e3b7a4c5ca9f
     {
         $verb = "post";
         static::$currentChannel = static::$channels[$name][] = compact('verb', 'controller', 'name' );

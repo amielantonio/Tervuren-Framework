@@ -9,7 +9,7 @@ class PageCreator {
      *
      * @var string
      */
-    protected $controllerURL = "\App\Controller\\";
+    protected $controllerURL = "\AWC\Controller\\";
 
     /**
      * @var RouteModel
@@ -99,7 +99,11 @@ class PageCreator {
         //If it has then return the associated controller and method
         //for the route channel.
         if( Router::isBeingListened() ) {
+<<<<<<< HEAD
             $controller = "\\App\Controller\\".Router::getController();
+=======
+            $controller = "\\AWC\Controller\\".Router::getController();
+>>>>>>> d0ea4d304a9f646bb1dd3a372b59e3b7a4c5ca9f
             $method = Router::getMethod();
 
             return function() use ($controller, $method){

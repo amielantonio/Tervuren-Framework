@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Core;
+namespace AWC\Core;
 
 use ArrayAccess;
-use App\Helpers\Contracts\Arrayable;
+use AWC\Helpers\Contracts\Arrayable;
 
 class Request implements Arrayable, ArrayAccess {
 
@@ -30,12 +30,19 @@ class Request implements Arrayable, ArrayAccess {
         $this->post = $post;
 
         $this->get = $this->processGet($get);
+<<<<<<< HEAD
 
         $this->requestPage = $get['page'];
 
         $this->requestRoute = $get['route'];
 
         $this->all = array_merge($this->post, $this->get);
+=======
+
+        $this->requestPage = $get['page'];
+
+        $this->requestRoute = $get['route'];
+>>>>>>> d0ea4d304a9f646bb1dd3a372b59e3b7a4c5ca9f
     }
 
     public function method()
@@ -54,6 +61,7 @@ class Request implements Arrayable, ArrayAccess {
         return array_key_exists( $key, $this->post);
     }
 
+<<<<<<< HEAD
     /**
      *
      *
@@ -75,6 +83,10 @@ class Request implements Arrayable, ArrayAccess {
 
     public function is( $path )
     {
+=======
+    public function is( $path )
+    {
+>>>>>>> d0ea4d304a9f646bb1dd3a372b59e3b7a4c5ca9f
         return ( $path == $this->requestPage );
     }
 
