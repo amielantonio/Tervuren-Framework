@@ -44,7 +44,7 @@ class Router {
      *
      * @var string
      */
-    protected $namespace = "\\AWC\Controller\\";
+    protected $namespace = "\\App\Controller\\";
 
     /**
      * Router Instance
@@ -330,7 +330,7 @@ class Router {
             : "" ;
     }
 
-    public function redirect( $from, $to, $redirect = 302)
+    public static function redirect( $from, $to, $redirect = 302)
     {
 
     }
@@ -341,7 +341,9 @@ class Router {
      * @param $name
      * @param $controller
      */
-    public function get($name, $controller)
+
+    public static function get($name, $controller)
+
     {
         $verb = "get";
         static::$currentChannel = static::$channels[$name][] = compact('verb', 'controller', 'name' );
@@ -353,7 +355,8 @@ class Router {
      * @param $name
      * @param $controller
      */
-    public function post($name, $controller)
+
+    public static function post($name, $controller)
     {
         $verb = "post";
         static::$currentChannel = static::$channels[$name][] = compact('verb', 'controller', 'name' );

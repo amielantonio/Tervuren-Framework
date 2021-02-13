@@ -1,18 +1,18 @@
 <?php
 /**
- * Plugin Name: WP Plugin MVC
+ * Plugin Name: Website Command Center
  * Plugin URI: https://github.com/amielantonio
  * Description: An MVC Plugin Boiler plate
  * Author: Amiel Antonio
  * Version 1.0.0
- * Text Domain: strataplan-form-manager
+ * Text Domain: tervuren-framework
  *
  * @package Strataplan_Form_Manager
  */
 
 if( ! defined( 'WPINC' ) ) die;
 
-final class WPPluginMVC {
+final class TervurenFramework {
 
     /**
      * Current's Plugin Version
@@ -31,7 +31,7 @@ final class WPPluginMVC {
     /**
      * Singleton instance for the plugin
      *
-     * @var WPPluginMVC
+     * @var TervurenFramework
      */
     private static $instance;
 
@@ -39,12 +39,12 @@ final class WPPluginMVC {
      * Creates a single instance of the plugin
      *
      * @since 1.0.0
-     * @return WPPluginMVC
+     * @return TervurenFramework
      */
     public static function init()
     {
-        if( ! isset( self::$instance ) && !( self::$instance instanceof WPPluginMVC) ){
-            self::$instance = new WPPluginMVC();
+        if( ! isset( self::$instance ) && !( self::$instance instanceof TervurenFramework) ){
+            self::$instance = new TervurenFramework();
             self::$instance->start();
         }
 
@@ -125,8 +125,16 @@ final class WPPluginMVC {
 
         $installer = new \App\Helpers\Installer;
 
+        $installer->install();
+
 
         $installer->install();
+
+        include_once S_LIBPATH . "/Helpers/Functions/helpers.php";
+
+    }
+    public function scripts()
+    {
 
     }
 
@@ -143,4 +151,4 @@ final class WPPluginMVC {
 /**
  * Start the App
  */
-WPPluginMVC::init();
+TervurenFramework::init();
