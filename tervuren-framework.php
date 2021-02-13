@@ -80,7 +80,7 @@ final class TervurenFramework {
         define( 'S_CONFIGPATH'  , dirname(__FILE__ ) . "/config" );
         define( 'S_DBPATH'      , dirname( __FILE__) . "/database" );
         define( 'S_INCPATH'     , dirname( __FILE__) . "/includes" );
-        define( 'S_VIEWPATH'    , dirname( __FILE__) . "/templates" );
+        define( 'S_VIEWPATH'    , dirname( __FILE__) . "/resources/views" );
 
 
         //Plugin
