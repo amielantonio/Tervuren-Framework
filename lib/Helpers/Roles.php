@@ -1,6 +1,6 @@
 <?php
 
-namespace AWC\Helpers;
+namespace App\Helpers;
 
 class Roles {
 

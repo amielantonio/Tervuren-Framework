@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ### Added
  - Packages / Library manager 
  - Bootstrap folder
+ - Rest API registration
  
 ### Changed
  - Tranferred templates and assets files to a resource folder instead.

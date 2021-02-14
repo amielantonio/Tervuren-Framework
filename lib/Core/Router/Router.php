@@ -18,7 +18,7 @@ class Router {
     protected static $instance;
 
     /**
-     * @var \AWC\Core\Router\PageCreator
+     * @var \App\Core\Router\PageCreator
      */
     protected static $creator;
 

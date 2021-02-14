@@ -23,6 +23,7 @@ class Kernel {
 
     protected static function runAjax()
     {
+        require_once S_BASEPATH . "/start/api.php";
 
     }
 

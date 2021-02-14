@@ -1,5 +1,5 @@
 <?php
-namespace AWC\Helpers;
+namespace App\Helpers;
 
 class Menu {
 

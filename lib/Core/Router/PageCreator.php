@@ -9,7 +9,7 @@ class PageCreator {
      *
      * @var string
      */
-    protected $controllerURL = "\AWC\Http\Controller\\";
+    protected $controllerURL = "\App\Http\Controller\\";
 
     /**
      * @var RouteModel

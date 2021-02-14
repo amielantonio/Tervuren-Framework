@@ -1,9 +1,9 @@
 <?php
 
-namespace AWC\Core;
+namespace App\Core;
 
 use ArrayAccess;
-use AWC\Helpers\Contracts\Arrayable;
+use App\Helpers\Contracts\Arrayable;
 
 class Request implements Arrayable, ArrayAccess {
 

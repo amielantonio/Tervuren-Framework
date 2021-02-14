@@ -1,5 +1,5 @@
 <?php
-namespace AWC\Core;
+namespace App\Core;
 
 abstract class CoreController{
 

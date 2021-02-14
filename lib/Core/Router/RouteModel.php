@@ -97,7 +97,7 @@ class RouteModel {
 
     protected function is_request($class)
     {
-        return $class == "AWC\Core\Request";
+        return $class == "App\Core\Request";
     }
 
     protected function is_model( $class )

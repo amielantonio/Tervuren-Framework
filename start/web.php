@@ -10,7 +10,6 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
 Router::addMenu('Test', 'MainController@index' );
 Router::addSubMenu('Test', 'TheSubmenu', 'MainController@access_form');
 

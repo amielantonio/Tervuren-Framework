@@ -12,7 +12,7 @@ if (! function_exists('_view')) {
      */
     function _view($view = null, $data = []) {
 
-        $view = new AWC\Helpers\View($view, $data);
+        $view = new App\Helpers\View($view, $data);
 
         return $view->render();
 

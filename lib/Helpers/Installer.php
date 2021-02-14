@@ -1,8 +1,8 @@
 <?php
 
-namespace AWC\Helpers;
+namespace App\Helpers;
 
-use AWC\Database\Database;
+use App\Database\Database;
 
 class Installer{
 
