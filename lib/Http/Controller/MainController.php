@@ -1,5 +1,5 @@
 <?php
-namespace App\Controller;
+namespace App\Http\Controller;
 
 use App\Helpers\Func;
 use App\Helpers\View;

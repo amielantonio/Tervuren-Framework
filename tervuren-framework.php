@@ -2,9 +2,9 @@
 /**
  * Plugin Name: Website Command Center
  * Plugin URI: https://github.com/amielantonio
- * Description: An MVC Plugin Boiler plate
+ * Description: A free, open-source Wordpress plugin framework inspired by Laravel's elegant syntax. Intended to make development for wordpress plugins faster. Follows the MVC architectural pattern.
  * Author: Amiel Antonio
- * Version 1.0.0
+ * Version 1.2.0
  * Text Domain: tervuren-framework
  *
  * @package Strataplan_Form_Manager
@@ -19,7 +19,7 @@ final class TervurenFramework {
      *
      * @var string
      */
-    protected $version = "2.3.0";
+    protected $version = "1.2.0";
 
     /**
      * Minimum required PHP version
@@ -111,7 +111,9 @@ final class TervurenFramework {
     private function registerAutoload()
     {
         //Require Vendor Autoload
-        require __DIR__ . '/vendor/autoload.php';
+//        require __DIR__ . '/vendor/autoload.php';
+
+        require "bootsrap/autoload.php";
     }
 
     /**
@@ -123,14 +125,11 @@ final class TervurenFramework {
         //roles, databases and other wordpress instantiation before adding
         //it to any navigation.
 
-        $installer = new \App\Helpers\Installer;
-
-        $installer->install();
-
-
-        $installer->install();
-
-        include_once S_LIBPATH . "/Helpers/Functions/helpers.php";
+//        $installer = new \App\Helpers\Installer;
+//
+//        $installer->install();
+//
+//        include_once S_LIBPATH . "/Helpers/Functions/helpers.php";
 
     }
     public function scripts()

@@ -9,7 +9,7 @@ class PageCreator {
      *
      * @var string
      */
-    protected $controllerURL = "\AWC\Controller\\";
+    protected $controllerURL = "\AWC\Http\Controller\\";
 
     /**
      * @var RouteModel
@@ -100,7 +100,7 @@ class PageCreator {
         //for the route channel.
         if( Router::isBeingListened() ) {
 
-            $controller = "\\App\Controller\\".Router::getController();
+            $controller = "\\App\Http\Controller\\".Router::getController();
 
             $method = Router::getMethod();
 
