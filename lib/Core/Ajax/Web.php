@@ -50,7 +50,7 @@ class Web {
 
     public static function run()
     {
-
+        self::create_gateway();
     }
 
 
@@ -59,26 +59,61 @@ class Web {
 
     }
 
+    /**
+     * Create a get gateway
+     *
+     * @param $route
+     * @param $ajax
+     * @param array $settings
+     */
     public static function get($route, $ajax, $settings=[])
     {
         self::register('get', $route, $ajax, $settings);
     }
 
+    /**
+     * Create a post gateway
+     *
+     * @param $route
+     * @param $ajax
+     * @param array $settings
+     */
     public static function post($route, $ajax, $settings=[])
     {
         self::register('post', $route, $ajax, $settings);
     }
 
+    /**
+     * Create a put gateway
+     *
+     * @param $route
+     * @param $ajax
+     * @param array $settings
+     */
     public static function put($route, $ajax, $settings=[])
     {
         self::register('put', $route, $ajax, $settings);
     }
 
+    /**
+     * Create a delete gateway
+     *
+     * @param $route
+     * @param $ajax
+     * @param array $settings
+     */
     public static function delete($route, $ajax, $settings=[])
     {
         self::register('delete', $route, $ajax, $settings);
     }
 
+    /**
+     * Create a resource gateway
+     *
+     * @param $route
+     * @param $ajax
+     * @param array $settings
+     */
     public static function resource($route, $ajax, $settings=[])
     {
 

@@ -18,7 +18,8 @@
       },
       "classmap" : [
         "lib/Core/",
-        "start"
+        "start",
+        "lib/Packages"
       ]
     }
 }

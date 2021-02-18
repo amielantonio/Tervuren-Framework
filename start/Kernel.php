@@ -8,6 +8,7 @@ class Kernel {
     public static function run()
     {
         static::runRouters();
+        static::runAjax();
     }
 
     protected static function runRouters()
@@ -24,6 +25,8 @@ class Kernel {
     protected static function runAjax()
     {
         require_once S_BASEPATH . "/start/api.php";
+        echo "labyu";
+        Web::run();
 
     }
 
