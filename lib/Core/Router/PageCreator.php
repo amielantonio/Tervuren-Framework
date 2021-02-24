@@ -87,6 +87,12 @@ class PageCreator {
         return "";
     }
 
+
+    protected function woo_product_data_tab()
+    {
+
+    }
+
     /**
      * Sets the method to be used for the menu
      *
