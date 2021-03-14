@@ -6,7 +6,7 @@ use App\Helpers\View;
 use App\Core\Request;
 use App\Core\CoreController;
 use App\Model\AccessDevice;
-
+use CourseACFIntegration;
 
 class MainController extends CoreController{
 
@@ -23,9 +23,11 @@ class MainController extends CoreController{
      */
     public function index()
     {
-        return ( new View( 'dashboard/dashboard') )
-            ->with( 'testKey', '' )
-            ->with( 'testKey2', 'testVal2' )->render();
+        CourseACFIntegration::init();
+        CourseACFIntegration::getFieldById(136596);
+
+
+        return ( new View( 'dashboard/dashboard') )->render();
     }
 
     /**
