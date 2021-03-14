@@ -8,7 +8,7 @@ class Kernel {
     public static function run()
     {
         static::runRouters();
-        static::runAjax();
+        static::runAPI();
     }
 
     protected static function runRouters()
@@ -22,7 +22,7 @@ class Kernel {
 
     }
 
-    protected static function runAjax()
+    protected static function runAPI()
     {
         require_once S_BASEPATH . "/start/api.php";
         Web::run();
