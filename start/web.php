@@ -15,3 +15,6 @@ Router::addSubMenu('Test', 'TheSubmenu', 'MainController@access_form');
 
 Router::addChannel( 'post', 'MainController@test', 'test' );
 Router::addChannel( 'post', 'MainController@index', 'test2' );
+
+
+Router::woocommerce('product_data_tabs', 'writers_tab', 'WooController@index');
