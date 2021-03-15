@@ -4,4 +4,8 @@
 
 
 # Remove for testing purposes
+/lib/Database
+/lib/Http
+/lib/Model
 /lib/Packages
+/start/
