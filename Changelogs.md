@@ -1,7 +1,13 @@
 # Change log
 All notable changes to this project will be documented in this file.
 
-## [1.2.0] - 2021-02-14
+
+## 0.4.0 - 2021-03-16
+### Added
+ - Router support for woocommerce tabs
+
+
+## [0.2.0] - 2021-02-14
 ### Added
  - Packages / Library manager 
  - Bootstrap folder
