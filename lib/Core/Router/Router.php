@@ -281,8 +281,6 @@ class Router {
 
         }
 
-
-
         self::add($location, $name, $controller, $settings);
     }
 

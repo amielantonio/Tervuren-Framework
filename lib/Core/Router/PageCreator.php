@@ -87,14 +87,18 @@ class PageCreator {
         return "";
     }
 
-
-    protected function create_woocommerce_tabs( $page )
+    /**
+     * Creates the a woocommerce tab and panel that will be shown inside the product data
+     *
+     * @param $page
+     */
+    protected function create_woocommerce_tabs($page)
     {
         $class = [];
 
-        if(isset($page['product_type'])) {
-            if(is_array($page['product_type'])) {
-                foreach($page['product_type'] as $productType) {
+        if (isset($page['product_type'])) {
+            if (is_array($page['product_type'])) {
+                foreach ($page['product_type'] as $productType) {
                     $class[] = 'show_if_' . $productType;
                 }
             } else {
@@ -102,7 +106,7 @@ class PageCreator {
             }
         }
 
-        $controllerClass = "\\App\Http\Controller\\".$page['function']['controller'];
+        $controllerClass = "\\App\Http\Controller\\" . $page['function']['controller'];
 
         $controller = new $controllerClass;
 
@@ -114,7 +118,7 @@ class PageCreator {
         $slug = $this->toSlug($page['title']);
         $tab = $slug . "_tab";
 
-        add_filter('woocommerce_product_data_tabs', function($tabs) use($page, $class, $tab){
+        add_filter('woocommerce_product_data_tabs', function ($tabs) use ($page, $class, $tab) {
             $tabs[$tab] = [
                 'label' => __($page['title'], 'textdomain'),
                 'target' => $tab,
@@ -123,11 +127,11 @@ class PageCreator {
 
             return $tabs;
         });
-        add_action('woocommerce_product_data_panels', function() use($controller, $panelMethod, $tab){ ?>
+        add_action('woocommerce_product_data_panels', function () use ($controller, $panelMethod, $tab) { ?>
             <div id='<?php echo $tab ?>' class='panel wc-metaboxes-wrapper'>
                 <?php
 
-                if(method_exists($controller, $panelMethod)) {
+                if (method_exists($controller, $panelMethod)) {
                     $controller->$panelMethod();
                 } else {
                     echo "Panel method does not exists";
@@ -137,12 +141,15 @@ class PageCreator {
             <!-- END TAB -->
         <?php });
 
-        add_action('woocommerce_process_product_meta', function() use($controller, $saveMethod) {
-            if(method_exists($controller, 'beforeSave')) {
+        add_action('woocommerce_process_product_meta', function () use ($controller, $saveMethod) {
+            if (method_exists($controller, 'beforeSave')) {
                 $controller->beforeSave();
             }
 
-            if(method_exists($controller, $saveMethod)) {
+            if (method_exists($controller, $saveMethod)) {
+
+                $controller->$saveMethod();
+
             } else {
                 throw new Exception('no save method indicated');
             }
