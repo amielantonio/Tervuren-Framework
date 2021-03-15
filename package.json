@@ -1,8 +1,8 @@
 {
-  "name": "strataplan-form-manager",
+  "name": "tervuren-frameowrk",
   "version": "1.0.0",
   "description": "Test project for building WordPress plugins using MVC Pattern, Webpack, and VueJS",
-  "main": "strataplan-form-manager.php",
+  "main": "tervuren-framework.php",
   "directories": {
     "lib": "lib"
   },
@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/amielantonio/Strata-Form-Manager.git"
+    "url": "git+https://github.com/amielantonio/Teruvern-Framework.git"
   },
   "keywords": [
     "Wordpress",
@@ -22,9 +22,9 @@
   "author": "Amiel Antonio",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/amielantonio/Strata-Form-Manager/issues"
+    "url": "https://github.com/amielantonio/Teruvern-Framework/issues"
   },
-  "homepage": "https://github.com/amielantonio/Strata-Form-Manager#readme",
+  "homepage": "https://github.com/amielantonio/Teruvern-Framework#readme",
   "devDependencies": {
     "css-loader": "^1.0.0",
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
