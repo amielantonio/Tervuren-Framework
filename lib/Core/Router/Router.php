@@ -267,6 +267,25 @@ class Router {
         self::add( 'options', $name, $controller, $settings );
     }
 
+    public static function woocommerce( $location, $name, $controller, $settings)
+    {
+        switch ($location) {
+
+            // Settings for tabs can contain the following attributes
+            // save  - indicates the save method of the tab
+            // tab   - indicates the tab part of the variation tab
+            // panel - indicates the panel part of the variation tab
+            case "tabs";
+                $location = "woocommerce_tabs";
+                break;
+
+        }
+
+
+
+        self::add($location, $name, $controller, $settings);
+    }
+
     /**
      * Set Controller and method to array
      *

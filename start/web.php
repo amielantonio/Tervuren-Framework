@@ -17,4 +17,4 @@ Router::addChannel( 'post', 'MainController@test', 'test' );
 Router::addChannel( 'post', 'MainController@index', 'test2' );
 
 
-Router::woocommerce('product_data_tabs', 'writers_tab', 'WooController@index');
+Router::woocommerce('tabs', 'writers_tab', 'WooController', ['product_type' => 'variable']);

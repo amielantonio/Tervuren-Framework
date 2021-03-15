@@ -88,9 +88,31 @@ class PageCreator {
     }
 
 
-    protected function woo_product_data_tab()
+    protected function create_woocommerceTabs( $page )
     {
+        $controller = "\\App\Http\Controller\\".$page['controller'];
+        $class = [];
+        foreach($page['product_type'] as $productType) {
+            $class[] = 'show_if_' . $productType;
+        }
 
+
+
+
+        $tabMethod = isset($page['tab']) ? $page['tab'] : "tab";
+        $tabArgs = [
+            'label' => __($page['title'], 'textdomain'),
+            'target' => $this->toSlug($page['title']. '__target'),
+            'class' => $class,
+        ];
+        $saveMethod = isset($page['save']) ? $page['save'] : "save";
+        $panelMethod = isset($page['panel']) ? $page['panel'] : "panel";
+
+
+        add_filter('woocommerce_product_data_tabs', call_user_func_array( array($controller, $tabMethod), $tabArgs));
+        add_action('woocommerce_product_data_panels', [$controller, $panelMethod]);
+
+        add_action('woocommerce_process_product_meta', [$controller, $saveMethod]);
     }
 
     /**
