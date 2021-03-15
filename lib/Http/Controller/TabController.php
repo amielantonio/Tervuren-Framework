@@ -19,9 +19,10 @@ class TabController extends CoreController{
      * @return mixed
      * @throws \exception
      */
-    public function tab()
+    public function tab($tabArgs)
     {
 
+        return $tabArgs;
     }
 
     /**

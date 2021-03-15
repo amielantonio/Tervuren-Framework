@@ -88,31 +88,66 @@ class PageCreator {
     }
 
 
-    protected function create_woocommerceTabs( $page )
+    protected function create_woocommerce_tabs( $page )
     {
-        $controller = "\\App\Http\Controller\\".$page['controller'];
         $class = [];
-        foreach($page['product_type'] as $productType) {
-            $class[] = 'show_if_' . $productType;
+
+        if(isset($page['product_type'])) {
+            if(is_array($page['product_type'])) {
+                foreach($page['product_type'] as $productType) {
+                    $class[] = 'show_if_' . $productType;
+                }
+            } else {
+                $class = 'show_if_' . $page['product_type'];
+            }
         }
 
+        $controllerClass = "\\App\Http\Controller\\".$page['function']['controller'];
+
+        $controller = new $controllerClass;
 
 
-
-        $tabMethod = isset($page['tab']) ? $page['tab'] : "tab";
-        $tabArgs = [
-            'label' => __($page['title'], 'textdomain'),
-            'target' => $this->toSlug($page['title']. '__target'),
-            'class' => $class,
-        ];
         $saveMethod = isset($page['save']) ? $page['save'] : "save";
         $panelMethod = isset($page['panel']) ? $page['panel'] : "panel";
 
 
-        add_filter('woocommerce_product_data_tabs', call_user_func_array( array($controller, $tabMethod), $tabArgs));
-        add_action('woocommerce_product_data_panels', [$controller, $panelMethod]);
+        $slug = $this->toSlug($page['title']);
+        $tab = $slug . "_tab";
 
-        add_action('woocommerce_process_product_meta', [$controller, $saveMethod]);
+        add_filter('woocommerce_product_data_tabs', function($tabs) use($page, $class, $tab){
+            $tabs[$tab] = [
+                'label' => __($page['title'], 'textdomain'),
+                'target' => $tab,
+                'class' => $class,
+            ];
+
+            return $tabs;
+        });
+        add_action('woocommerce_product_data_panels', function() use($controller, $panelMethod, $tab){ ?>
+            <div id='<?php echo $tab ?>' class='panel wc-metaboxes-wrapper'>
+                <?php
+
+                if(method_exists($controller, $panelMethod)) {
+                    $controller->$panelMethod();
+                } else {
+                    echo "Panel method does not exists";
+                };
+                ?>
+            </div>
+            <!-- END TAB -->
+        <?php });
+
+        add_action('woocommerce_process_product_meta', function() use($controller, $saveMethod) {
+            if(method_exists($controller, 'beforeSave')) {
+                $controller->beforeSave();
+            }
+
+            if(method_exists($controller, $saveMethod)) {
+            } else {
+                throw new Exception('no save method indicated');
+            }
+
+        });
     }
 
     /**
