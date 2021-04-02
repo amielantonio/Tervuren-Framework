@@ -127,19 +127,17 @@ class PageCreator {
 
             return $tabs;
         });
-        add_action('woocommerce_product_data_panels', function () use ($controller, $panelMethod, $tab) { ?>
-            <div id='<?php echo $tab ?>' class='panel wc-metaboxes-wrapper'>
-                <?php
 
+        add_action('woocommerce_product_data_panels', function () use ($controller, $panelMethod, $tab) {
+            echo "<div id='{$tab}' class='panel wc-metaboxes-wrapper'>";
                 if (method_exists($controller, $panelMethod)) {
                     $controller->$panelMethod();
                 } else {
                     echo "Panel method does not exists";
                 };
-                ?>
-            </div>
-            <!-- END TAB -->
-        <?php });
+            echo  "</div><!-- END TAB -->";
+
+        });
 
         add_action('woocommerce_process_product_meta', function () use ($controller, $saveMethod) {
             if (method_exists($controller, 'beforeSave')) {
@@ -154,6 +152,34 @@ class PageCreator {
                 throw new Exception('no save method indicated');
             }
 
+            if (method_exists($controller, 'afterSave')) {
+                $controller->afterSave();
+            }
+
+        });
+    }
+
+
+    protected function create_woocommerce_settings($page)
+    {
+
+        $controllerClass = "\\App\Http\Controller\\" . $page['function']['controller'];
+
+        $settingsMethod = isset($page['settings']) ? $page['settings'] : "settings";
+
+        add_filter('woocommerce_settings_tabs_array', function ($settings_tabs) use( $page ) {
+            $settings_tabs['settings_tab_demo'] = __( addslashes($page['title']), 'woocommerce-settings-tab-demo' );
+            return $settings_tabs;
+        }, 50, 1);
+
+
+        add_filter('woocommerce_settings_tabs_settings_tab_demo', function () use($controllerClass, $settingsMethod) {
+            woocommerce_admin_fields($controllerClass::$settingsMethod());
+        });
+
+        add_filter('woocommerce_update_options_settings_tab_demo', function () use($controllerClass, $settingsMethod) {
+            echo "UPDTED";
+            woocommerce_update_options($controllerClass::$settingsMethod());
         });
     }
 

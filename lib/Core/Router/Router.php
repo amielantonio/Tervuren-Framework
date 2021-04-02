@@ -84,7 +84,6 @@ class Router {
         self::$pages[] = array_merge( compact( 'location', 'title', 'function' ), $settings );
 
         return self::$instance;
-
     }
 
     /**
@@ -267,7 +266,15 @@ class Router {
         self::add( 'options', $name, $controller, $settings );
     }
 
-    public static function woocommerce( $location, $name, $controller, $settings)
+    /**
+     * Sets a router support for woocommerce
+     *
+     * @param $location
+     * @param $name
+     * @param $controller
+     * @param array $settings
+     */
+    public static function woocommerce( $location, $name, $controller, $settings = [])
     {
         switch ($location) {
 
@@ -278,11 +285,40 @@ class Router {
             case "tabs";
                 $location = "woocommerce_tabs";
                 break;
+            case "settings";
+                $location = "woocommerce_settings";
+                break;
 
         }
 
         self::add($location, $name, $controller, $settings);
     }
+
+    /**
+     * Wrapper for woocommerce tabs
+     *
+     * @param $name
+     * @param $controller
+     * @param $settings
+     */
+    public static function woocommerceTabs($name, $controller, $settings)
+    {
+        self::woocommerce('tabs', $name, $controller, $settings);
+    }
+
+    /**
+     * Wrapper for woocomemrce Settings
+     *
+     * @param $name
+     * @param $controller
+     * @param $settings
+     */
+    public static function woocommerceSettings($name, $controller, $settings)
+    {
+        self::woocommerce('settings', $name, $controller, $settings);
+    }
+
+
 
     /**
      * Set Controller and method to array

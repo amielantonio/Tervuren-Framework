@@ -17,4 +17,6 @@ Router::addChannel( 'post', 'MainController@test', 'test' );
 Router::addChannel( 'post', 'MainController@index', 'test2' );
 
 
-Router::woocommerce('tabs', 'AWC Course Settings', 'WooController', ['product_type' => 'variable']);
+Router::woocommerce('tabs', 'AWC Course Settings', 'TabController', ['product_type' => 'variable']);
+
+Router::woocommerce('settings', 'Custom', 'WooSettingsController');
