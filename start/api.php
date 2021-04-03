@@ -9,4 +9,6 @@
 | connected to your ajax requests.
 |
 */
-Web::register('post','test', 'Main');
+//Web::register('post','awc/v1','course', 'MainController@index');
+
+Web::resource('awc/v1','course','MainController');

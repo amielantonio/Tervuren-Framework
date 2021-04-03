@@ -26,7 +26,6 @@ class Kernel {
     {
         require_once S_BASEPATH . "/start/api.php";
         Web::run();
-
     }
 
 }
