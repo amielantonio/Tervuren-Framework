@@ -11,7 +11,6 @@
 |
 */
 Router::addMenu('Test', 'MainController@index' );
-Router::addSubMenu('Test', 'TheSubmenu', 'MainController@access_form');
 
 Router::addChannel( 'post', 'MainController@test', 'test' );
 Router::addChannel( 'post', 'MainController@index', 'test2' );
@@ -20,3 +19,4 @@ Router::addChannel( 'post', 'MainController@index', 'test2' );
 Router::woocommerce('tabs', 'AWC Course Settings', 'TabController', ['product_type' => 'variable']);
 
 Router::woocommerce('settings', 'Custom', 'WooSettingsController');
+Router::woocommerce('accounts', 'Custom Accounts Settings', 'WooAccountsController@index');

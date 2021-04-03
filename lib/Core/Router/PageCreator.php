@@ -110,10 +110,8 @@ class PageCreator {
 
         $controller = new $controllerClass;
 
-
         $saveMethod = isset($page['save']) ? $page['save'] : "save";
         $panelMethod = isset($page['panel']) ? $page['panel'] : "panel";
-
 
         $slug = $this->toSlug($page['title']);
         $tab = $slug . "_tab";
@@ -178,9 +176,45 @@ class PageCreator {
         });
 
         add_filter('woocommerce_update_options_settings_tab_demo', function () use($controllerClass, $settingsMethod) {
-            echo "UPDTED";
             woocommerce_update_options($controllerClass::$settingsMethod());
         });
+    }
+
+
+    protected function create_woocommerce_accounts_tab( $page )
+    {
+        $controllerClass = "\\App\Http\Controller\\" . $page['function']['controller'];
+        $controller = new $controllerClass;
+
+        $account_title = addslashes($page['title']);
+        $account_slug = sanitize_title($account_title);
+        $contentMethod = isset($page['function']['method']) ? $page['function']['method'] : "content";
+
+        //Endpoint
+        add_action('init', function() use($account_slug){
+            add_rewrite_endpoint($account_slug, EP_ROOT | EP_PAGES);
+        });
+
+        //Query Vars
+        add_filter("woocommerce_get_query_vars", function($vars) use($account_slug){
+            $vars[] = $account_slug;
+            return $vars;
+        }, 0);
+
+        //Menu items
+        add_filter('woocommerce_account_menu_items', function($items) use ($account_title, $account_slug){
+            var_dump($items);
+            $items[$account_slug] = $account_title;
+            return $items;
+        });
+
+        add_action("woocommerce_account_{$account_slug}_title", function() use($account_title){
+            $title = __($account_title);
+            return $title;
+        });
+
+        add_action("woocomerce_account_{$account_slug}_endpoint", [$controller, $contentMethod]);
+
     }
 
     /**

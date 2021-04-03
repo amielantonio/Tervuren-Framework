@@ -288,7 +288,9 @@ class Router {
             case "settings";
                 $location = "woocommerce_settings";
                 break;
-
+            case "accounts";
+                $location = "woocommerce_accounts_tab";
+                break;
         }
 
         self::add($location, $name, $controller, $settings);
@@ -316,6 +318,18 @@ class Router {
     public static function woocommerceSettings($name, $controller, $settings)
     {
         self::woocommerce('settings', $name, $controller, $settings);
+    }
+
+    /**
+     * Wrapper for woocommerce accounts
+     *
+     * @param $name
+     * @param $controller
+     * @param $settings
+     */
+    public static function woocommerceAccounts($name, $controller, $settings)
+    {
+        self::woocommerce('accounts', $name, $controller, $settings);
     }
 
 
@@ -387,6 +401,12 @@ class Router {
     {
 
     }
+
+    public static function all()
+    {
+        return self::$pages;
+    }
+
 
     /**
      * A wrapper for the add Channel with a GET http request
