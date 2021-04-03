@@ -68,25 +68,6 @@ class Web
                 'callback' => [$list['function']['controller'], $list['function']['method']]
             ]);
         }
-
-//        add_action('rest_api_init', function () {
-//
-//            register_rest_route(
-//                'awc2', '/delete',
-//                array(
-//                    'methods' => 'POST',
-//                    'callback' => 'action_delete_comment',
-//                )
-//            );
-//
-//            register_rest_route(
-//                'awc2', '/delete_update',
-//                array(
-//                    'methods' => 'POST',
-//                    'callback' => 'action_update_delete_comment',
-//                )
-//            );
-//        });
     }
 
     /**
@@ -196,6 +177,15 @@ class Web
             "prefix" => "",
             "middleware" => "",
         ];
+    }
+
+
+    /**
+     * Match the registered route for multiple verbs
+     */
+    public static function match()
+    {
+
     }
 
     /**

@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 ### Added
  - Router support for woocommerce tabs
  - Router support for woocommerce settings
+ - Registration of Web API
 
 
 ## [0.2.0] - 2021-02-14
