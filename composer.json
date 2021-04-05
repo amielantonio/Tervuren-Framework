@@ -1,25 +1,31 @@
 {
-    "name": "tervuren/tervuren-framework",
-    "description": "MVC framework for building beautiful wordpress plugins",
-    "type": "wordpress-plugin",
-    "license": "ISC",
-    "authors": [
-      {
-          "name": "Amiel Antonio",
-          "email": "amiel.cornerstone@gmail.com"
-      }
-    ],
-    "require": {
-      "guzzlehttp/guzzle": "~6.0"
-    },
-    "autoload":{
-      "psr-4":{
-        "App\\" : "lib/"
-      },
-      "classmap" : [
-        "lib/Core/",
-        "start",
-        "lib/Packages"
-      ]
+  "name": "tervuren/tervuren-framework",
+  "description": "MVC framework for building beautiful wordpress plugins",
+  "type": "project",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Amiel Antonio",
+      "email": "amielnicole.antonio@gmail.com"
     }
+  ],
+  "config": {
+    "preferred-install": "dist",
+    "sort-packages": true
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "require": {
+    "guzzlehttp/guzzle": "~6.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "lib/"
+    },
+    "classmap": [
+      "lib/Core/",
+      "start",
+      "lib/Packages"
+    ]
+  }
 }
