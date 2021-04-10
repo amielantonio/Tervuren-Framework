@@ -11,4 +11,4 @@
 */
 //Web::register('post','awc/v1','course', 'MainController@index');
 
-Web::resource('awc/v1','course','MainController');
+Web::resource('awc/v1','course','MainAjax');

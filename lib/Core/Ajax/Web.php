@@ -52,8 +52,6 @@ class Web
 
     public static function run()
     {
-//        self::create_gateway(self::$routeList);
-
         add_action('rest_api_init', function() {
             self::create_gateway(self::$routeList);
         });
@@ -62,10 +60,13 @@ class Web
 
     public static function create_gateway($routeList)
     {
+
+        $controllerPath = "\\App\Http\Ajax\\";
+
         foreach($routeList as $list){
             register_rest_route($list['namespace'], $list['route'], [
                 'methods' => strtoupper($list['verb']),
-                'callback' => [$list['function']['controller'], $list['function']['method']]
+                'callback' => [$controllerPath.$list['function']['controller'], $list['function']['method']]
             ]);
         }
     }
@@ -136,7 +137,7 @@ class Web
             'post' => [
                 'verb' => 'post',
                 'url' => $route,
-                'callback' => '',
+                'callback' => 'store',
             ],
             'index' => [
                 'verb' => 'get',
@@ -150,12 +151,12 @@ class Web
             ],
             'put' => [
                 'verb' => 'get',
-                'url' => $route,
+                'url' => $route."/update/(?P<id>\d+)",
                 'callback' => 'update',
             ],
             'delete' => [
                 'verb' => 'delete',
-                'url' => $route,
+                'url' => $route."/delete/(?P<id>\d+)",
                 'callback' => 'destroy',
             ]
         ];
