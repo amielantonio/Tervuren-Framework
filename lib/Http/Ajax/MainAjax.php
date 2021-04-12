@@ -3,8 +3,11 @@
 namespace App\Http\Ajax;
 
 use App\Core\Ajax\AjaxHandler;
+use App\Core\Request;
+use WP_REST_Request;
 
-class MainAjax extends AjaxHandler {
+class MainAjax extends AjaxHandler
+{
 
 
     public function register($name)
@@ -23,9 +26,31 @@ class MainAjax extends AjaxHandler {
         die();
     }
 
-    public function post()
+    public function store(Request $request)
     {
 
+
+        echo json_encode($request->all());
+        echo json_encode(['post']);
+        die();
+    }
+
+    public function show()
+    {
+        echo json_encode($_POST);
+        die();
+    }
+
+    public function update()
+    {
+        echo json_encode($_POST);
+        die();
+    }
+
+    public function destroy()
+    {
+        echo json_encode($_POST);
+        die();
     }
 
 

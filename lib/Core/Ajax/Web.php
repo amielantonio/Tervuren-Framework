@@ -60,13 +60,28 @@ class Web
 
     public static function create_gateway($routeList)
     {
-
         $controllerPath = "\\App\Http\Ajax\\";
 
+        $callback = new \App\Core\Ajax\Callback();
+
         foreach($routeList as $list){
+
+            $controller = $controllerPath.$list['function']['controller'];
+            $method = $list['function']['method'];
+            $controller = new $controller;
+
+
             register_rest_route($list['namespace'], $list['route'], [
                 'methods' => strtoupper($list['verb']),
-                'callback' => [$controllerPath.$list['function']['controller'], $list['function']['method']]
+                'callback' => function () use($callback, $list, $controller, $method) {
+                    //Set the settings
+                    $callback->setController($controller);
+                    $callback->setMethod($method);
+                    $callback->setRequest($_SERVER);
+
+                    json_encode($callback->rest($list['verb']));
+                    die();
+                }
             ]);
         }
     }

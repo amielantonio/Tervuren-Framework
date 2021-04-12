@@ -44,7 +44,7 @@ class RouteModel {
         // variable.
         foreach( $params as $param ){
             // We will check first if the method is a request method,
-            // since the request method accepts a different parameters than
+            // since the request method accepts a different parameter than
             // a model class, we need to segregate it to pass the proper
             // arguments
             if( static::instance()->is_request($param['class']) ){

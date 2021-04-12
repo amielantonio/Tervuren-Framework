@@ -16,18 +16,18 @@ abstract class AjaxHandler
 
     public $script_url = "";
 
-    public function register($name)
+    protected function register($name)
     {
         add_action('wp_loaded', array($this, 'register_script'));
     }
 
 
-    public function method()
+    protected function method()
     {
 
     }
 
-    public function registerScript()
+    protected function registerScript()
     {
 
     }
