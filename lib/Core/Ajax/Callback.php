@@ -59,17 +59,11 @@ class Callback
             die();
         }
 
-//        $test = ['_wpnonce' => )];
-
-//        echo wp_create_nonce();
-//
-//        if(!wp_verify_nonce($_POST)) {
-//            echo json_encode([
-//                'error' => "nonce token mismatch"
-//            ]);
-//            die();
-//        }
-//
+        /* TODO
+         * add nonce validation
+         * add middleware
+         *
+         */
 
         $request = new Request($_POST);
 
@@ -83,12 +77,42 @@ class Callback
 
     public function doDelete($controller, $method)
     {
+        if($this->request['REQUEST_METHOD'] !== 'POST'){
+            echo json_encode([
+                'error' => "request method used is {$this->request['REQUEST_METHOD']}, must be POST"
+            ]);
+            die();
+        }
 
+        /* TODO
+         * add nonce validation
+         * add middleware
+         *
+         */
+
+        $request = new Request($_POST);
+
+        return $controller->$method($request);
     }
 
     public function doUpdate($controller, $method)
     {
+        if($this->request['REQUEST_METHOD'] !== 'POST'){
+            echo json_encode([
+                'error' => "request method used is {$this->request['REQUEST_METHOD']}, must be POST"
+            ]);
+            die();
+        }
 
+        /* TODO
+         * add nonce validation
+         * add middleware
+         *
+         */
+
+        $request = new Request($_POST);
+
+        return $controller->$method($request);
     }
 
 
