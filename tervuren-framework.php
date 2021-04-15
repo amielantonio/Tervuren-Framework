@@ -4,10 +4,10 @@
  * Plugin URI: https://github.com/amielantonio
  * Description: A free, open-source Wordpress plugin framework inspired by Laravel's elegant syntax. Intended to make development for wordpress plugins faster. Follows the MVC architectural pattern.
  * Author: Amiel Antonio
- * Version 1.2.0
+ * Version 0.5.0
  * Text Domain: tervuren-framework
  *
- * @package Strataplan_Form_Manager
+ * @package TervurenFramework
  */
 
 if( ! defined( 'WPINC' ) ) die;
@@ -19,7 +19,7 @@ final class TervurenFramework {
      *
      * @var string
      */
-    protected $version = "1.2.0";
+    protected $version = "0.5.0";
 
     /**
      * Minimum required PHP version

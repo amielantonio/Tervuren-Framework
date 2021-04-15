@@ -9,6 +9,7 @@ class Kernel {
     {
         static::runRouters();
         static::runAPI();
+        static::runShortcodes();
     }
 
     protected static function runRouters()
@@ -26,6 +27,12 @@ class Kernel {
     {
         require_once S_BASEPATH . "/start/api.php";
         Web::run();
+    }
+
+    protected static function runShortcodes()
+    {
+        require_once S_BASEPATH . "/start/shortcodes.php";
+        Shortcode::run();
     }
 
 }
