@@ -45,10 +45,10 @@ class Shortcode {
             $controller = $controllerPath.$shortcode['function']['controller'];
             $method = $shortcode['function']['method'];
 
-            add_shortcode($shortcode['tag'], function() use ($controller, $method){
+            add_shortcode($shortcode['tag'], function($attribs) use ($controller, $method){
                 $controller = new $controller;
 
-                return $controller->$method();
+                return $controller->$method($attribs);
             });
         }
     }

@@ -4,8 +4,18 @@ namespace App\Core\Shortcodes;
 
 abstract class ShortcodeController {
 
+    /**
+     * User attributes that are passed by the shortcode interface
+     *
+     * @var array
+     */
     protected $attributes = [];
 
+    /**
+     * Base attributes that are set and can be modified based on user input
+     *
+     * @var array
+     */
     protected $baseAttributes = [];
 
     /**
@@ -40,13 +50,14 @@ abstract class ShortcodeController {
 
 
     /**
+     * Starts the shortcodes
      *
+     * @param array $attribs
      */
-    public function start()
+    public function start($attribs = [])
     {
-        $this->handler();
+        $this->handler($attribs);
         $this->render();
     }
-
 
 }

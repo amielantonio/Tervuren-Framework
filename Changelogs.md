@@ -21,6 +21,6 @@ All notable changes to this project will be documented in this file.
  - Add Service Providers
  
 ### Changed
- - Tranferred templates and assets files to a resource folder instead.
+ - Transferred templates and assets files to a resource folder instead.
  - Changed the name of the template folder from Template to views.
  - Transferred Controller folder to http
