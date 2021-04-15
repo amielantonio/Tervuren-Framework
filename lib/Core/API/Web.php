@@ -15,7 +15,21 @@ class Web
      *
      * @var array
      */
-    protected static $routeList = [];
+    public static $routeList = [];
+
+    /**
+     * Contains all ajax list that will be added o the backend
+     *
+     * @var array
+     */
+    public static $ajaxList = [];
+
+    /**
+     * Ajax Factory class
+     *
+     * @var AjaxFactory
+     */
+    protected static $ajaxFactory;
 
     /**
      * Web Instance
@@ -26,6 +40,15 @@ class Web
     {
         return $this;
     }
+
+    public static function start(AjaxFactory $factory)
+    {
+        self::$ajaxFactory = new $factory;
+
+        self::$ajaxFactory->create(self::$instance);
+    }
+
+
 
     /**
      * Use to register a Route to create a gateway
@@ -50,14 +73,23 @@ class Web
         self::$routeList[] = array_merge(compact('namespace', 'route', 'verb', 'function'), $settings);
     }
 
+    /**
+     * Bootstraps the creation of the routes api list and registers it in WordPress init
+     *
+     */
     public static function run()
     {
         add_action('rest_api_init', function() {
             self::create_gateway(self::$routeList);
         });
+
     }
 
-
+    /**
+     * Create the API gateway and install it in wordpress
+     *
+     * @param $routeList
+     */
     public static function create_gateway($routeList)
     {
         $controllerPath = "\\App\Http\API\\";
@@ -193,6 +225,32 @@ class Web
             "prefix" => "",
             "middleware" => "",
         ];
+    }
+
+    /**
+     * Ajax registration method
+     *
+     * @param $name
+     * @param $controller
+     * @param bool $nopriv
+     */
+    public static function ajax( $name, $controller, $nopriv = true)
+    {
+        // Check if controller is a closure or a string that passes
+        // the controller class and the corresponding method that
+        // will run the ajax request.
+        if($controller instanceof Closure)
+        {
+            $function = $controller;
+        } else {
+            $array  = explode( '@', $controller );
+            $function = [
+                'controller' => $array[0],
+                'method' => $array[1]
+            ];
+        }
+
+        self::$ajaxList[] = compact('name', 'function', 'nopriv');
     }
 
 

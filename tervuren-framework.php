@@ -144,6 +144,7 @@ final class TervurenFramework {
     {
         Kernel::run();
         Router::start( (new PageCreator) );
+        Web::start( (new AjaxFactory) );
     }
 }
 
