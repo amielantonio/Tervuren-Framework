@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Core\Ajax;
+namespace App\Core\API;
 
 use App\Core\Request;
 

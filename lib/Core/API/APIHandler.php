@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Core\Ajax;
+namespace App\Core\API;
 
-abstract class AjaxHandler
+abstract class APIHandler
 {
 
     /**

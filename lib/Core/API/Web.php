@@ -33,19 +33,19 @@ class Web
      * @param $verb
      * @param $namespace
      * @param $route
-     * @param $ajax
+     * @param $api
      * @param array $settings
      */
-    public static function register($verb, $namespace, $route, $ajax, $settings = [])
+    public static function register($verb, $namespace, $route, $api, $settings = [])
     {
         //Check for Instance
         if (self::$instance === null) {
             self::$instance = new self;
         }
 
-        $function = ($ajax instanceof Closure)
-            ? $ajax
-            : self::$instance->setController($ajax, $verb);
+        $function = ($api instanceof Closure)
+            ? $api
+            : self::$instance->setController($api, $verb);
 
         self::$routeList[] = array_merge(compact('namespace', 'route', 'verb', 'function'), $settings);
     }
@@ -60,9 +60,9 @@ class Web
 
     public static function create_gateway($routeList)
     {
-        $controllerPath = "\\App\Http\Ajax\\";
+        $controllerPath = "\\App\Http\API\\";
 
-        $callback = new \App\Core\Ajax\Callback();
+        $callback = new \App\Core\API\Callback();
 
         foreach($routeList as $list){
 
@@ -91,12 +91,12 @@ class Web
      *
      * @param $namespace
      * @param $route
-     * @param $ajax
+     * @param $api
      * @param array $settings
      */
-    public static function get($namespace, $route, $ajax, $settings = [])
+    public static function get($namespace, $route, $api, $settings = [])
     {
-        self::register('get', $namespace, $route, $ajax, $settings);
+        self::register('get', $namespace, $route, $api, $settings);
     }
 
     /**
@@ -104,12 +104,12 @@ class Web
      *
      * @param $namespace
      * @param $route
-     * @param $ajax
+     * @param $api
      * @param array $settings
      */
-    public static function post($namespace, $route, $ajax, $settings = [])
+    public static function post($namespace, $route, $api, $settings = [])
     {
-        self::register('post', $namespace, $route, $ajax, $settings);
+        self::register('post', $namespace, $route, $api, $settings);
     }
 
     /**
@@ -117,12 +117,12 @@ class Web
      *
      * @param $namespace
      * @param $route
-     * @param $ajax
+     * @param $api
      * @param array $settings
      */
-    public static function put($namespace, $route, $ajax, $settings = [])
+    public static function put($namespace, $route, $api, $settings = [])
     {
-        self::register('put', $namespace, $route, $ajax, $settings);
+        self::register('put', $namespace, $route, $api, $settings);
     }
 
     /**
@@ -130,12 +130,12 @@ class Web
      *
      * @param $namespace
      * @param $route
-     * @param $ajax
+     * @param $api
      * @param array $settings
      */
-    public static function delete($namespace, $route, $ajax, $settings = [])
+    public static function delete($namespace, $route, $api, $settings = [])
     {
-        self::register('delete', $namespace, $route, $ajax, $settings);
+        self::register('delete', $namespace, $route, $api, $settings);
     }
 
     /**
@@ -143,10 +143,10 @@ class Web
      *
      * @param $namespace
      * @param $route
-     * @param $ajax
+     * @param $api
      * @param array $settings
      */
-    public static function resource($namespace, $route, $ajax, $settings = [])
+    public static function resource($namespace, $route, $api, $settings = [])
     {
         $resources = [
             'post' => [
@@ -177,7 +177,7 @@ class Web
         ];
 
         foreach ($resources as $verb => $resource) {
-            self::register($resource['verb'], $namespace, $resource['url'], "{$ajax}@{$resource['callback']}");
+            self::register($resource['verb'], $namespace, $resource['url'], "{$api}@{$resource['callback']}");
         }
     }
 

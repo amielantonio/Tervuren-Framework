@@ -1,17 +1,21 @@
 # Change log
 All notable changes to this project will be documented in this file.
 
+
+
 ## [0.5.0] - 2021-04-15
 ### Added
  - Shortcode registration
-
+ - Added response file
+ 
+### Changed
+- Rename AJAX files and folders to API 
 
 ## [0.4.0] - 2021-03-16
 ### Added
  - Router support for woocommerce tabs
  - Router support for woocommerce settings
  - Registration of Web API
-
 
 ## [0.2.0] - 2021-02-14
 ### Added
