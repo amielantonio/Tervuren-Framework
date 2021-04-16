@@ -43,6 +43,11 @@ class Web
 
     public static function start(AjaxFactory $factory)
     {
+        //Check for Instance
+        if (self::$instance === null) {
+            self::$instance = new self;
+        }
+
         self::$ajaxFactory = new $factory;
 
         self::$ajaxFactory->create(self::$instance);
