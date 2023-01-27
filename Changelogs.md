@@ -1,7 +1,9 @@
 # Change log
 All notable changes to this project will be documented in this file.
 
-
+## [0.5.1] - 2021-4-18
+### Bugfix
+- fix bug where Router outputs an issue when display_errors / wp_debug is on.
 
 ## [0.5.0] - 2021-04-15
 #### Added

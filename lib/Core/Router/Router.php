@@ -342,12 +342,14 @@ class Router {
      */
     protected function setController( $controller )
     {
+        $control = [];
         $method = explode( '@', $controller );
 
-        return [
-            'controller' => $method[0],
-            'method' => $method[1]
-        ];
+
+        $control['controller'] = isset($method[0]) ? $method[0] : "";
+        $control['method'] = isset($method[0]) ? $method[0] : "";
+
+        return $control;
     }
 
     public static function setChannel( $channel )
